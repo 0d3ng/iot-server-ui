@@ -12,7 +12,7 @@
 
 <div class="page-content">
   <div class="row row-lg">
-    <div class="col-md-6 col-xxl-3">
+    <div class="col-md-6">
       <div class="pricing-list text-left">
         <div class="pricing-header bg-blue-600">
           <div class="pricing-title">Device Info</div>
@@ -34,7 +34,7 @@
         </ul>
       </div>
     </div>
-    <div class="col-md-6 col-xxl-3">
+    <div class="col-md-6">
       <div class="panel-bordered panel-success">
         <div class="panel-heading">
           <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Last Data</h3>
@@ -81,8 +81,10 @@
         }
         foreach($sensor as $d){
           $itemdata = (array)$d;
-          foreach($listfield as $fd){           
-            $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],(isset($itemdata[$fd]))?$itemdata[$fd]:''];            
+            if(!empty($itemdata)){
+            foreach($listfield as $fd){           
+              $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],(isset($itemdata[$fd]))?$itemdata[$fd]:''];            
+            }
           }
           $lastdata = (array)$d;
         } 

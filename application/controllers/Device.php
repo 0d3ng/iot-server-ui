@@ -224,7 +224,6 @@ class Device extends CI_Controller {
         );
         $data['limit_data'] = $this->limit_data;
         $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
-        $data['last_data'] = (array)$data['sensor'][0];
         $data['sensor'] = array_reverse((array)$data['sensor']);
         // echo "<pre>";
         // print_r($data);
