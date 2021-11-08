@@ -1,0 +1,39 @@
+EASY BENSIN ADMINSTRATOR
+NOTE : 
+	Admin bisa ganti pasword Driver dan username;
+	Driver tidak bisa ganti password dan username -> tidak ada profile;
+
+Menu
+A. 	Dashboard ganti =>  Bussiness
+	1. Icon (Today) -> 
+		- Total Active yang disum adalah "Capacity"
+		- 'L' adl total transaction
+		- 'Fuel in the tank' adl total sisa fuel yang ada per jenis 
+ 	2. Live Maps (Today) -> Last Transaaction yg sudah finish saja
+ 	3. Transaction Chart (Perjam)
+ 	4. Last 50 Transaction on Today (table)
+
+
+
+ B. Operational
+ 	*Model Grid Card*
+ 	1. Car ->
+ 		- Tanki 1: Isi/Total (Isi -> Tank, Total Capacity)
+ 		- Tanki 2: Isi/Total
+ 		- Tanki 3: Isi/Total 
+ 		- Alert Service (Alert untuks service berdasarkan field Tgl Service atau Total Kilomter)
+ 		- Aler Geo  (Alert bila car keluar dari area)
+
+
+ 		
+DASHBOARD USER
+
+Menu
+A. Dashboard
+	1. Tank Condition -> Condisi masing2 Tank
+	2. Transaction (Jumlah Transaksi dan Total Liter)
+	3. Bila ada transaksi.... muncul pop up untuk direct ke Transaction Request
+Transaction Request
+
+
+
