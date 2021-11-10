@@ -247,6 +247,64 @@ class Device extends CI_Controller {
         }
         return $return;
     }
+
+    public function table($id){       
+        $data=array();
+        $data['success']='';
+        $data['error']='';
+        $data['title']= 'Device Data';       
+        $data['user_now'] = $this->session->userdata('dasboard_iot');   
+        $data['data'] = $this->device_m->get_detail($id)->data; 
+        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
+        $data['extract'] = $this->extract($data['data']->field);
+        $query = array(
+            'limit' => $this->limit_data
+        );
+        $data['limit_data'] = $this->limit_data;
+        $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+        $data['sensor'] = array_reverse((array)$data['sensor']);
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // exit();
+        $this->load->view('device_data_v', $data);
+    }  
+
+    public function datatable($id){
+        #"indoor_humidity","indoor_temperature","indoor_di","ac_state","outdoor_humidity","outdoor_temperature","outdoor_di"
+        ## Read value
+        $draw = $this->input->post('draw');
+        $row = $this->input->post('start');
+        $rowperpage = $this->input->post('length'); // Rows display per page
+        $columnIndex = $this->input->post('order')[0]['column']; // Column index
+        $columnName = $this->input->post('columns')[$columnIndex]['data']; // Column name
+        $columnSortOrder = $this->input->post('order')[0]['dir']; // asc or desc
+        $searchValue = $this->input->post('search')['value']; // Search value
+        $data = array(
+            "draw"=>$draw,
+            "row"=>$row,
+            "rowperpage"=>$rowperpage,
+            "columnIndex"=>$columnIndex,
+            "columnName"=>$columnName,
+            "columnSortOrder"=>$columnSortOrder,
+            "searchValue"=>$searchValue,
+            "searchValue"=>$searchValue
+        );
+        $data = $this->device_m->get_detail($id)->data;         
+        $field = $data['data']->field;
+        // $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+        // $query = array(
+        //     'limit' => $this->limit_data
+        // );    
+        // $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;    
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );        
+        echo json_encode($response);
+    }
 }
 
 

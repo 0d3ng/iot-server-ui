@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+    <head>
+        <title>DataTables AJAX Pagination with search and sort - PHP</title>
+        <!-- Datatable CSS -->
+        <link href='DataTables/datatables.min.css' rel='stylesheet' type='text/css'>
+
+        <!-- jQuery Library -->
+        <script src="jquery-3.3.1.min.js"></script>
+        
+        <!-- Datatable JS -->
+        <script src="DataTables/datatables.min.js"></script>
+        
+    </head>
+    <body >
+
+        <div >
+            <!-- Table -->
+            <table id='empTable' class='display dataTable'>
+                <thead>
+                <tr>
+                    <th>Indoor Humidity</th>
+                    <th>Indoor Temperature</th>
+                    <th>Indoor DI</th>
+                    <th>AC State</th>
+                    <th>Outdoor Humidity</th>
+                    <th>Outdoor Temperature</th>
+                    <th>Outdoor DI</th>
+                </tr>
+                </thead>
+                
+            </table>
+        </div>
+        
+        <!-- Script -->
+        <script>
+        $(document).ready(function(){
+            $('#empTable').DataTable({
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'post',
+                'ajax': {
+                    // 'url':'ajaxfile.php'
+                    'url':'http://localhost/iot-server/device/datatable/jd2090-eh06'
+                },
+                'columns': [
+                    { data: 'indoor_humidity' },
+                    { data: 'indoor_temperature' },
+                    { data: 'indoor_di' },
+                    { data: 'ac_state' },
+                    { data: 'outdoor_humidity' },
+                    { data: 'outdoor_temperature' },
+                    { data: 'outdoor_di' }
+                ]
+            });
+        });
+        </script>
+    </body>
+
+</html>
