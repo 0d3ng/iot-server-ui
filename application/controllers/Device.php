@@ -9,7 +9,8 @@ class Device extends CI_Controller {
 		$this->load->model('group_m');
         $this->load->model('groupsensor_m');
 		$this->load->model('device_m');
-        $this->limit_data = 50;
+        $this->limit_data = 1000;
+        $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
     }
 
@@ -257,12 +258,23 @@ class Device extends CI_Controller {
         $data['data'] = $this->device_m->get_detail($id)->data; 
         $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
         $data['extract'] = $this->extract($data['data']->field);
+        
+        ////Paginator////
+		$limit_table=$this->limit_table;
+		$page = $this->input->get('hal');
+		($page=='')?$page_number = 1:$page_number = $page;
+        $offset = ($page_number - 1) * $limit_table;
+        $off = abs( (int) $offset);
+        $data['offset']=$offset;
+		$count_data = $this->device_m->count_datasensor($data['data']->device_code,$query);
+        $data['paginator'] = $this->device_m->page($count_data, $limit_table, $page);
+        $data['count_data'] = $count_data;
+		////End Paginator////
         $query = array(
-            'limit' => $this->limit_data
+            'limit' => $this->limit_table,
+            'skip' => $data['offset']
         );
-        $data['limit_data'] = $this->limit_data;
-        $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
-        $data['sensor'] = array_reverse((array)$data['sensor']);
+		$data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query);
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
