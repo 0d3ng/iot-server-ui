@@ -54,6 +54,16 @@ class device_m extends My_Model{
 			$result->data = array();
 		return $result;
 	}
+
+	function count_datasensor($device,$data){
+		$url = $this->config->item('url_node')."device/data/".$device."/count/";				
+		$result =  json_decode($this->sendPost($url,$data));
+		if(!$result->status)
+			$result->data = 0;
+		return $result;
+	}
+
+	
 }
 
 /* End of file admin_model.php */
