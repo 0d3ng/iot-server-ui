@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/flag-icon-css/flag-icon.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/waves/waves.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/dropdowns.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/icheck/icheck.css">
 
         <!-- Select -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/select2/select2.css">

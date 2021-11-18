@@ -47,11 +47,16 @@
               </button>
               <div class="dropdown-menu bullet dropdown-menu-right" aria-labelledby="exampleBulletDropdown2"
                 role="menu">
-                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Action</a>
                 <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Another action</a>
                 <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Something else here</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Separated link</a>
+                <div class="dropdown-item">
+                  <input type="checkbox" class="icheckbox-primary" id="lastData" name="inputiCheckCheckboxes"
+                            data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue"
+                          />
+                    <label for="lastData">Last Data</label>
+                    <button type="submit" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;">Apply</button>
+                </div>
               </div>
             </div>
           </div>
@@ -115,6 +120,8 @@
 <script src="<?= base_url()?>assets/global/vendor/highchart/export-data.js"></script>
 <script src="<?= base_url()?>assets/js/mqttws31.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/icheck/icheck.min.js"></script>
+<script src="<?= base_url()?>assets/global/js/Plugin/icheck.js"></script>
 
 <script>
   var myLine = [], lineChart = []; 
