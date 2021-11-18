@@ -81,7 +81,9 @@
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td class="actions">
                   <a href="<?= base_url()?>device/data/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
-                    data-toggle="tooltip" data-original-title="Show Data"><i class="icon md-file-text" aria-hidden="true"></i></a>
+                    data-toggle="tooltip" data-original-title="Show Chart View"><i class="icon md-chart" aria-hidden="true"></i></a>
+                  <a href="<?= base_url()?>device/table/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                    data-toggle="tooltip" data-original-title="Show Table View"><i class="icon md-grid" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edit/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"

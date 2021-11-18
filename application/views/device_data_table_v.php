@@ -4,7 +4,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>device">Devices</a></li>
-    <li class="breadcrumb-item active">Data</li>
+    <li class="breadcrumb-item active">Table Data</li>
   </ol>
   <div class="page-header-actions">
   </div>
@@ -44,23 +44,24 @@
             <div class="example-wrap">
                 <h4 class="example-title">Date Range Data</h4>                
                 <div class="example">
-                    <form>
+                    <form method="GET">
                         <div class="form-group form-material row">
                             <div class="input-daterange" data-plugin="datepicker">
                                 <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon md-calendar" aria-hidden="true"></i>
                                 </span>
-                                <input type="text" class="form-control" name="start" data-date-format="yyyy-mm-dd"/>
+                                <input type="text" class="form-control" name="start" value="<?= $date_str?>" data-date-format="yyyy-mm-dd"/>
                                 </div>
                                 <div class="input-group">
                                 <span class="input-group-addon">to</span>
-                                <input type="text" class="form-control" name="end" data-date-format="yyyy-mm-dd"/>
+                                <input type="text" class="form-control" name="end" value="<?= $date_end?>" data-date-format="yyyy-mm-dd"/>
                                 </div>
                             </div>
                         </div>    
                         <div class="form-group form-material row">
-                            <button type="button" class="btn btn-primary waves-effect waves-classic">Search </button>
+                            <span class="input-group-addon" style="background:none; border:none;"> </span>
+                            <button type="submit" class="btn btn-primary waves-effect waves-classic">Search </button>
                         </div>    
                     </form>
                 </div>
@@ -72,8 +73,44 @@
     </div>
   </div>
   <div class="row row-lg mt-20">
-    
-
+    <div class="col-md-12">
+      <div class="panel">
+        <div class="panel-heading">
+          <h3 class="panel-title">Sensor Data</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-12">
+              <!-- Example Toolbar -->
+            <div class="example-wrap">
+              <div class="example">
+                  <!-- <div class="btn-group hidden-sm-down" id="exampleToolbar" role="group">
+                  <button type="button" class="btn btn-info btn-icon">
+                      <i class="icon md-plus" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="btn btn-info btn-icon">
+                      <i class="icon md-favorite" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="btn btn-info btn-icon">
+                      <i class="icon md-delete" aria-hidden="true"></i>
+                  </button>
+                  </div> -->
+                  <table id="sensordata" data-mobile-responsive="true">
+                  <thead>
+                      <tr>
+                        <th data-field="date" style="white-space:nowrap;">DATE</th>
+                        <?php foreach($extract as $d){ ?>
+                        <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
+                        <?php } ?>
+                      </tr>
+                  </thead>
+                  </table>
+              </div>
+              </div>
+              <!-- End Example Toolbar -->
+          </div>
+        </div>
+      </div>  
+    </div>
   </div>
 </div>
 
@@ -82,3 +119,30 @@
 <script src="<?= base_url()?>assets/js/mqttws31.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 <script src="<?= base_url()?>assets/global/js/Plugin/bootstrap-datepicker.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
+<!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
+<script>
+  $( document ).ready(function() {
+    $('#sensordata').bootstrapTable({
+        url: "<?= base_url() ?>device/datatable/<?=  $data->device_code; ?>?start=<?= $date_str?>&end=<?= $date_str?>",
+        // url: "../../assets/data/bootstrap_table_test2.json",
+        pagination: true,
+        sidePagination: 'server',
+        pageSize: '25',
+        pageList: '[10,25, 50, 100]',
+        // search: true,
+        showRefresh: true,
+        showToggle: true,
+        showColumns: true,
+        toolbar: '#exampleToolbar',
+        iconsPrefix: 'icon',
+        iconSize: 'icon',
+        icons: {
+          refresh: 'md-refresh',
+          toggle: 'md-receipt',
+          columns: 'md-view-list-alt'
+        }
+    });
+  });
+</script>

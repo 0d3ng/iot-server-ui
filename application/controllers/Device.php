@@ -258,24 +258,14 @@ class Device extends CI_Controller {
         $data['data'] = $this->device_m->get_detail($id)->data; 
         $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
         $data['extract'] = $this->extract($data['data']->field);
-        
-        // ////Paginator////
-		// $limit_table=$this->limit_table;
-		// $page = $this->input->get('hal');
-		// ($page=='')?$page_number = 1:$page_number = $page;
-        // $offset = ($page_number - 1) * $limit_table;
-        // $off = abs( (int) $offset);
-        // $data['offset']=$offset;
-		// $count_data = $this->device_m->count_datasensor($data['data']->device_code,$query);
-        // $data['paginator'] = $this->device_m->page($count_data, $limit_table, $page);
-        // $data['count_data'] = $count_data;
-		// ////End Paginator////
-        // $query = array(
-        //     'limit' => $this->limit_table,
-        //     'skip' => $data['offset']
-        // );
-		// $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query);
+        $data["date_str"] = date("Y-m-d");
+        $data["date_end"] = date("Y-m-d");
+        if($this->input->get('start'))
+            $data["date_str"] = $this->input->get('start');
+        if($this->input->get('end'))
+            $data["date_end"] = $this->input->get('end');
         // echo "<pre>";
+        // print_r($query);
         // print_r($data);
         // echo "</pre>";
         // exit();
@@ -283,40 +273,59 @@ class Device extends CI_Controller {
     }  
 
     public function datatable($id){
-        #"indoor_humidity","indoor_temperature","indoor_di","ac_state","outdoor_humidity","outdoor_temperature","outdoor_di"
-        ## Read value
-        $draw = $this->input->post('draw');
-        $row = $this->input->post('start');
-        $rowperpage = $this->input->post('length'); // Rows display per page
-        $columnIndex = $this->input->post('order')[0]['column']; // Column index
-        $columnName = $this->input->post('columns')[$columnIndex]['data']; // Column name
-        $columnSortOrder = $this->input->post('order')[0]['dir']; // asc or desc
-        $searchValue = $this->input->post('search')['value']; // Search value
-        $data = array(
-            "draw"=>$draw,
-            "row"=>$row,
-            "rowperpage"=>$rowperpage,
-            "columnIndex"=>$columnIndex,
-            "columnName"=>$columnName,
-            "columnSortOrder"=>$columnSortOrder,
-            "searchValue"=>$searchValue,
-            "searchValue"=>$searchValue
+        $device = $this->device_m->get_detail($id)->data; 
+        $extract = $this->extract($device->field);
+        $limit=$this->input->get('limit');
+        $offset = $this->input->get('offset');
+        $date_str = date("Y-m-d");
+        $date_end = date("Y-m-d");
+        if($this->input->get('start'))
+            $date_str = $this->input->get('start');
+        if($this->input->get('end'))
+            $date_str = $this->input->get('end');
+
+        $query = array(
+            "date_start" => $date_str,
+            "date_end" => $date_end
         );
-        $data = $this->device_m->get_detail($id)->data;         
-        $field = $data['data']->field;
-        // $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
-        // $query = array(
-        //     'limit' => $this->limit_data
-        // );    
-        // $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;    
+        $count_data = $this->device_m->count_datasensor($device->device_code,$query)->data;
+        $query["limit"] = intval($limit);
+        $query["skip"] = intval($offset);
+		$list = $this->device_m->datasensor($device->device_code,$query)->data;
+        $data = array();
+        foreach($list as $d){
+            $item = array();
+            foreach($extract as $k){
+                if (strpos($k, '-') !== false) {
+                    $nested_k = explode("-",$k);
+                    $val = $this->dataget_nested($nested_k,$d);
+                } else {
+                    $val = (empty($d->{$k}))?"-":$d->{$k};
+                }
+                $item[$k] = $val;
+            }
+            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server_unix"}/1000);
+            $data[] = $item;
+        }
         $response = array(
-            "draw" => intval($draw),
-            "iTotalRecords" => $totalRecords,
-            "iTotalDisplayRecords" => $totalRecordwithFilter,
-            "aaData" => $data
-        );        
+            "total" => $count_data,
+            "rows" =>  $data
+        );     
+        header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
     }
+
+    function dataget_nested($key,$value){
+        foreach($key as $d){
+            if(empty($value->{$d})){
+                $value = "-";
+                break;    
+            }
+            $value = $value->{$d}; 
+        }
+        return $value;
+    }
+
 }
 
 

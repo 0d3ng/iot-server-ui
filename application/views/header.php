@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/slidepanel/slidePanel.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/flag-icon-css/flag-icon.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/waves/waves.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/dropdowns.css">
+
         <!-- Select -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/select2/select2.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-select/bootstrap-select.css">
@@ -50,12 +52,13 @@
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/datatables.net-responsive-bs4/dataTables.responsive.bootstrap4.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/datatables.net-buttons-bs4/dataTables.buttons.bootstrap4.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/tables/datatable.css">
+        <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-table/bootstrap-table.css">
 
         <!-- Tree View -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-treeview/bootstrap-treeview.css">
 
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.css">
-    
+
     
     <!-- Fonts -->
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/web-icons/web-icons.css">

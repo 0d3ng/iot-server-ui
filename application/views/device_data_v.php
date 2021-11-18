@@ -36,8 +36,25 @@
     </div>
     <div class="col-md-6">
       <div class="panel-bordered panel-success">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Last Data</h3>
+      <div class="panel-heading">
+          <h3 class="panel-title"><i class="icon wb-info" aria-hidden="true"></i> &nbsp;Last Data</h3>
+          <!-- <h3 class="panel-title"> &nbsp;Last Data</h3> -->
+          <div class="panel-actions">
+            <div class="btn-group dropdown">
+              <button type="button" class="btn btn-success dropdown-toggle" id="exampleBulletDropdown2"
+                data-toggle="dropdown" aria-expanded="false">
+                <i class="icon wb-time" aria-hidden="true"></i> Search By Date
+              </button>
+              <div class="dropdown-menu bullet dropdown-menu-right" aria-labelledby="exampleBulletDropdown2"
+                role="menu">
+                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Action</a>
+                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Another action</a>
+                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Separated link</a>
+              </div>
+            </div>
+          </div>
         </div>
         <ul class="list-group list-group-bordered mb-0" style="font-size:15px;">
             <?php foreach($extract as $d){ ?>
@@ -97,6 +114,7 @@
 <script src="<?= base_url()?>assets/global/vendor/highchart/exporting.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/highchart/export-data.js"></script>
 <script src="<?= base_url()?>assets/js/mqttws31.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
 
 <script>
   var myLine = [], lineChart = []; 
