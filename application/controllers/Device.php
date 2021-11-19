@@ -220,6 +220,13 @@ class Device extends CI_Controller {
         $data['data'] = $this->device_m->get_detail($id)->data; 
         $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
         $data['extract'] = $this->extract($data['data']->field);
+        $data["date_str"] = date("Y-m-d");
+        $data["date_end"] = date("Y-m-d");
+        if($this->input->get('start'))
+            $data["date_str"] = $this->input->get('start');
+        if($this->input->get('end'))
+            $data["date_end"] = $this->input->get('end');
+        $data["search"] = $this->input->get('search');
         $query = array(
             'limit' => $this->limit_data
         );
@@ -282,7 +289,7 @@ class Device extends CI_Controller {
         if($this->input->get('start'))
             $date_str = $this->input->get('start');
         if($this->input->get('end'))
-            $date_str = $this->input->get('end');
+            $date_end = $this->input->get('end');
 
         $query = array(
             "date_start" => $date_str,

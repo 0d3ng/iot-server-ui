@@ -39,26 +39,45 @@
       <div class="panel-heading">
           <h3 class="panel-title"><i class="icon wb-info" aria-hidden="true"></i> &nbsp;Last Data</h3>
           <!-- <h3 class="panel-title"> &nbsp;Last Data</h3> -->
-          <div class="panel-actions">
-            <div class="btn-group dropdown">
-              <button type="button" class="btn btn-success dropdown-toggle" id="exampleBulletDropdown2"
-                data-toggle="dropdown" aria-expanded="false">
-                <i class="icon wb-time" aria-hidden="true"></i> Search By Date
-              </button>
-              <div class="dropdown-menu bullet dropdown-menu-right" aria-labelledby="exampleBulletDropdown2"
-                role="menu">
-                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Another action</a>
-                <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-item">
-                  <input type="checkbox" class="icheckbox-primary" id="lastData" name="inputiCheckCheckboxes"
-                            data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue"
-                          />
-                    <label for="lastData">Last Data</label>
-                    <button type="submit" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;">Apply</button>
+          <div class="panel-actions" style="text-align: right;">
+            <form method="GET">
+              <div class="btn-group dropdown">
+                <button type="button" class="btn btn-success dropdown-toggle" id="BulletDropdown2"
+                  data-toggle="dropdown" aria-expanded="false">
+                  <i class="icon wb-time" aria-hidden="true"></i> Search
+                </button>
+                <div class="dropdown-menu bullet dropdown-menu-right" aria-labelledby="BulletDropdown2"
+                  role="menu">
+                  <div class="dropdown-item-form">
+                      <label for="lastData">Search From:</label> 
+                      <div class="form-group">
+                          <div class="input-group input-group-icon">
+                            <input type="text" class="form-control search-date" name="start" value="<?= $date_str?>" <?= (empty($search))?"disabled":""; ?> >
+                            <span class="input-group-addon">
+                              <span class="icon md-calendar" aria-hidden="true"></span>
+                            </span>
+                          </div>
+                      </div> 
+                      <label for="lastData">To:</label> 
+                      <div class="form-group">
+                          <div class="input-group input-group-icon">
+                            <input type="text" class="form-control search-date" name="end" value="<?= $date_end?>" <?= (empty($search))?"disabled":""; ?> >
+                            <span class="input-group-addon">
+                              <span class="icon md-calendar" aria-hidden="true"></span>
+                            </span>
+                          </div>
+                      </div> 
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div id="checkbox-search" class="dropdown-item-form" >
+                    <input type="checkbox" class="icheckbox-primary" id="searchState" name="search"
+                              data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" <?= (empty($search))?"":"checked"; ?>/>
+                      <label for="lastData">Search Active</label>
+                      <button type="button" id="ceks" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;margin-top: -5px;">Apply</button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
         <ul class="list-group list-group-bordered mb-0" style="font-size:15px;">
@@ -128,6 +147,19 @@
   var mychart = [];
   var listfield = <?php echo json_encode($listfield); ?>;
   $( document ).ready(function() {
+    $(".dropdown-menu-right").click(function(e){
+      e.stopPropagation();
+    })
+    // $("#searchState").click(function(e){
+    //   if(this.checked){
+    //     $(".search-date").removeAttr('disabled');
+    //   } else {
+    //     $(".search-date").attr('disabled','disabled');
+    //   }
+    // });
+    $("#checkbox-search").change(function(e){
+      console.log('changed');
+    });
     // Create the chart
     <?php foreach($listfield as $d){ ?>
       Highcharts.stockChart('chart_<?= $d ?>', {
