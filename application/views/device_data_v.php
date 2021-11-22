@@ -49,9 +49,10 @@
                 <div class="dropdown-menu bullet dropdown-menu-right" aria-labelledby="BulletDropdown2"
                   role="menu">
                   <div class="dropdown-item-form">
+                    <div class="input-daterange" data-plugin="datepicker">
                       <label for="lastData">Search From:</label> 
                       <div class="form-group">
-                          <div class="input-group input-group-icon">
+                          <div class="input-group input-group-icon" style=" width: 100%; float: none; ">
                             <input type="text" class="form-control search-date" name="start" value="<?= $date_str?>" <?= (empty($search))?"disabled":""; ?> >
                             <span class="input-group-addon">
                               <span class="icon md-calendar" aria-hidden="true"></span>
@@ -60,19 +61,20 @@
                       </div> 
                       <label for="lastData">To:</label> 
                       <div class="form-group">
-                          <div class="input-group input-group-icon">
-                            <input type="text" class="form-control search-date" name="end" value="<?= $date_end?>" <?= (empty($search))?"disabled":""; ?> >
+                          <div class="input-group input-group-icon" style=" width: 100%; float: none; ">
+                            <input type="text" class="form-control search-date" name="end" value="<?= $date_end?>" <?= (empty($search))?"disabled":""; ?>>
                             <span class="input-group-addon">
                               <span class="icon md-calendar" aria-hidden="true"></span>
                             </span>
                           </div>
                       </div> 
+                    </div>
                   </div>
                   <div class="dropdown-divider"></div>
                   <div id="checkbox-search" class="dropdown-item-form" >
                     <input type="checkbox" class="icheckbox-primary" id="searchState" name="search"
-                              data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" <?= (empty($search))?"":"checked"; ?>/>
-                      <label for="lastData">Search Active</label>
+                              data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" onchange="alert('test');" <?= (empty($search))?"":"checked"; ?>/>
+                      <label for="lastData">Search By Date</label>
                       <button type="button" id="ceks" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;margin-top: -5px;">Apply</button>
                   </div>
                 </div>
@@ -134,6 +136,8 @@
 
 <?php include("footer.php") ?>
 <script src="<?= base_url()?>assets/global/vendor/moment/moment.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+<script src="<?= base_url()?>assets/global/js/Plugin/bootstrap-datepicker.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/highchart/highstock.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/highchart/exporting.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/highchart/export-data.js"></script>
@@ -142,6 +146,7 @@
 <script src="<?= base_url()?>assets/global/vendor/icheck/icheck.min.js"></script>
 <script src="<?= base_url()?>assets/global/js/Plugin/icheck.js"></script>
 
+
 <script>
   var myLine = [], lineChart = []; 
   var mychart = [];
@@ -149,16 +154,12 @@
   $( document ).ready(function() {
     $(".dropdown-menu-right").click(function(e){
       e.stopPropagation();
-    })
-    // $("#searchState").click(function(e){
-    //   if(this.checked){
-    //     $(".search-date").removeAttr('disabled');
-    //   } else {
-    //     $(".search-date").attr('disabled','disabled');
-    //   }
-    // });
-    $("#checkbox-search").change(function(e){
-      console.log('changed');
+    })    
+    $('input').on('ifChecked', function(event){
+      $(".search-date").removeAttr('disabled');
+    });
+    $('input').on('ifUnchecked', function(event){
+      $(".search-date").attr('disabled','disabled');
     });
     // Create the chart
     <?php foreach($listfield as $d){ ?>
