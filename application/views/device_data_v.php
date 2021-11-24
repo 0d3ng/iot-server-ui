@@ -75,7 +75,7 @@
                     <input type="checkbox" class="icheckbox-primary" id="searchState" name="search"
                               data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" onchange="alert('test');" <?= (empty($search))?"":"checked"; ?>/>
                       <label for="lastData">Search By Date</label>
-                      <button type="button" id="ceks" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;margin-top: -5px;">Apply</button>
+                      <button type="submit" id="ceks" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;margin-top: -5px;">Apply</button>
                   </div>
                 </div>
               </div>
@@ -107,6 +107,11 @@
       <div class="panel panel-primary panel-line">
         <div class="panel-heading">
           <h3 class="panel-title"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></h3>
+          <?php if( ($search) ){ ?>
+          <div class="panel-actions" style="text-align: right;">
+            <?= ($date_end != $date_str)?$date_str." <i>to</i> ".$date_end:$date_str; ?>
+          </div>
+          <?php } ?>
         </div>
         <div class="panel-body">
           <div id="chart_<?= $d ?>" ></div>
@@ -128,8 +133,7 @@
             foreach($listfield as $fd){           
               $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],(isset($itemdata[$fd]))?$itemdata[$fd]:''];            
             }
-          }
-          $lastdata = (array)$d;
+          }          
         } 
     ?>
 </div>
@@ -258,7 +262,9 @@
       }
     };
 
+    <?php if( (!$search) or $date_str == date("Y-m-d") or $date_end == date("Y-m-d")){ ?>
     MQTTconnect();
+    <?php } ?>
     //--------------------------------------------///  
   });
   

@@ -230,8 +230,21 @@ class Device extends CI_Controller {
         $query = array(
             'limit' => $this->limit_data
         );
+        if($data["search"]){
+            $query["date_start"] =  $data["date_str"];
+            $query["date_end"] =  $data["date_end"];
+        }
         $data['limit_data'] = $this->limit_data;
         $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+        if($data["search"]){
+            $query = array(
+                'limit' => 1
+            );
+            $last = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+            $data['lastdata'] = (!empty($last))?$last[0]:"";
+        } else {
+            $data['lastdata'] = (!empty($data['sensor']))?$data['sensor'][0]:"";
+        } 
         $data['sensor'] = array_reverse((array)$data['sensor']);
         // echo "<pre>";
         // print_r($data);
