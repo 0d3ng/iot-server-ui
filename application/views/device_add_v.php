@@ -23,17 +23,19 @@
                   <div class="col-md-6">
                     <div class="form-group form-material" id="selectGroup">
                       <label class="form-control-label" for="inputSelectGroup">Devices Group</label>
-                      <select class="form-control " id="inputSelectGroup" name="group">
+                      <select class="form-control " id="inputSelectGroup" name="group" required>
+                          <option value="">--- Select Group Device ---</option>
                           <?php foreach ($device_group as $d) { ?>
                           <option value="<?= $d->code_name?>"><?= $d->name?></option>
                           <?php } ?>
+                          <option value="other">Non-group Device</option>
                       </select>
                     </div>
 
                     <div class="form-group form-material ">
                       <label class="form-control-label" for="inputBasicFirstName">Device Name</label>
                       <input type="text" class="form-control" id="inputBasicName" name="name" value="<?= (empty($data->name))?'':$data->name;  ?>" 
-                        placeholder="Name" autocomplete="off" />
+                        placeholder="Name" autocomplete="off" required/>
                     </div>
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputPurpose">Purpose</label>
@@ -48,10 +50,59 @@
                       <label class="form-control-label" for="inputLocation">Location</label>
                       <input type="text" class="form-control" id="inputLocation" name="location" value="<?= (empty($data->location))?'':$data->location;  ?>"
                         placeholder="Location devices group" autocomplete="off" />
-                    </div>                                   
+                    </div> 
+                    
+
                   </div>
 
                   <div class="col-md-6">
+                  <div class="form-group form-material" id="commchannel" style="display:none">
+                      <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
+                      <div class="row">
+                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
+                          <label class="form-control-label float-left mt-3" for="inputLocation" style="width:100px;">HTTP POST</label>
+                          <div class="float-left">
+                            <label class="float-left pt-3" for="inputBasicOff">On</label>
+                            <div class="float-left ml-20 mr-20">
+                              <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery"
+                              />
+                            </div>
+                            <label class="pt-3" for="inputBasicOff">Off</label>
+                          </div>
+                        </div>
+
+                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
+                          <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">MQTT</label>
+                          <div class="float-left">
+                            <label class="float-left pt-3" for="inputMQTT">On</label>
+                            <div class="float-left ml-20 mr-20">
+                              <input type="checkbox" id="inputMQTT" name="mqtt" data-plugin="switchery"
+                              />
+                            </div>
+                            <label class="pt-3" for="inputMQTT">Off</label>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row" id="mqttform" style="display:none">
+                        <div class="form-group form-material col-xl-6 col-md-12">
+                          <label class="form-control-label" for="inputServer">Server</label>
+                          <input type="text" class="form-control" id="inputServer" name="server" value="" 
+                            placeholder="MQTT Server" autocomplete="off" />
+                        </div>
+                        <div class="form-group form-material col-xl-6 col-md-12">
+                          <label class="form-control-label" for="inputPort">Port</label>
+                          <input type="text" class="form-control" id="inputPort" name="port" value="" 
+                            placeholder="Port" autocomplete="off" />
+                        </div>
+                        <div class="form-group form-material col-md-12">
+                          <label class="form-control-label" for="inputTopic">Topic</label>
+                          <input type="text" class="form-control" id="inputTopic" name="topic" value="" 
+                            placeholder="Port" autocomplete="off" />
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="form-group form-material">
                       <label class="form-control-label font-size-16" for="inputLocation">Field</label>
                     </div>
@@ -145,15 +196,29 @@
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
     
-    $("#inputSelectType").change(function(){
-      var typeval = $("#inputSelectType").val();
-      if(typeval == 'group'){
-        $("#selectGroup").show();
+    $("#inputSelectGroup").change(function(){
+      var typeval = $("#inputSelectGroup").val();
+      if(typeval == 'other'){
+        $("#commchannel").removeAttr("style");
       } else {
-        $("#selectGroup").hide();
+        $("#commchannel").css("display","none");
       }
-
     });
+
+    $("#inputMQTT").change(function(){   // 1st
+      if($(this).prop("checked")){
+        $("#mqttform").removeAttr("style");
+        $("#inputTopic").attr("required", true);
+        $("#inputServer").attr("required", true);
+        $("#inputPort").attr("required", true);
+      } else {
+        $("#mqttform").css("display","none");
+        $("#inputTopic").removeAttr("required");
+        $("#inputServer").removeAttr("required");
+        $("#inputPort").removeAttr("required");
+      }
+    });
+
     function string_to_slug(str) {
       str = str.replace(/^\s+|\s+$/g, ""); // trim
       str = str.toLowerCase();

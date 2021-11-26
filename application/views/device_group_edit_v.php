@@ -115,7 +115,7 @@
                         </code>
                       </div>
 
-                      <div class="example mt-20 mb-2">
+                      <div class="example mt-20 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">NATS</label>
                         <div class="float-left">
                           <label class="float-left pt-3" for="inputBasicOff">On</label>
@@ -127,7 +127,7 @@
                         </div>
                       </div>
                       <div>
-                        <code class="p-10" style="display: block;">
+                        <code class="p-10" style="display: none;">
                           <b class="font-weight-700">Send your sensor through NATS using this subject </b><br/>
                           <span class="ml-10">message/sensor/[devices group code]</span> <br/>
                           <b class="font-weight-700">Example:</b><br/>
@@ -135,7 +135,7 @@
                         </code>
                       </div>
 
-                      <div class="example mt-20 mb-2">
+                      <div class="example mt-20 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">KAFKA <br/><span style="color:red; font-size: 10px;">*for image data</span> </label>
                         <div class="float-left">
                           <label class="float-left pt-3" for="inputBasicOff">On</label>
@@ -147,7 +147,7 @@
                         </div>
                       </div>
                       <div>
-                        <code class="p-10" style="display: block;">
+                        <code class="p-10" style="display: none;">
                           <b class="font-weight-700">Send your sensor through Kafka using this topic </b><br/>
                           <span class="ml-10">message-sensor-[devices group code]</span> <br/>
                           <b class="font-weight-700">Example:</b><br/>

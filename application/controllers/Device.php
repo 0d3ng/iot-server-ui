@@ -110,12 +110,12 @@ class Device extends CI_Controller {
             $data['device_group'] = array_merge($data['device_group'],$data_personal);
         } 
 		if($this->input->post('save')){  
-            $field = json_decode($this->input->post('field'));      	
+            $field = json_decode($this->input->post('field'));  
+            $group_code = $this->input->post('group');    	
             $input = array(
         		"name" => $this->input->post('name'),
 				"add_by" => $data['user_now']->id,
         	    "active" => true,
-                "group_code_name"=>$this->input->post('group'),
                 "information" => array(
                         "location" => $this->input->post('location'),
                         "detail" => $this->input->post('detail'),
@@ -127,7 +127,28 @@ class Device extends CI_Controller {
             // print_r($input);
             // echo "</pre>";
             // exit();
-        	$respo = $this->device_m->add($input);
+            if($group_code == "other"){
+                if(empty($this->input->post('http_post')))
+                    $http_post = false;
+                else 
+                    $http_post = true;
+                if(empty($this->input->post('mqtt')))
+                    $mqtt = false;
+                else 
+                    $mqtt = true;
+                $input["communication"] = array(
+                    "http-post" => $http_post,
+                    "mqtt" => $mqtt,
+                    "server" => $this->input->post('mqtt'),
+                    "port" => $this->input->post('port'),
+                    "topic" => $this->input->post('topic')
+                );
+                $respo = $this->device_m->add_other($input);
+            } else {
+                $input["group_code_name"]=$group_code;
+                $respo = $this->device_m->add($input);
+            } 
+        	
             if($respo->status){             
                 $data['success']=$respo->message;                  
             } else {                
@@ -171,19 +192,39 @@ class Device extends CI_Controller {
         } 
 		if($this->input->post('save')){    
             $iddevice = $this->input->post('id');
-            $field = json_decode($this->input->post('field'));          
+            $field = json_decode($this->input->post('field')); 
+            $group_code = $this->input->post('group');         
             $input = array(
                 "name" => $this->input->post('name'),
-                "updated_by" => $data['user_now']->id,
-                "group_code_name"=>$this->input->post('group'),
+                "updated_by" => $data['user_now']->id,                
                 "information" => array(
                         "location" => $this->input->post('location'),
                         "detail" => $this->input->post('detail'),
                         "purpose" => $this->input->post('purpose'),
                     ),
                 "field" => $field
-            ); 
-            $respo = $this->device_m->edit($iddevice,$input);
+            );
+            if($group_code == "other"){
+                if(empty($this->input->post('http_post')))
+                    $http_post = false;
+                else 
+                    $http_post = true;
+                if(empty($this->input->post('mqtt')))
+                    $mqtt = false;
+                else 
+                    $mqtt = true;
+                $input["communication"] = array(
+                    "http-post" => $http_post,
+                    "mqtt" => $mqtt,
+                    "server" => $this->input->post('mqtt'),
+                    "port" => $this->input->post('port'),
+                    "topic" => $this->input->post('topic')
+                );
+                $respo = $this->device_m->edit_other($iddevice,$input);
+            } else {
+                $input["group_code_name"]=$group_code;
+                $respo = $this->device_m->edit($iddevice,$input);
+            } 
             if($respo->status){             
                 $data['success']=$respo->message;                  
             } else {                
@@ -199,9 +240,13 @@ class Device extends CI_Controller {
 		$this->load->view('device_edit_v', $data);
 	}		
 
-	public function delete($id){       
-		if($id){  
-        	$respo = $this->device_m->del($id);
+	public function delete($id,$other=""){       
+		if($id){
+            if($other){
+                $respo = $this->device_m->del_other($id);
+            } else {
+        	    $respo = $this->device_m->del($id);
+            } 
             if($respo->status){             
 				redirect(base_url().'device/?alert=success') ; 			
             } else {                

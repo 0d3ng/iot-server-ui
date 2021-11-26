@@ -63,6 +63,24 @@ class device_m extends My_Model{
 		return $result;
 	}
 
+	function add_other($data){
+		$url = $this->config->item('url_node')."device/add/other/";				
+		return json_decode($this->sendPost($url,$data));
+	}
+
+	function edit_other($id,$data){
+		$data+=["id" => $id];
+		$url = $this->config->item('url_node')."device/edit/other/";				
+		return json_decode($this->sendPost($url,$data));
+	}
+	
+	function del_other($id){
+		$data = array(
+			"id" => $id
+		);
+		$url = $this->config->item('url_node')."device/delete/other/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 	
 }
 

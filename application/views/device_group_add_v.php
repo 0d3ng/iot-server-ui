@@ -85,7 +85,7 @@
                         </div>
                       </div>
 
-                      <div class="example mt-2 mb-2">
+                      <div class="example mt-2 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">NATS</label>
                         <div class="float-left">
                           <label class="float-left pt-3" for="inputBasicOff">On</label>
@@ -97,7 +97,7 @@
                         </div>
                       </div>
 
-                      <div class="example mt-2 mb-2">
+                      <div class="example mt-2 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">KAFKA <br/><span style="color:red; font-size: 10px;">*for image data</span> </label>
                         <div class="float-left">
                           <label class="float-left pt-3" for="inputBasicOff">On</label>
