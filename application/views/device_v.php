@@ -27,6 +27,7 @@
                       <?php foreach ($device_group as $d) { ?>
                       <option value="<?= $d->code_name; ?>" <?= ($type == $d->code_name)?'selected':'' ?> ><?= $d->name?></option>
                       <?php } ?>
+                      <option value="other" <?= ($type == "other")?'selected':'' ?> >Non-group Device</option>
                   </select>
                 </div>
                 <div class="form-group form-material col-4">
@@ -75,7 +76,7 @@
               <tr>
                 <td><?= $d->name?></td>
                 <td><?= $d->device_code?></td>
-                <td><?= ($d->group_code_name=="other")?"non-group device":$device_group[$d->group_code_name]->name?></td>
+                <td><?= ( empty($d->group_code_name) )?"non-group device":$device_group[$d->group_code_name]->name?></td>
                 <td><?= $d->information->location; ?></td>
                 <td><?= $d->information->purpose; ?></td>
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
@@ -86,7 +87,7 @@
                     data-toggle="tooltip" data-original-title="Show Table View"><i class="icon md-grid" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edit/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>device/delete/<?= $d->id; ?><?= ($d->group_code_name=="other")?"/true/":""; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                  <a href="<?= base_url()?>device/delete/<?= $d->id; ?><?= ( empty($d->group_code_name) )?"/true/":""; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
                 </td>
               </tr>

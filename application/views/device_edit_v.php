@@ -12,8 +12,7 @@
   <div class="row row-lg">
     <div class="col-md-12">
       <div class="panel">
-        <div class="panel-body container-fluid">
-        
+        <div class="panel-body container-fluid">        
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
             <h4 class="example-title">Form Update Device</h4>
@@ -35,6 +34,7 @@
                           ?>
                           <option value="<?= $d->code_name?>"  <?= ($d->code_name == $data->group_code_name)?'selected':'' ?> ><?= $d->name?></option>
                           <?php } ?>
+                          <option value="other" <?= (empty($data->group_code_name))?'selected':'' ?> >Non-group Device</option>
                       </select>
                     </div>
                     <div class="form-group form-material ">
@@ -59,6 +59,53 @@
                   </div>
 
                   <div class="col-md-6">
+                  <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name))?'display:none':'' ?>">
+                      <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
+                      <div class="row">
+                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
+                          <label class="form-control-label float-left mt-3" for="inputLocation" style="width:100px;">HTTP POST</label>
+                          <div class="float-left">
+                            <label class="float-left pt-3" for="inputBasicOff">On</label>
+                            <div class="float-left ml-20 mr-20">
+                              <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery" 
+                              <?= ($data->communication->{'http-post'})?'checked':'' ?> />
+                            </div>
+                            <label class="pt-3" for="inputBasicOff">Off</label>
+                          </div>
+                        </div>
+
+                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
+                          <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">MQTT</label>
+                          <div class="float-left">
+                            <label class="float-left pt-3" for="inputMQTT">On</label>
+                            <div class="float-left ml-20 mr-20">
+                              <input type="checkbox" id="inputMQTT" name="mqtt" data-plugin="switchery" 
+                              <?= ($data->communication->{'mqtt'})?'checked':'' ?>/>
+                            </div>
+                            <label class="pt-3" for="inputMQTT">Off</label>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row" id="mqttform" style="<?= ($data->communication->{'mqtt'})?'':'display:none' ?>">
+                        <div class="form-group form-material col-xl-6 col-md-12">
+                          <label class="form-control-label" for="inputServer">Server</label>
+                          <input type="text" class="form-control" id="inputServer" name="server" value="<?= $data->communication->{'server'} ?>" 
+                            placeholder="MQTT Server" autocomplete="off" />
+                        </div>
+                        <div class="form-group form-material col-xl-6 col-md-12">
+                          <label class="form-control-label" for="inputPort">Port</label>
+                          <input type="text" class="form-control" id="inputPort" name="port" value="<?= $data->communication->{'port'} ?>" 
+                            placeholder="Port" autocomplete="off" />
+                        </div>
+                        <div class="form-group form-material col-md-12">
+                          <label class="form-control-label" for="inputTopic">Topic</label>
+                          <input type="text" class="form-control" id="inputTopic" name="topic" value="<?= $data->communication->{'topic'} ?>" 
+                            placeholder="Port" autocomplete="off" />
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div class="form-group form-material">
                       <label class="form-control-label font-size-16" for="inputLocation">Field</label>
                     </div>
@@ -177,15 +224,29 @@
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
     
-    $("#inputSelectType").change(function(){
-      var typeval = $("#inputSelectType").val();
-      if(typeval == 'group'){
-        $("#selectGroup").show();
+    $("#inputSelectGroup").change(function(){
+      var typeval = $("#inputSelectGroup").val();
+      if(typeval == 'other'){
+        $("#commchannel").removeAttr("style");
       } else {
-        $("#selectGroup").hide();
+        $("#commchannel").css("display","none");
       }
-
     });
+
+    $("#inputMQTT").change(function(){   // 1st
+      if($(this).prop("checked")){
+        $("#mqttform").removeAttr("style");
+        $("#inputTopic").attr("required", true);
+        $("#inputServer").attr("required", true);
+        $("#inputPort").attr("required", true);
+      } else {
+        $("#mqttform").css("display","none");
+        $("#inputTopic").removeAttr("required");
+        $("#inputServer").removeAttr("required");
+        $("#inputPort").removeAttr("required");
+      }
+    });
+
     function string_to_slug(str) {
       str = str.replace(/^\s+|\s+$/g, ""); // trim
       str = str.toLowerCase();

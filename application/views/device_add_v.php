@@ -56,7 +56,7 @@
                   </div>
 
                   <div class="col-md-6">
-                  <div class="form-group form-material" id="commchannel" style="display:none">
+                    <div class="form-group form-material" id="commchannel" style="display:none">
                       <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
                       <div class="row">
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">

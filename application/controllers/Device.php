@@ -64,10 +64,22 @@ class Device extends CI_Controller {
             $device_groupcode = array(
                 '$in' => $device_groupcode
             );
+            $or = array();
+            $or[] = array("group_code_name" =>$device_groupcode);
+            $or[] = array("add_by" => $data['user_now']->id);
+            $query = array(
+                '$or' => $or
+            );
+        } else if($type == "other"){            
+            $query = array(
+                "add_by" => $data['user_now']->id
+            );
         } else {
-            $device_groupcode = $type;
+            $query = array(
+                "group_code_name" =>$type
+            );
         }
-        $data["data"] =  $this->device_m->search(array("group_code_name"=>$device_groupcode))->data;
+        $data["data"] =  $this->device_m->search($query)->data;
         $data['type'] = $type;
   //       echo "<pre>";
   //       print_r($device_groupcode);
@@ -139,7 +151,7 @@ class Device extends CI_Controller {
                 $input["communication"] = array(
                     "http-post" => $http_post,
                     "mqtt" => $mqtt,
-                    "server" => $this->input->post('mqtt'),
+                    "server" => $this->input->post('server'),
                     "port" => $this->input->post('port'),
                     "topic" => $this->input->post('topic')
                 );
@@ -216,7 +228,7 @@ class Device extends CI_Controller {
                 $input["communication"] = array(
                     "http-post" => $http_post,
                     "mqtt" => $mqtt,
-                    "server" => $this->input->post('mqtt'),
+                    "server" => $this->input->post('server'),
                     "port" => $this->input->post('port'),
                     "topic" => $this->input->post('topic')
                 );
