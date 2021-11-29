@@ -27,8 +27,10 @@
             <strong>Location :</strong> <?= $data->information->location; ?></li>
           <li>
             <strong>Purpose :</strong> <?= $data->information->purpose; ?></li>
+          <?php if(!empty($group)){ ?>
           <li>
             <strong>Devices Group :</strong> <?= $group->name; ?></li>
+          <?php } ?>
           <li>
             <strong>Detail Infomation :</strong> <?= $data->information->detail; ?></li>
         </ul>

@@ -27,8 +27,10 @@
             <strong>Location :</strong> <?= $data->information->location; ?></li>
           <li>
             <strong>Purpose :</strong> <?= $data->information->purpose; ?></li>
+          <?php if(!empty($group)){ ?>
           <li>
             <strong>Devices Group :</strong> <?= $group->name; ?></li>
+          <?php } ?>
           <li>
             <strong>Detail Infomation :</strong> <?= $data->information->detail; ?></li>
         </ul>
@@ -130,8 +132,15 @@
         foreach($sensor as $d){
           $itemdata = (array)$d;
             if(!empty($itemdata)){
-            foreach($listfield as $fd){           
-              $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],(isset($itemdata[$fd]))?$itemdata[$fd]:''];            
+            foreach($listfield as $fd){    
+              if(!isset($itemdata[$fd])){
+                $values = '';
+              } else if(!is_numeric($itemdata[$fd])){
+                $values = 0;
+              } else {
+                $values = $itemdata[$fd];
+              }       
+              $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],$values];            
             }
           }          
         } 
@@ -217,7 +226,8 @@
         }]
       });
     <?php } ?>
-
+    
+    <?php if(!empty($group)){ ?>
     //--------------------------------------------///
     //////MQTT SETTING/////
     var mqtt;
@@ -264,6 +274,8 @@
 
     <?php if( (!$search) or $date_str == date("Y-m-d") or $date_end == date("Y-m-d")){ ?>
     MQTTconnect();
+    <?php } ?>
+    
     <?php } ?>
     //--------------------------------------------///  
   });

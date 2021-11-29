@@ -274,8 +274,12 @@ class Device extends CI_Controller {
         $data['error']='';
         $data['title']= 'Device Data';       
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
-        $data['data'] = $this->device_m->get_detail($id)->data; 
-        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
+        $data['data'] = $this->device_m->get_detail($id)->data;
+        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name);
+        if(!$data['group']->status)
+            $data['group'] = [];
+        else
+            $data['group'] = $data['group']->data;
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");
         $data["date_end"] = date("Y-m-d");
@@ -333,7 +337,11 @@ class Device extends CI_Controller {
         $data['title']= 'Device Data - Table View';       
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
         $data['data'] = $this->device_m->get_detail($id)->data; 
-        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name)->data;  
+        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name);  
+        if(!$data['group']->status)
+            $data['group'] = [];
+        else
+            $data['group'] = $data['group']->data;
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");
         $data["date_end"] = date("Y-m-d");
@@ -342,7 +350,6 @@ class Device extends CI_Controller {
         if($this->input->get('end'))
             $data["date_end"] = $this->input->get('end');
         // echo "<pre>";
-        // print_r($query);
         // print_r($data);
         // echo "</pre>";
         // exit();

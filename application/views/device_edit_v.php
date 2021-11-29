@@ -34,7 +34,7 @@
                           ?>
                           <option value="<?= $d->code_name?>"  <?= ($d->code_name == $data->group_code_name)?'selected':'' ?> ><?= $d->name?></option>
                           <?php } ?>
-                          <option value="other" <?= (empty($data->group_code_name))?'selected':'' ?> >Non-group Device</option>
+                          <option value="other" <?= (empty($data->group_code_name) || ($data->group_code_name=="other"))?'selected':'' ?> >Non-group Device</option>
                       </select>
                     </div>
                     <div class="form-group form-material ">
@@ -59,7 +59,7 @@
                   </div>
 
                   <div class="col-md-6">
-                  <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name))?'display:none':'' ?>">
+                  <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name) && ($data->group_code_name!="other"))?'display:none':'' ?>">
                       <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
                       <div class="row">
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">
