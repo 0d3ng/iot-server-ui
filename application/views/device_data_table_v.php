@@ -127,7 +127,7 @@
 <script>
   $( document ).ready(function() {
     $('#sensordata').bootstrapTable({
-        url: "<?= base_url() ?>device/datatable/<?=  $data->device_code; ?>?start=<?= $date_str?>&end=<?= $date_str?>",
+        url: "<?= base_url() ?>device/datatable/<?=  $data->device_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
         pagination: true,
         sidePagination: 'server',
         pageSize: '25',
