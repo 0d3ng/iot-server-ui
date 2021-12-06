@@ -59,7 +59,8 @@
                   </div>
 
                   <div class="col-md-6">
-                  <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name) && ($data->group_code_name!="other"))?'display:none':'' ?>">
+                    <?php if(!empty($data->communication)){ ?>
+                    <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name) && ($data->group_code_name!="other"))?'display:none':'' ?>">
                       <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
                       <div class="row">
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">
@@ -105,6 +106,7 @@
                         </div>
                       </div>
                     </div>
+                    <?php } ?>
                     
                     <div class="form-group form-material">
                       <label class="form-control-label font-size-16" for="inputLocation">Field</label>
@@ -112,7 +114,6 @@
                     <div class="">
                       <div id="default-tree"></div>
                     </div>
-
                     <!-- <div class="row ml-20 mb-20 animation-slide-top" id="fieldDetail" style="display: none;">
                       <div class="col-md-10 p-10" style="color: #4f5584;background-color: rgba(197,202,233,.1); border-radius: .215rem;border: 1px solid #c5cae9;">
                         <div class="form-group form-material mb-0">
