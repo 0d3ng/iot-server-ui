@@ -1,9 +1,9 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Update Device</h1>
+  <h1 class="page-title">Update Schema</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>device">Devices</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
     <li class="breadcrumb-item active">Update</li>
   </ol>
 </div>
@@ -12,131 +12,43 @@
   <div class="row row-lg">
     <div class="col-md-12">
       <div class="panel">
-        <div class="panel-body container-fluid">        
+        <div class="panel-body container-fluid">
+        
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form Update Device</h4>
+            <h4 class="example-title">Form Update Schema</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group form-material">
-                      <label class="form-control-label" for="inputLocation">Device Code</label>
-                      <input type="text" class="form-control" id="inputLocation" name="location" value="<?= (empty($data->device_code))?'':$data->device_code;  ?>"
+                      <label class="form-control-label" for="inputLocation">Schema Code</label>
+                      <input type="text" class="form-control" id="inputLocation" name="location" value="<?= (empty($data->schema_code))?'':$data->schema_code;  ?>"
                         readonly/>
                     </div>
-                    <div class="form-group form-material" id="selectGroup">
-                      <label class="form-control-label" for="inputSelectGroup">Devices Group</label>
-                      <select class="form-control " id="inputSelectGroup" name="group">
-                          <?php foreach ($device_group as $d) { 
-                            if($d->code_name == $data->group_code_name)
-                              $curentgroup = $d;
-                          ?>
-                          <option value="<?= $d->code_name?>"  <?= ($d->code_name == $data->group_code_name)?'selected':'' ?> ><?= $d->name?></option>
-                          <?php } ?>
-                          <option value="other" <?= (empty($data->group_code_name) || ($data->group_code_name=="other"))?'selected':'' ?> >Non-group Device</option>
-                      </select>
-                    </div>
                     <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputBasicFirstName">Device Name</label>
+                      <label class="form-control-label" for="inputBasicFirstName">Schema Name</label>
                       <input type="text" class="form-control" id="inputBasicName" name="name" value="<?= (empty($data->name))?'':$data->name;  ?>" 
-                        placeholder="Name" autocomplete="off" />
+                        placeholder="Name" autocomplete="off" required/>
                     </div>
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputPurpose">Purpose</label>
                       <input type="text" class="form-control" id="inputPurpose" name="purpose" value="<?= (empty($data->information->purpose))?'':$data->information->purpose;  ?>"
-                        placeholder="Purpose devices group" autocomplete="off" />
+                        placeholder="Purpose schemas group" autocomplete="off" />
                     </div>
                     <div class="form-group form-material">
                         <label class="form-control-label">Detail Information</label>
                         <textarea class="form-control empty" rows="3" name="detail"><?= (empty($data->information->detail))?'':$data->information->detail;  ?></textarea>
                     </div>  
-                    <div class="form-group form-material">
-                      <label class="form-control-label" for="inputLocation">Location</label>
-                      <input type="text" class="form-control" id="inputLocation" name="location" value="<?= (empty($data->information->location))?'':$data->information->location;  ?>"
-                        placeholder="Location devices group" autocomplete="off" />
-                    </div>                                   
                   </div>
 
                   <div class="col-md-6">
-                    <?php if(!empty($data->communication)){ ?>
-                    <div class="form-group form-material" id="commchannel" style="<?= (!empty($data->group_code_name) && ($data->group_code_name!="other"))?'display:none':'' ?>">
-                      <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
-                      <div class="row">
-                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
-                          <label class="form-control-label float-left mt-3" for="inputLocation" style="width:100px;">HTTP POST</label>
-                          <div class="float-left">
-                            <label class="float-left pt-3" for="inputBasicOff">On</label>
-                            <div class="float-left ml-20 mr-20">
-                              <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery" 
-                              <?= ($data->communication->{'http-post'})?'checked':'' ?> />
-                            </div>
-                            <label class="pt-3" for="inputBasicOff">Off</label>
-                          </div>
-                        </div>
-
-                        <div class="example col-md-12 col-xl-6 mt-2 mb-2">
-                          <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">MQTT</label>
-                          <div class="float-left">
-                            <label class="float-left pt-3" for="inputMQTT">On</label>
-                            <div class="float-left ml-20 mr-20">
-                              <input type="checkbox" id="inputMQTT" name="mqtt" data-plugin="switchery" 
-                              <?= ($data->communication->{'mqtt'})?'checked':'' ?>/>
-                            </div>
-                            <label class="pt-3" for="inputMQTT">Off</label>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="row" id="mqttform" style="<?= ($data->communication->{'mqtt'})?'':'display:none' ?>">
-                        <div class="form-group form-material col-xl-6 col-md-12">
-                          <label class="form-control-label" for="inputServer">Server</label>
-                          <input type="text" class="form-control" id="inputServer" name="server" value="<?= $data->communication->{'server'} ?>" 
-                            placeholder="MQTT Server" autocomplete="off" />
-                        </div>
-                        <div class="form-group form-material col-xl-6 col-md-12">
-                          <label class="form-control-label" for="inputPort">Port</label>
-                          <input type="text" class="form-control" id="inputPort" name="port" value="<?= $data->communication->{'port'} ?>" 
-                            placeholder="Port" autocomplete="off" />
-                        </div>
-                        <div class="form-group form-material col-md-12">
-                          <label class="form-control-label" for="inputTopic">Topic</label>
-                          <input type="text" class="form-control" id="inputTopic" name="topic" value="<?= $data->communication->{'topic'} ?>" 
-                            placeholder="Port" autocomplete="off" />
-                        </div>
-                      </div>
-                    </div>
-                    <?php } ?>
-                    
                     <div class="form-group form-material">
                       <label class="form-control-label font-size-16" for="inputLocation">Field</label>
                     </div>
                     <div class="">
                       <div id="default-tree"></div>
                     </div>
-                    <!-- <div class="row ml-20 mb-20 animation-slide-top" id="fieldDetail" style="display: none;">
-                      <div class="col-md-10 p-10" style="color: #4f5584;background-color: rgba(197,202,233,.1); border-radius: .215rem;border: 1px solid #c5cae9;">
-                        <div class="form-group form-material mb-0">
-                          <label class="form-control-label font-size-14" for="inputLocation">Field Item</label>
-                          <input type="text" class="form-control mb-10" id="inputField" placeholder="field" autocomplete="off">
-                          <button type="button" id="btnAddChildField" class="btn btn-sm btn-info waves-effect waves-classic mb-5"><i class="md-plus"></i> Add New Child</button>
-                          <button type="button" id="btnUpdateField" class="btn btn-warning btn-sm waves-effect waves-classic mb-5"><i class="md-edit"></i> Update</button>
-                          <button type="button" id="btnDeleteChildField" class="btn btn-sm btn-danger waves-effect waves-classic mb-5"><i class="md-delete"></i> Delete Child</button>
-                          <button type="button" id="btnCloseFieldDetail" class="btn btn-sm btn-danger waves-effect waves-classic float-right mb-5"><i class="md-close"></i> Cancel</button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row ml-20 mb-20 animation-slide-bottom" id="fieldChild" style="display: none;">
-                      <div class="col-md-8 p-10" style="color: #4f5584;background-color: rgba(197,202,233,.1); border-radius: .215rem;border: 1px solid #c5cae9;">
-                        <div class="form-group form-material mb-0">
-                          <label class="form-control-label font-size-14" for="inputLocation">Add New Field : Parent of  <b id="parent_new"></b></label>
-                          <input type="text" class="form-control mb-10" id="inputChild" placeholder="field" autocomplete="off">
-                          <button type="button" id="btnAddField" class="btn btn-sm btn-info waves-effect waves-classic"><i class="md-plus"></i> Add Field</button>
-                          <button type="button" id="btnCloseFieldChild" class="btn btn-sm btn-danger waves-effect waves-classic float-right"><i class="md-close"></i> Cancel</button>
-                        </div>
-                      </div>
-                    </div> -->
 
                     <div class="row ml-20 mb-20 animation-slide-top" id="fieldDetail" style="display: none;">
                       <div class="col-md-10 p-10" style="color: #4f5584;background-color: rgba(197,202,233,.1); border-radius: .215rem;border: 1px solid #c5cae9;">
@@ -149,12 +61,17 @@
                               <input type="text" class="form-control " id="inputField">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12" id="formChildType" style="display: none;">
+                            <div class="col-md-4 col-sm-12" id="formChildType">
                               <select class="form-control" id="inputFieldType">
-                                <option value="">Default</option>
-                                <option value=" [image-file]">Image File</option>
+                                <option value=" [int]">Integer</option>
+                                <option value=" [float]">Float</option>
+                                <option value=" [str]">String</option>
+                                <option value=" [boolean]">Boolean</option>
+                                <option value=" [time]">Time(only)</option>
+                                <option value=" [date]">Date(only)</option>
+                                <option value=" [datetime]">Datetime</option>
                               </select>
-                              <label class="floating-label">Field Type</label>
+                              <label class="floating-label" for="inputFieldType">Field Type</label>
                             </div>
                           </div>
 
@@ -178,10 +95,15 @@
                               <input type="text" class="form-control empty" id="inputChild">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12" style="display: none;">
-                              <select class="form-control" id="inputChildType">
-                                <option value="">Default</option>
-                                <option value=" [image-file]">Image File</option>
+                            <div class="col-md-4 col-sm-12">
+                              <select class="form-control" id="inputChildType" required>
+                                <option value=" [int]">Integer</option>
+                                <option value=" [float]">Float</option>
+                                <option value=" [str]">String</option>
+                                <option value=" [boolean]">Boolean</option>
+                                <option value=" [time]">Time(only)</option>
+                                <option value=" [date]">Date(only)</option>
+                                <option value=" [datetime]">Datetime</option>
                               </select>
                               <label class="floating-label">Field Type</label>
                             </div>
@@ -192,15 +114,15 @@
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <div class="form-group form-material">
-                  <button type="submit" name="save" value="save" class="btn btn-primary">Update Device</button>&nbsp; &nbsp;
-                  <a href="<?= base_url();?>device"><button type="button" class="btn btn-default">Cancel</button></a>
-                  <input type="hidden" name="id" value="<?= $data->id ?>">
-                  <input type="hidden" name="field" id="listField">
+                    <button type="submit" name="save" value="save" class="btn btn-primary">Update Device</button>&nbsp; &nbsp;
+                    <a href="<?= base_url();?>schema"><button type="button" class="btn btn-default">Cancel</button></a>
+                    <input type="hidden" name="id" value="<?= $data->id ?>">
+                    <input type="hidden" name="field" id="listField">
                 </div>
+
               </form>
             </div>
           </div>
@@ -209,7 +131,6 @@
       </div>
     </div>
   </div>
-
 </div>
 <?php include("footer.php") ?>
 <script type="text/javascript">
@@ -268,18 +189,10 @@
       return str;
     }
     var currentNode;
-    var prefixType = ' [image-file]';
     function choosenode(node){
-      var fieldName = node.text;
-      if(fieldName.includes(prefixType)){
-        fieldName = fieldName.replace(prefixType,'');
-        $("#btnAddChildField").hide();
-        $("#inputFieldType").val(prefixType);
-      } else {
-        $("#inputFieldType").val('');
-        $("#btnAddChildField").show();
-      }
-
+      var items = node.text.split(" ");
+      var fieldName = items[0];
+      $("#inputFieldType").val(" "+items[1]);
       $("#fieldChild").hide();
       $("#fieldDetail").show();
       $("#inputField").val(fieldName);
@@ -288,11 +201,13 @@
         $("#inputField").prop('disabled', false);
         $("#formChildType").show();
         $("#btnDeleteChildField").show();
+        $("#btnAddChildField").hide();
       } else {
         $("#formChildType").hide();
         $("#btnUpdateField").hide();
         $("#btnDeleteChildField").hide();
         $("#inputField").prop('disabled', true);
+        $("#btnAddChildField").show();
       }
       currentNode = node;
     }
@@ -305,10 +220,9 @@
         nodes:[]
       }
     ];
-
+    
     var myList = JSON.parse('<?php echo JSON_encode($data->field);?>');
     
-
     function insertArray(listData,treeData){
       var itemData = [];
       var i;
@@ -329,12 +243,7 @@
             tags: indexing,
             nodes:[]
           };
-
-          if(itemListData == 'image'){
-            newData.text+= prefixType;
-          } else {
-            insertArray(itemListData,newData);
-          }
+          newData.text+= " ["+itemListData+"]";
           itemData.push(newData);
         } else {
           console.log("iteration - "+i+" from "+item);
@@ -355,7 +264,7 @@
     }
     insertArray(myList,myTree[0]);
 
-    function updateTree(){
+    function updateTree(){      
       var defaults = Plugin.getDefaults("treeview");
       defaults.nodeIcon = "icon md-nfc";
       defaults.levels = 5;
@@ -385,14 +294,13 @@
         var item = data[i]['text'];  
         console.log("iteration - "+i+" : "+item);      
         if(data[i]['nodes'].length  == 0){
-          if(item.includes(prefixType)){
-            fieldName = item.replace(prefixType,'');  
+            var items = item.split(" ");
+            var fieldName = items[0];
+            var fieldType = items[1];
+            fieldType = fieldType.replace("[",'').replace("]",'');
             var obj = {};
-            obj[fieldName] = 'image';
+            obj[fieldName] = fieldType;
             newArray.push(obj);
-          } else {
-            newArray.push(item);
-          }
         } else {
           var itemArray = saveArray(data[i]['nodes']);
           var obj = {};
@@ -511,22 +419,6 @@
         childdata = data[i].nodes;
         index.shift();
         updateArray(index,updateData,childdata)
-      }
-    }
-
-    function deleteArray(index,data){
-      for (i = 0; i < data.length; i++) {
-        if(data[i]['href'] == index[0])
-          break;
-      }
-      if(index.length == 1){
-        data.splice(i,1);
-        updateTree();
-        toastr.success('Delete field success', 'Success', {timeOut: 3000})
-      } else {
-        childdata = data[i].nodes;
-        index.shift();
-        deleteArray(index,childdata)
       }
     }
 

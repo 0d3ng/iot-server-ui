@@ -194,6 +194,12 @@
 	                        <span class="site-menu-title">Devices</span>
 	                    </a>
 	              	</li>
+                  <li class="site-menu-item has-sub">
+	                	<a class="animsition-link" href="<?= base_url()?>schema">
+	                        <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
+	                        <span class="site-menu-title">Schema</span>
+	                    </a>
+	              	</li>
 	              	<!-- <li class="site-menu-item has-sub">
 	                	<a class="animsition-link" href="<?= base_url()?>communication">
 	                        <i class="site-menu-icon md-cloud-outline" aria-hidden="true"></i>

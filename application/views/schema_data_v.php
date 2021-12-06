@@ -1,9 +1,9 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Devices Data</h1>
+  <h1 class="page-title">Schema Data</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>device">Devices</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
     <li class="breadcrumb-item active">Table Data</li>
   </ol>
   <div class="page-header-actions">
@@ -20,17 +20,11 @@
             <span class="pricing-currency"><i class="icon wb-memory" aria-hidden="true"></i></span>
             <span class="pricing-amount"><?= $data->name; ?></span>            
           </div>
-          <p class="px-30 font-size-16" ><strong>Device Code</strong>: <i><?= $data->device_code; ?></i></p>
+          <p class="px-30 font-size-16" ><strong>Device Code</strong>: <i><?= $data->schema_code; ?></i></p>
         </div>
         <ul class="pricing-features font-size-16" style="background-color: #fff;" >
           <li>
-            <strong>Location :</strong> <?= $data->information->location; ?></li>
-          <li>
             <strong>Purpose :</strong> <?= $data->information->purpose; ?></li>
-          <?php if(!empty($group)){ ?>
-          <li>
-            <strong>Devices Group :</strong> <?= $group->name; ?></li>
-          <?php } ?>
           <li>
             <strong>Detail Infomation :</strong> <?= $data->information->detail; ?></li>
         </ul>
@@ -103,6 +97,7 @@
                         <?php foreach($extract as $d){ ?>
                         <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
                         <?php } ?>
+                        <th data-field="action-form" style="white-space:nowrap;">ACTION</th>
                       </tr>
                   </thead>
                   </table>
@@ -127,7 +122,7 @@
 <script>
   $( document ).ready(function() {
     $('#sensordata').bootstrapTable({
-        url: "<?= base_url() ?>device/datatable/<?=  $data->device_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
+        url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
         pagination: true,
         sidePagination: 'server',
         pageSize: '25',

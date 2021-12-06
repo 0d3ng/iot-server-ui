@@ -20,7 +20,7 @@ class Device extends CI_Controller {
 		$data['error']='';
 		if($this->input->get('alert')=='success') $data['success']='Delete device successfully';	
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete device";	
-		$data['title']='Device Group List';
+		$data['title']='Device List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
         $device_groupcode = array();
 
