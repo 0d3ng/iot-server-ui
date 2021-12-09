@@ -73,6 +73,11 @@
       <div class="panel">
         <div class="panel-heading">
           <h3 class="panel-title">Sensor Data</h3>
+          <div class="panel-actions" style="text-align: right;">    
+              <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
+                <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data&nbsp;&nbsp; 
+              </button></a>
+          </div>
         </div>
         <div class="panel-body">
           <div class="col-md-12">
@@ -93,7 +98,7 @@
                   <table id="sensordata" data-mobile-responsive="true">
                   <thead>
                       <tr>
-                        <th data-field="date" style="white-space:nowrap;">DATE</th>
+                        <th data-field="date" style="white-space:nowrap;">DATE ADD</th>
                         <?php foreach($extract as $d){ ?>
                         <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
                         <?php } ?>
@@ -120,7 +125,24 @@
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
 <!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
 <script>
+  function del(link){
+    alertify.confirm('Do you continue to delete this schema?', 
+      function(){ 
+        location.replace(link);
+      },function(){ 
+    });
+  }
   $( document ).ready(function() {
+    // Override global options
+    toastr.options = {
+      positionClass: 'toast-top-center'
+    };
+    <?php if($success){ ?>
+      toastr.success('<?= $success; ?>', 'Success', {timeOut: 3000})
+    <?php }  
+    if($error){ ?>
+        toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
+    <?php } ?>
     $('#sensordata').bootstrapTable({
         url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
         pagination: true,

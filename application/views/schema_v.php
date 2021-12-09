@@ -68,7 +68,7 @@
   </div>
 </div>
 <?php include("footer.php") ?>
-<script type="text/javascript">
+<script type="text/javascript">  
   $( document ).ready(function() {
     // Override global options
     toastr.options = {
@@ -91,6 +91,5 @@
           
         });
     });
-
   });
 </script>

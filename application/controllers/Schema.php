@@ -9,6 +9,7 @@ class schema extends CI_Controller {
 		$this->load->model('group_m');
         $this->load->model('groupsensor_m');
 		$this->load->model('schema_m');
+		$this->load->model('schema_form_m');
         $this->limit_data = 1000;
         $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
@@ -199,9 +200,15 @@ class schema extends CI_Controller {
                 $data['error']=$respo->message;
             }                     
         }
-        $data['data'] = $this->schema_m->get_detail($id)->data;        
-		$data['id'] = $id;
-		$this->load->view('schema_edit_v', $data);
+        
+        $data['data'] = $this->schema_m->get_detail($id);       
+        if($data['data']->status){
+            $data['data'] = $data['data']->data;
+            $data['id'] = $id;
+		    $this->load->view('schema_edit_v', $data);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
 	}		
 
 	public function delete($id,$other=""){       
@@ -220,13 +227,33 @@ class schema extends CI_Controller {
 		redirect(base_url().'schema/?alert=failed') ; 			
 	}	
 
-    public function data($id){       
+    public function data($id,$action="",$data_id=""){       
+        $schema = $this->schema_m->get_detail($id);
+        if(!$schema->status){
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        } else if(empty($action)){
+            $this->list($id,$schema->data);
+        } else if($action=="add"){
+            $this->data_add($id,$schema->data);
+        } else if($action=="edit"){
+            $this->data_edit($id,$schema->data,$data_id);
+        } else if($action=="delete"){
+            $this->data_delete($id,$schema->data,$data_id);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        } 
+
+    }   
+
+    function list($id,$schema){       
         $data=array();
         $data['success']='';
         $data['error']='';
-        $data['title']= 'schema Data - Table View';       
+        $data['title']= 'Schema Data '.$id.' - Table View';       
+		if($this->input->get('alert')=='success') $data['success']='Delete data successfully';	
+		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data";	
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
-        $data['data'] = $this->schema_m->get_detail($id)->data; 
+        $data['data'] = $schema; 
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");
         $data["date_end"] = date("Y-m-d");
@@ -235,7 +262,125 @@ class schema extends CI_Controller {
         if($this->input->get('end'))
             $data["date_end"] = $this->input->get('end');
         $this->load->view('schema_data_v', $data);
-    }   
+    }
+
+    function data_add($id,$schema){       
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+        $data['title']= 'Schema Data '.$id.' - Add New Data';       
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+		if($this->input->post('save')){    
+            $input = $this->input->post();
+            $input = $this->schema_form_m->save_form($schema->field,$input);            
+            $respo = $this->schema_m->add_data($id,$input);
+            if($respo->status){             
+                $data['success']=$respo->message;                  
+            } else {                
+                $data['error']=$respo->message;
+            }                     
+        }
+		$data['id'] = $id;
+        $form=array();
+        $form[0] = array();
+        $form[1] = array();
+        for ($i = 0; $i < count($schema->field); $i++) {
+            $item = $schema->field[$i];
+            foreach($item as $key=>$value) {
+                if($value == "datetime"){
+                    $item_form = $this->schema_form_m->form_datetime($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),date("Y-m-d H:i:s"));
+                } else if($value == "date"){
+                    $item_form = $this->schema_form_m->form_date($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),date("Y-m-d"));
+                } else if($value == "time"){
+                    $item_form = $this->schema_form_m->form_time($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),date("H:i:s"));
+                } else if($value == "int"){
+                    $item_form = $this->schema_form_m->form_int($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),"");
+                } else if($value == "float"){
+                    $item_form = $this->schema_form_m->form_float($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),"");
+                } else if($value == "boolean"){
+                    $item_form = $this->schema_form_m->form_boolean($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),"");
+                } else {
+                    $item_form = $this->schema_form_m->form_string($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),"");
+                }
+                if($i < ceil(count($schema->field) / 2) ){
+                    $form[0][] = $item_form;
+                }else {
+                    $form[1][] = $item_form;
+                }
+            }
+        }
+        $data['form'] = $form;
+        
+		$this->load->view('schema_data_add_v', $data);
+	}		
+    
+    public function data_edit($id,$schema,$data_id){       
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+		$data['title']= 'Schema Data '.$id.' - Add New Data';		
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+		if($this->input->post('save')){    
+            $input = $this->input->post();
+            $input = $this->schema_form_m->save_form($schema->field,$input);   
+            $respo = $this->schema_m->edit_data($id,$data_id,$input);
+            if($respo->status){             
+                $data['success']=$respo->message;                  
+            } else {                
+                $data['error']=$respo->message;
+            }                     
+        }
+        $data['data'] = $this->schema_m->get_detail_data($id,$data_id);       
+        if($data['data']->status){
+            $data['data'] = $data['data']->data;
+            $data['id'] = $id;
+            $form=array();
+            $form[0] = array();
+            $form[1] = array();
+            for ($i = 0; $i < count($schema->field); $i++) {
+                $item = $schema->field[$i];
+                foreach($item as $key=>$value) {
+                    $dataval = !(empty($data['data']->{$key}))?$data['data']->{$key}:"";
+                    if($value == "datetime"){
+                        $item_form = $this->schema_form_m->form_datetime($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else if($value == "date"){
+                        $item_form = $this->schema_form_m->form_date($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else if($value == "time"){
+                        $item_form = $this->schema_form_m->form_time($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else if($value == "int"){
+                        $item_form = $this->schema_form_m->form_int($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else if($value == "float"){
+                        $item_form = $this->schema_form_m->form_float($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else if($value == "boolean"){
+                        $item_form = $this->schema_form_m->form_boolean($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    } else {
+                        $item_form = $this->schema_form_m->form_string($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                    }
+                    if($i < ceil(count($schema->field) / 2) ){
+                        $form[0][] = $item_form;
+                    }else {
+                        $form[1][] = $item_form;
+                    }
+                }
+            }
+            $data['form'] = $form;
+		    $this->load->view('schema_data_edit_v', $data);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
+	}	
+
+    public function data_delete($id,$schema,$data_id){       
+		if($id){
+            $respo = $this->schema_m->del_data($id,$data_id);
+            if($respo->status){             
+				redirect(base_url().'schema/data/'.$id.'/?alert=success') ; 			
+            } else {                
+				redirect(base_url().'schema/data/'.$id.'/?alert=failed') ; 			
+            }                       
+        }        
+		redirect(base_url().'schema/data/'.$id.'/?alert=failed') ; 			
+	}	
 
     function extract($list,$prefix=''){
         $return = array();
@@ -284,11 +429,11 @@ class schema extends CI_Controller {
                 }
                 $item[$k] = $val;
             }
-            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server_unix"}/1000);
+            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
             $item["action-form"] = '
-                <a href="<?= base_url()?>schema/action/'.$id.'/edit/'.$d->id.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                <a href="'.base_url().'schema/data/'.$id.'/edit/'.$d->id.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                 data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                <a href="<?= base_url()?>schema/action/'.$id.'/delete/'.$d->id.'" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                <a onclick="del('."'".base_url().'schema/data/'.$id.'/delete/'.$d->id."'".')" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                 data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
             ';
             $data[] = $item;
@@ -311,6 +456,8 @@ class schema extends CI_Controller {
         }
         return $value;
     }
+
+
 
 }
 

@@ -63,22 +63,30 @@ class schema_m extends My_Model{
 		return $result;
 	}
 
-	function add_other($data){
-		$url = $this->config->item('url_node')."schema/add/other/";				
+	function add_data($schema,$data){
+		$url = $this->config->item('url_node')."schema/data/".$schema."/add/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 
-	function edit_other($id,$data){
+	function edit_data($schema,$id,$data){
 		$data+=["id" => $id];
-		$url = $this->config->item('url_node')."schema/edit/other/";				
+		$url = $this->config->item('url_node')."schema/data/".$schema."/edit/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 	
-	function del_other($id){
+	function del_data($schema,$id){
 		$data = array(
 			"id" => $id
 		);
-		$url = $this->config->item('url_node')."schema/delete/other/";				
+		$url = $this->config->item('url_node')."schema/data/".$schema."/delete/";				
+		return json_decode($this->sendPost($url,$data));
+	}
+
+	function get_detail_data($schema,$id){
+		$data = array(
+			"id" => $id
+		);
+		$url = $this->config->item('url_node')."schema/data/".$schema."/detail/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 	

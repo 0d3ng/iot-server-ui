@@ -59,6 +59,7 @@
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-treeview/bootstrap-treeview.css">
 
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.css">
+        <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/clockpicker/clockpicker.css">
 
     
     <!-- Fonts -->

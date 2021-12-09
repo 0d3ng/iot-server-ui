@@ -56,9 +56,9 @@ p {
 </style>
 </head>
 <body>
-	<div id="container">
+	<div id="container" style="padding-bottom: 20px;">
 		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
+		<span style=" margin-left: 15px; font-size: 15px;"><?php echo $message; ?></span>
 	</div>
 </body>
 </html>
