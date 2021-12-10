@@ -121,7 +121,7 @@
                               <input type="text" class="form-control " id="inputField">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12" id="formChildType">
+                            <div class="col-md-4 col-sm-12" id="formChildType" style="display:none">
                               <select class="form-control" id="inputFieldType">
                                 <option value="">Default</option>
                                 <option value=" [image-file]">Image File</option>
@@ -150,7 +150,7 @@
                               <input type="text" class="form-control empty" id="inputChild">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12">
+                            <div class="col-md-4 col-sm-12" style="display:none">
                               <select class="form-control" id="inputChildType">
                                 <option value="">Default</option>
                                 <option value=" [image-file]">Image File</option>
@@ -257,10 +257,10 @@
       if(node.text != "List Field"){
         $("#btnUpdateField").show();
         $("#inputField").prop('disabled', false);
-        $("#formChildType").show();
+        // $("#formChildType").show();
         $("#btnDeleteChildField").show();
       } else {
-        $("#formChildType").hide();
+        // $("#formChildType").hide();
         $("#btnUpdateField").hide();
         $("#btnDeleteChildField").hide();
         $("#inputField").prop('disabled', true);

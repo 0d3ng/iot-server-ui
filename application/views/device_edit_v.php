@@ -138,7 +138,7 @@
                       </div>
                     </div> -->
 
-                    <div class="row ml-20 mb-20 animation-slide-top" id="fieldDetail" style="display: none;">
+                    <div class="row ml-20 mb-20 animation-slide-top" id="fieldDetail" style="display:none;">
                       <div class="col-md-10 p-10" style="color: #4f5584;background-color: rgba(197,202,233,.1); border-radius: .215rem;border: 1px solid #c5cae9;">
                         <div class="form-group form-material mb-0">
                           <label class="form-control-label font-size-14" for="inputLocation">Field Item</label>
@@ -149,7 +149,7 @@
                               <input type="text" class="form-control " id="inputField">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12" id="formChildType" style="display: none;">
+                            <div class="col-md-4 col-sm-12" id="formChildType" style="display: none !important;">
                               <select class="form-control" id="inputFieldType">
                                 <option value="">Default</option>
                                 <option value=" [image-file]">Image File</option>
@@ -178,7 +178,7 @@
                               <input type="text" class="form-control empty" id="inputChild">
                               <label class="floating-label">Field Name</label>
                             </div>
-                            <div class="col-md-4 col-sm-12" style="display: none;">
+                            <div class="col-md-4 col-sm-12" style="display: none !important;">
                               <select class="form-control" id="inputChildType">
                                 <option value="">Default</option>
                                 <option value=" [image-file]">Image File</option>
@@ -286,10 +286,10 @@
       if(node.text != "List Field"){
         $("#btnUpdateField").show();
         $("#inputField").prop('disabled', false);
-        $("#formChildType").show();
+        // $("#formChildType").show();
         $("#btnDeleteChildField").show();
       } else {
-        $("#formChildType").hide();
+        // $("#formChildType").hide();
         $("#btnUpdateField").hide();
         $("#btnDeleteChildField").hide();
         $("#inputField").prop('disabled', true);
