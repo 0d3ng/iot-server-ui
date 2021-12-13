@@ -129,20 +129,22 @@
         foreach($listfield as $d){
           $sensor_data[$d] = array();
         }
-        foreach($sensor as $d){
-          $itemdata = (array)$d;
-            if(!empty($itemdata)){
-            foreach($listfield as $fd){    
-              if(!isset($itemdata[$fd])){
-                $values = '';
-              } else if(!is_numeric($itemdata[$fd])){
-                $values = 0;
-              } else {
-                $values = $itemdata[$fd];
-              }       
-              $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],$values];            
-            }
-          }          
+        if($sensor){
+          foreach($sensor as $d){
+            $itemdata = (array)$d;
+              if(!empty($itemdata)){
+              foreach($listfield as $fd){    
+                if(!isset($itemdata[$fd])){
+                  $values = '';
+                } else if(!is_numeric($itemdata[$fd])){
+                  $values = 0;
+                } else {
+                  $values = $itemdata[$fd];
+                }       
+                $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],$values];            
+              }
+            }          
+          }
         } 
     ?>
 </div>

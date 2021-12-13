@@ -305,8 +305,9 @@ class Device extends CI_Controller {
             $data['lastdata'] = (!empty($last))?$last[0]:"";
         } else {
             $data['lastdata'] = (!empty($data['sensor']))?$data['sensor'][0]:"";
-        } 
-        $data['sensor'] = array_reverse((array)$data['sensor']);
+        }
+        if(!empty($data['sensor'])) 
+            $data['sensor'] = array_reverse((array)$data['sensor']);
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
