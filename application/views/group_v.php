@@ -14,7 +14,8 @@
 
 <div class="page-content">
   <div class="row row-lg">
-    <?php foreach ($data as $d) {
+    <?php if(!empty($data))
+            foreach ($data as $d) {
             $status = ''; 
             foreach($d->member as $v){
               if($v->user_id == $user_now->id){

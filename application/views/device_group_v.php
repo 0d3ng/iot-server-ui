@@ -15,7 +15,8 @@
 <div class="page-content">
   <h2>Personal</h2>
   <div class="row row-lg">
-    <?php foreach ($data_personal as $d) {
+    <?php if(!empty($data_personal))
+          foreach ($data_personal as $d) {
             $total_dv = $device_m->search_count(array('group_code_name'=>$d->code_name))->data;
       ?>
       <div class="col-xl-3 col-lg-4 col-md-6">
@@ -89,7 +90,8 @@
   <br/>
   <h2> User Groups</h2>
   <div class="row row-lg">
-    <?php foreach ($data_group as $d) {
+    <?php if(!empty($data_group))
+          foreach ($data_group as $d) {
             
             $total_dv = $device_m->search_count(array('group_code_name'=>$d->code_name))->data;
 

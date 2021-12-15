@@ -72,7 +72,8 @@
               </tr>
             </tfoot>
             <tbody>
-              <?php foreach($data as $d){ ?>
+              <?php if(!empty($data))
+                    foreach($data as $d){ ?>
               <tr>
                 <td><?= $d->name?></td>
                 <td><?= $d->device_code?></td>

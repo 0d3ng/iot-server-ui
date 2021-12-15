@@ -83,7 +83,12 @@ class schema extends CI_Controller {
         $query = array(
             "add_by" => $data['user_now']->id
         );
-        $data["data"] =  $this->schema_m->search($query)->data;
+        $data["data"] =  $this->schema_m->search($query);
+        if($data["data"]->status){
+            $data["data"] = $data["data"]->data;
+        } else {
+            $data['data'] = array();
+        }
         // $data['type'] = $type;
         // echo "<pre>";
         // print_r($data);

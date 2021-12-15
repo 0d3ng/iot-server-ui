@@ -44,20 +44,22 @@ class Device extends CI_Controller {
         $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
         if($data_group->status){
             $data_group = $data_group->data;
-            foreach ($data_group as $key) {
-                $device_groupcode[] = $key->code_name;
-                $data['device_group'][$key->code_name] = $key;
-            }
+            if(!empty($data_group))
+                foreach ($data_group as $key) {
+                    $device_groupcode[] = $key->code_name;
+                    $data['device_group'][$key->code_name] = $key;
+                }
         }
         //end get device from group///
         ////get device from personal ///
         $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
         if($data_personal->status){
             $data_personal = $data_personal->data;
-            foreach ($data_personal as $key) {
-                $device_groupcode[] = $key->code_name;
-                $data['device_group'][$key->code_name] = $key;
-            }
+            if(!empty($data_group))
+                foreach ($data_personal as $key) {
+                    $device_groupcode[] = $key->code_name;
+                    $data['device_group'][$key->code_name] = $key;
+                }
         }            
         ////end get device from personal ///
         if($type == "all"){            
