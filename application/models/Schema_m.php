@@ -69,7 +69,11 @@ class schema_m extends My_Model{
 	}
 
 	function edit_data($schema,$id,$data){
-		$data+=["id" => $id];
+		if(isset($data["id"])){
+			$data+=["_id" => $id];
+		} else {
+			$data+=["id" => $id];
+		}
 		$url = $this->config->item('url_node')."schema/data/".$schema."/edit/";				
 		return json_decode($this->sendPost($url,$data));
 	}

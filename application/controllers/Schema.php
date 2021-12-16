@@ -435,10 +435,14 @@ class schema extends CI_Controller {
                 $item[$k] = $val;
             }
             $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+            if(!empty($d->_id))
+                $iddata = $d->_id;
+            else
+                $iddata = $d->id;
             $item["action-form"] = '
-                <a href="'.base_url().'schema/data/'.$id.'/edit/'.$d->id.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                <a href="'.base_url().'schema/data/'.$id.'/edit/'.$iddata.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                 data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                <a onclick="del('."'".base_url().'schema/data/'.$id.'/delete/'.$d->id."'".')" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                <a onclick="del('."'".base_url().'schema/data/'.$id.'/delete/'.$iddata."'".')" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                 data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
             ';
             $data[] = $item;
