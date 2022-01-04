@@ -72,8 +72,9 @@
                   </div>
                 </div>
                 <div class="form-group form-material">
-                  <button type="submit" name="save" value="save" class="btn btn-primary">Add New Combination Function</button>&nbsp; &nbsp;
+                  <button type="submit" name="save" value="save" class="btn btn-primary">Combination Function Update</button>&nbsp; &nbsp;
                   <a href="<?= base_url();?>combination"><button type="button" class="btn btn-default">Cancel</button></a>
+                  <input type="hidden" name="id" value="<?= $data->id ?>">
                   <input type="hidden" name="field" id="listField">
                 </div>
               </form>

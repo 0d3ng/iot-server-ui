@@ -268,7 +268,7 @@ class combination extends CI_Controller {
                     }    
                 }
             }
-            if($data["combi"]){                
+            if($data["combi"]){                     
                 $this->load->view('combi_edit_form_v', $data);
             }else{
                 $this->load->view('combi_add_form_v', $data);
