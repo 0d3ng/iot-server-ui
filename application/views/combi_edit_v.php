@@ -1,10 +1,10 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Add New Combiantion Function</h1>
+  <h1 class="page-title">Combiantion Function Update</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Combination</a></li>
-    <li class="breadcrumb-item active">Add</li>
+    <li class="breadcrumb-item active">Update</li>
   </ol>
 </div>
 
@@ -16,11 +16,16 @@
         
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form Add New Combiantion Function</h4>
+            <h4 class="example-title">Form Combiantion Function  Update</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">
                   <div class="col-md-6">
+                    <div class="form-group form-material">
+                      <label class="form-control-label" for="inputLocation">Combination Function Code</label>
+                      <input type="text" class="form-control" id="inputLocation" name="combicode" value="<?= (empty($data->combi_code))?'':$data->combi_code;  ?>"
+                        readonly/>
+                    </div>
                     <div class="form-group form-material ">
                       <label class="form-control-label" for="inputBasicFirstName">Combination Function Name</label>
                       <input type="text" class="form-control" id="inputBasicName" name="name" value="<?= (empty($data->name))?'':$data->name;  ?>" 
@@ -31,7 +36,7 @@
                       <select class="form-control " id="inputSchema" name="schema" required>
                           <option value="">--- Select Schema Target ---</option>
                           <?php foreach ($schema as $d) { ?>
-                          <option value="<?= $d->schema_code?>"><?= $d->name?> [<?= $d->schema_code?>]</option>
+                          <option value="<?= $d->schema_code?>" <?= ($d->schema_code==$data->schema_code)?"selected":""; ?> ><?= $d->name?> [<?= $d->schema_code?>]</option>
                           <?php } ?>
                       </select>
                     </div>
@@ -98,13 +103,14 @@
         var shcema = $("#inputSchema").val();
         $.ajax({
             type: 'post',
-            url: '<?= base_url()?>combination/schema/'+shcema,
+            url: '<?= base_url()?>combination/schema/'+shcema+"/<?= $data->combi_code ?>",
             data: {},
             success: function (result){
                 $("#form_schema").html(result);
             }
         });
     });    
+    $("#inputSchema").change();
   });
 
   var key = "";

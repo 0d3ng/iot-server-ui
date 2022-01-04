@@ -84,8 +84,7 @@ class combination extends CI_Controller {
             $input = array(
         		"name" => $this->input->post('name'),
         		"schema_code" => $this->input->post('schema'),
-				"add_by" => $data['user_now']->id,
-        	    "active" => true,
+				"add_by" => $data['user_now']->id,        	    
         	    "time_loop" => $this->input->post('time_loop'),
         	    "stream" => $this->input->post('stream'),
                 "information" => array(
@@ -110,19 +109,57 @@ class combination extends CI_Controller {
 		$data['error']='';
 		$data['title']= 'Combination Edit';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+        $query = array(
+            "add_by" => $data['user_now']->id
+        );
+        $data["schema"] =  $this->schema_m->search($query);
+        if($data["schema"]->status){
+            $data["schema"] = $data["schema"]->data;
+        }else{
+            $data["schema"] = [];
+        }
 		if($this->input->post('save')){    
             $idcombi = $this->input->post('id');
-            $field = json_decode($this->input->post('field')); 
-            $group_code = $this->input->post('group');         
+            
+            $schema = $this->schema_m->get_detail($this->input->post('schema'))->data;            
+            $field = array();
+            for ($i = 0; $i < count($schema->field); $i++) { 
+                $item = $schema->field[$i];
+                foreach($item as $key=>$value) {
+                    $items = array();
+                    if($this->input->post("inputcheck_".$key)){
+                        if($this->input->post("input_field_key") == $key){
+                            $items[$key] = "key";
+                        } else {
+                            $items[$key] = array(
+                                "data" => [$this->input->post($key."_device"),$this->input->post($key."_value_field"),$this->input->post($key."_key_field")],
+                                "option" => $this->input->post($key."_method"),
+                                "default" => $this->input->post($key."_default_val")
+                            );
+                        }
+                        array_push($field,$items);
+                    }
+                }
+            }
+            // echo "<pre>";
+            // print_r($schema);
+            // print_r($this->input->post());
+            // print_r($field);
+            // echo "</pre>";
+            // exit();                	
             $input = array(
-                "name" => $this->input->post('name'),
-                "updated_by" => $data['user_now']->id,                
+        		"name" => $this->input->post('name'),
+        		"schema_code" => $this->input->post('schema'),
+				"add_by" => $data['user_now']->id,        	    
+        	    "time_loop" => $this->input->post('time_loop'),
+        	    "stream" => $this->input->post('stream'),
                 "information" => array(
                         "detail" => $this->input->post('detail'),
                         "purpose" => $this->input->post('purpose'),
                     ),
                 "field" => $field
             );
+
             $respo = $this->combination_m->edit($idcombi,$input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
@@ -157,7 +194,7 @@ class combination extends CI_Controller {
 		redirect(base_url().'combination/?alert=failed') ; 			
 	}	
 
-    public function schema($code){       
+    public function schema($code,$idcombi=""){       
         $schema = $this->schema_m->get_detail($code);
         if($schema->status){
             $data = array();
@@ -213,7 +250,29 @@ class combination extends CI_Controller {
             }else{
                 $data["device"] = [];
             }
-            $this->load->view('combi_add_form_v', $data);
+            $data["combi"] = array();
+            if($idcombi){
+                $combi = $this->combination_m->get_detail($idcombi);
+                if($combi->status){
+                    $combi = $combi->data;
+                    for ($i = 0; $i < count($combi->field); $i++) { 
+                        $item = $combi->field[$i];
+                        foreach($item as $key=>$value) {                               
+                            $data["combi"][$key] = $value;
+                            if($value=="key"){
+                                continue;
+                            }                                                      
+                            $device_field = $this->device_m->get_detail($value->data[0])->data;                                                    
+                            $data["combi"][$key]->device_field = $this->extract($device_field->field);                            
+                        }                        
+                    }    
+                }
+            }
+            if($data["combi"]){                
+                $this->load->view('combi_edit_form_v', $data);
+            }else{
+                $this->load->view('combi_add_form_v', $data);
+            }
         }
     }
 

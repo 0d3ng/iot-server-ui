@@ -57,7 +57,7 @@
                           <!-- <input type="text" class="form-control mb-10" id="inputField" placeholder="field" autocomplete="off"> -->
 
                           <div class="form-group form-material mt-5 row" data-plugin="formMaterial">
-                            <div class="col-md-8 col-sm-12">
+                            <div class="col-md-8 col-sm-12" style="margin-bottom: 20px;">
                               <input type="text" class="form-control " id="inputField">
                               <label class="floating-label">Field Name</label>
                             </div>
@@ -91,7 +91,7 @@
                           <input type="text" class="form-control mb-10" id="inputChild" placeholder="field" autocomplete="off">
                            -->
                           <div class="form-group form-material mt-5 row" data-plugin="formMaterial">
-                            <div class="col-md-8 col-sm-12">
+                            <div class="col-md-8 col-sm-12" style="margin-bottom: 20px;">
                               <input type="text" class="form-control empty" id="inputChild">
                               <label class="floating-label">Field Name</label>
                             </div>
@@ -326,7 +326,7 @@
       $("#fieldDetail").hide();
       $("#inputField").val("");
       $("#fieldChild").show();
-      $("#inputChildType").val('');
+      $("#inputChildType").val(' [int]');
     });
 
     $("#btnCloseFieldChild").click(function(){
@@ -335,10 +335,12 @@
 
     $("#btnAddField").click(function(){
       var inputChild = $("#inputChild").val();
-      var inputChildType = $("#inputChildType").val();
-
+      var inputChildType = $("#inputChildType").val();      
+      
       if(inputChild == ""){
         toastr.error('Child field name not found', 'Failed', {timeOut: 3000});
+      } else if(inputFieldType  == "null" ){
+        toastr.error('Child field type not found', 'Failed', {timeOut: 3000});
       } else {
         var slugInputChild = string_to_slug(inputChild);
         var indexing = [];
@@ -359,6 +361,8 @@
       var inputFieldType = $("#inputFieldType").val();
       if(inputField == ""){
         toastr.error('Child field name not found', 'Failed', {timeOut: 3000});
+      } else if(inputFieldType == ""){
+        toastr.error('Child field type not found', 'Failed', {timeOut: 3000});
       } else {
         var slugInputChild = string_to_slug(inputField) + inputFieldType;
         updateArray(currentNode.tags,slugInputChild,myTree);

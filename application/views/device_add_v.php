@@ -62,12 +62,12 @@
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">
                           <label class="form-control-label float-left mt-3" for="inputLocation" style="width:100px;">HTTP POST</label>
                           <div class="float-left">
-                            <label class="float-left pt-3" for="inputBasicOff">On</label>
+                            <label class="float-left pt-3" for="inputBasicOff">Off</label>
                             <div class="float-left ml-20 mr-20">
                               <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery"
                               />
                             </div>
-                            <label class="pt-3" for="inputBasicOff">Off</label>
+                            <label class="pt-3" for="inputBasicOn">On</label>
                           </div>
                         </div>
 

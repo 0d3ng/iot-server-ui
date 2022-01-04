@@ -9,7 +9,7 @@ class combination_m extends My_Model{
 
 	function get_detail($id){
 		$data = array(
-			"combination_code" => $id
+			"combi_code" => $id
 		);
 		$url = $this->config->item('url_node')."combination/detail/";				
 		return json_decode($this->sendPost($url,$data));

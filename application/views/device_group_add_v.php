@@ -64,48 +64,48 @@
                       <div class="example mt-2 mb-2">
                         <label class="form-control-label float-left mt-3" for="inputLocation" style="width:100px;">HTTP POST</label>
                         <div class="float-left">
-                          <label class="float-left pt-3" for="inputBasicOff">On</label>
+                          <label class="float-left pt-3" for="inputBasicOff">Off</label>
                           <div class="float-left ml-20 mr-20">
                             <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery"
                             />
                           </div>
-                          <label class="pt-3" for="inputBasicOff">Off</label>
+                          <label class="pt-3" for="inputBasicOn">On</label>
                         </div>
                       </div>
 
                       <div class="example mt-2 mb-2">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">MQTT</label>
                         <div class="float-left">
-                          <label class="float-left pt-3" for="inputBasicOff">On</label>
+                          <label class="float-left pt-3" for="inputBasicOff">Off</label>
                           <div class="float-left ml-20 mr-20">
                             <input type="checkbox" id="inputBasicOff" name="mqtt" data-plugin="switchery"
                             />
                           </div>
-                          <label class="pt-3" for="inputBasicOff">Off</label>
+                          <label class="pt-3" for="inputBasicOn">On</label>
                         </div>
                       </div>
 
                       <div class="example mt-2 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">NATS</label>
                         <div class="float-left">
-                          <label class="float-left pt-3" for="inputBasicOff">On</label>
+                          <label class="float-left pt-3" for="inputBasicOff">Off</label>
                           <div class="float-left ml-20 mr-20">
                             <input type="checkbox" id="inputBasicOff" name="nats" data-plugin="switchery"
                             />
                           </div>
-                          <label class="pt-3" for="inputBasicOff">Off</label>
+                          <label class="pt-3" for="inputBasicOn">On</label>
                         </div>
                       </div>
 
                       <div class="example mt-2 mb-2" style="display:none">
                         <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">KAFKA <br/><span style="color:red; font-size: 10px;">*for image data</span> </label>
                         <div class="float-left">
-                          <label class="float-left pt-3" for="inputBasicOff">On</label>
+                          <label class="float-left pt-3" for="inputBasicOff">Off</label>
                           <div class="float-left ml-20 mr-20">
                             <input type="checkbox" id="inputBasicOff" name="kafka" data-plugin="switchery"
                             />
                           </div>
-                          <label class="pt-3" for="inputBasicOff">Off</label>
+                          <label class="pt-3" for="inputBasicOn">On</label>
                         </div>
                       </div>
 
