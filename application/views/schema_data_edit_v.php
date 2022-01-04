@@ -1,11 +1,11 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Add New Devices Group</h1>
+  <h1 class="page-title">Schema Update</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>schema/data/<?= $id ?>">Data</a></li>
-    <li class="breadcrumb-item active">Add</li>
+    <li class="breadcrumb-item active">Update</li>
   </ol>
 </div>
 
@@ -17,7 +17,7 @@
         
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form - Data Update</h4>
+            <h4 class="example-title">Form - Schema Update</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">

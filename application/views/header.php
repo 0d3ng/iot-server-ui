@@ -201,6 +201,12 @@
 	                        <span class="site-menu-title">Schema</span>
 	                    </a>
 	              	</li>
+                  <li class="site-menu-item has-sub">
+	                	<a class="animsition-link" href="<?= base_url()?>combination">
+	                        <i class="site-menu-icon md-input-composite" aria-hidden="true"></i>
+	                        <span class="site-menu-title">Combination</span>
+	                    </a>
+	              	</li>
 	              	<!-- <li class="site-menu-item has-sub">
 	                	<a class="animsition-link" href="<?= base_url()?>communication">
 	                        <i class="site-menu-icon md-cloud-outline" aria-hidden="true"></i>

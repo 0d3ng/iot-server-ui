@@ -1,6 +1,6 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Update Device</h1>
+  <h1 class="page-title">Device Update</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>device">Devices</a></li>
@@ -15,7 +15,7 @@
         <div class="panel-body container-fluid">        
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form Update Device</h4>
+            <h4 class="example-title">Form Device Update</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">

@@ -1,13 +1,13 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Schemas</h1>
+  <h1 class="page-title">Combination</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item active">Schemas</li>
+    <li class="breadcrumb-item active">Combination</li>
   </ol>
   <div class="page-header-actions">
-    <a href="<?= base_url()?>schema/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
-      <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Schema&nbsp;&nbsp; 
+    <a href="<?= base_url()?>combination/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
+      <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Combination Function&nbsp;&nbsp; 
     </button></a>
   </div>
 </div>
@@ -18,14 +18,16 @@
       <div class="panel">
         <header class="panel-heading">
           <div class="panel-actions"></div>
-          <h3 class="panel-title">List of Master Schema</h3>
+          <h3 class="panel-title">List of Combination Function</h3>
         </header>
         <div class="panel-body">
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Combination Code</th>
                 <th>Schema Code</th>
+                <th>Stream Process</th>
                 <th>Purpose</th>
                 <th>Detail</th>
                 <th>Date Add</th>
@@ -35,7 +37,9 @@
             <tfoot>
               <tr>
                 <th>Name</th>
+                <th>Combination Code</th>
                 <th>Schema Code</th>
+                <th>Stream Process</th>
                 <th>Purpose</th>
                 <th>Detail</th>
                 <th>Date Add</th>
@@ -48,16 +52,24 @@
               foreach($data as $d){ ?>
               <tr>
                 <td><?= $d->name?></td>
+                <td><?= $d->combi_code?></td>
                 <td><?= $d->schema_code?></td>
+                <td>
+                    <?php if($d->stream){ ?>
+                    <span class="badge badge-pill badge-success font-size-12">Active</span> 
+                    <?php } else { ?>
+                    <span class="badge badge-pill badge-danger font-size-12">Not Active</span> 
+                    <?php } ?>
+                </td>
                 <td><?= $d->information->purpose; ?></td>
                 <td><?= $d->information->detail; ?></td>
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td class="actions">
                   <a href="<?= base_url()?>schema/data/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
-                    data-toggle="tooltip" data-original-title="Show Data"><i class="icon md-grid" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>schema/edit/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                    data-toggle="tooltip" data-original-title="Show Data" target="_blank"><i class="icon md-grid" aria-hidden="true"></i></a>
+                  <a href="<?= base_url()?>combination/edit/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>schema/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                  <a href="<?= base_url()?>combination/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
                 </td>
               </tr>
@@ -86,7 +98,7 @@
     $(".btn-leave").click(function(e){
       e.preventDefault();
       link = $(this).attr('href');
-      alertify.confirm('Do you continue to delete this schema?', 
+      alertify.confirm('Do you continue to delete this combination?', 
         function(){ 
           location.replace(link);
         },function(){ 
