@@ -222,7 +222,7 @@ class combination extends CI_Controller {
             "date_start" => $this->input->post("date_start"),
             "date_end" => $this->input->post("date_end")
         );
-        $data = $this->combination_m->batch($id,$input);
+        $data = $this->combination_m->batch_process($id,$input);
         header("Content-Type: application/json");
         echo json_encode($data);
         exit();

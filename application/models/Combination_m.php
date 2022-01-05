@@ -63,7 +63,7 @@ class combination_m extends My_Model{
 		return $result;
 	}
 	
-	function batch($combination,$data){
+	function batch_process($combination,$data){
 		$url = $this->config->item('url_node')."combination/batch/".$combination."/";			
 		return json_decode($this->sendPost($url,$data));
 	}

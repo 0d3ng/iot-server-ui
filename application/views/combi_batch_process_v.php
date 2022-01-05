@@ -3,7 +3,7 @@
   <h1 class="page-title">Combination Function Batch Process</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>combinaton">Combination</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Combination</a></li>
     <li class="breadcrumb-item active">Batch Process</li>
   </ol>
   <div class="page-header-actions">
@@ -77,24 +77,30 @@
                                 </div>
                             </div>   
                         </div>
-                        <div class="form-group form-material row">
+                        <div class="form-group form-material">
                             <span class="input-group-addon" style="background:none; border:none;"> </span>
                             <button type="submit" class="btn btn-primary waves-effect waves-classic">Start Batch Process </button>
                         </div>    
                     </form>
                 </div>
-                <div class="col-md-4">
-                  <div class="example-wrap">
-                    <div class="example">
-                      <h5>With Label</h5>
-                      <div class="progress progress-lg">
-                        <div class="progress-bar progress-bar-danger" style="width: 60%;" role="progressbar">60%</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
             </div>
             <!-- End Example Date Range -->
+        </div>
+      </div>
+      <div class="panel-bordered panel-info mt-10" id="progressDiv">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Combination Function Batch Process</h3>
+        </div>
+        <div class="panel-body bg-white">
+            <div class="example-wrap">
+              <div class="example">
+                <h5>Process Status</h5>
+                <div class="progress progress-lg">
+                  <div class="progress-bar progress-bar-danger" id="progresbar" style="width: 0%;" role="progressbar">0%</div>
+                </div>
+                <h5>Total Record: <span id="total"></span> </h5>
+              </div>
+            </div>
         </div>
       </div>
     </div>
@@ -122,24 +128,39 @@
     if($error){ ?>
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
+    function sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+          break;
+        }
+      }
+    }
+
+    var totalRecord = 0;
     
     function batch(start,end,datalist,current,enddate){
-        // $.ajax({
-        //     type: 'post',
-        //     url: '<?= base_url()?>combination/batchprocess/<?= $data->combi_code; ?>',
-        //     data: {},
-        //     success: function (result){
-        //         $("#form_schema").html(result);
-        //     }
-        // });
-        console.log(start+" --- "+end);
-        
-        current++;
-        if(datalist.length-1 == current){
-            batch(datalist[current],enddate,datalist,current,enddate);
-        } else if(datalist.length > current){
-            batch(datalist[current],datalist[current+1],datalist,current,enddate);
-        }
+      console.log(start+" --- "+end);
+      $.ajax({
+          type: 'post',
+          url: '<?= base_url()?>combination/batchprocess/<?= $data->combi_code; ?>',
+          data: {"date_start":start,"date_end":end},
+          success: function (result){
+            totalRecord = totalRecord + result["data"]["insert_count"];
+            current++;
+            var progres = current / datalist.length * 100;
+            progres = progres.toFixed(2);
+            console.log(progres+"%");
+            $("#progresbar").html(progres+"%");
+            $("#progresbar").css("width",progres+"%");
+            $("#total").html(totalRecord);
+            if(datalist.length-1 == current){
+              batch(datalist[current],enddate,datalist,current,enddate);
+            } else if(datalist.length > current){
+              batch(datalist[current],datalist[current+1],datalist,current,enddate);
+            }
+          }
+      });
     }
 
     function findList(start,end){
@@ -147,7 +168,7 @@
             var now = startDate.clone(), dates = [];
     
             while (now.isSameOrBefore(endDate)) {
-                dates.push(now.format('YYYY/MM/DD HH:mm'));
+                dates.push(now.format('YYYY-MM-DD HH:mm'));
                 now.add(<?= (int)$data->time_loop * 10 ?>, 'minutes');
             }
             return dates;
@@ -162,8 +183,10 @@
 
     $("#formBatch").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
+
         alertify.confirm('Do you continue to combination process?', 
         function(){ 
+            totalRecord = 0;
             var startdate = $("#inputDateStart").val();
             var starttime = $("#inputTimeStart").val();
             var enddate = $("#inputDateEnd").val();
@@ -183,10 +206,6 @@
 
     });
 
-    $( "#progressbar" ).progressbar({
-      value: 37
-    });
-            
   });
 
   
