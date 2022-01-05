@@ -1,10 +1,10 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Schema Data</h1>
+  <h1 class="page-title">Combination Funcion Batch Process</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
-    <li class="breadcrumb-item active">Table Data</li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Combination</a></li>
+    <li class="breadcrumb-item active">Batch Process</li>
   </ol>
   <div class="page-header-actions">
   </div>
@@ -15,12 +15,12 @@
     <div class="col-md-6">
       <div class="pricing-list text-left">
         <div class="pricing-header bg-blue-600">
-          <div class="pricing-title">Schema Info</div>
+          <div class="pricing-title">Combination Info</div>
           <div class="pricing-price" style="padding-top:0px; padding-bottom: 0px;font-size: 2.858rem;">
             <span class="pricing-currency"><i class="icon md-collection-text" aria-hidden="true"></i></span>
             <span class="pricing-amount"><?= $data->name; ?></span>            
           </div>
-          <p class="px-30 font-size-16" ><strong>Schema Code</strong>: <i><?= $data->schema_code; ?></i></p>
+          <p class="px-30 font-size-16" ><strong>Combination Code</strong>: <i><?= $data->combi_code; ?></i></p>
         </div>
         <ul class="pricing-features font-size-16" style="background-color: #fff;" >
           <li>
@@ -74,7 +74,7 @@
         <div class="panel-heading">
           <h3 class="panel-title">Sensor Data</h3>
           <div class="panel-actions" style="text-align: right;">    
-              <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
+              <a href="<?= base_url() ?>combination/data/<?=  $data->combi_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
                 <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data&nbsp;&nbsp; 
               </button></a>
           </div>
@@ -126,7 +126,7 @@
 <!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
 <script>
   function del(link){
-    alertify.confirm('Do you continue to delete this schema?', 
+    alertify.confirm('Do you continue to delete this combination?', 
       function(){ 
         location.replace(link);
       },function(){ 
@@ -144,7 +144,7 @@
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
     $('#sensordata').bootstrapTable({
-        url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
+        url: "<?= base_url() ?>combination/datatable/<?=  $data->combi_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
         pagination: true,
         sidePagination: 'server',
         pageSize: '25',
