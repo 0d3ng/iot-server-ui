@@ -194,6 +194,41 @@ class combination extends CI_Controller {
 		redirect(base_url().'combination/?alert=failed') ; 			
 	}	
 
+    public function batch($id){       
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+		$data['title']= 'Combination Edit';		
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+        $query = array(
+            "add_by" => $data['user_now']->id
+        );
+        $data['data'] = $this->combination_m->get_detail($id);       
+        if($data['data']->status){
+            $data['data'] = $data['data']->data;
+            $data['id'] = $id;
+		    $this->load->view('combi_batch_process_v', $data);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
+	}
+    
+    public function batchprocess($id){ 
+        // $input = array(
+        //     "date_start" => $this->input->post("date_start")." ".$this->input->post("time_start"),
+        //     "date_end" => $this->input->post("date_end")." ".$this->input->post("time_end")
+        // );
+        $input = array(
+            "date_start" => $this->input->post("date_start"),
+            "date_end" => $this->input->post("date_end")
+        );
+        $data = $this->combination_m->batch($id,$input);
+        header("Content-Type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+
+
     public function schema($code,$idcombi=""){       
         $schema = $this->schema_m->get_detail($code);
         if($schema->status){
