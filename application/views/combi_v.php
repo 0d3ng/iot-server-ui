@@ -67,6 +67,8 @@
                 <td class="actions">
                   <a href="<?= base_url()?>schema/data/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Show Data" target="_blank"><i class="icon md-grid" aria-hidden="true"></i></a>
+                  <a href="<?= base_url()?>combination/batch/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                    data-toggle="tooltip" data-original-title="Batch Process"><i class="icon md-storage" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>combination/edit/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>combination/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"

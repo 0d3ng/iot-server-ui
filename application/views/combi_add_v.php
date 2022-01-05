@@ -36,7 +36,7 @@
                       </select>
                     </div>
                     <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputTime">Time Loop Process (sencond)</label>
+                      <label class="form-control-label" for="inputTime">Time Loop Process (minute)</label>
                       <input type="number" class="form-control" id="inputTime" name="time_loop" value="<?= (empty($data->time_loop))?'':$data->time_loop;  ?>" 
                         placeholder="Name" autocomplete="off" required/>
                     </div>

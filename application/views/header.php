@@ -60,6 +60,7 @@
 
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/clockpicker/clockpicker.css">
+        <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/progress-bars.css">
 
     
     <!-- Fonts -->

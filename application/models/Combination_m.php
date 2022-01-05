@@ -63,6 +63,10 @@ class combination_m extends My_Model{
 		return $result;
 	}
 	
+	function batch($combination,$data){
+		$url = $this->config->item('url_node')."combination/batch/".$combination."/";			
+		return json_decode($this->sendPost($url,$data));
+	}
 }
 
 /* End of file admin_model.php */
