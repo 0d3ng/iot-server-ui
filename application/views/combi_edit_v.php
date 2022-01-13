@@ -51,7 +51,7 @@
                             <label class="float-left pt-3" for="inputStream">Off</label>
                             <div class="float-left ml-20 mr-20">
                                 <input type="checkbox" id="inputStream" name="stream" data-plugin="switchery"
-                                />
+                                <?= ($data->stream)?'checked':'' ?> />
                             </div>
                             <label class="pt-3" for="inputStream">On</label>
                         </div>

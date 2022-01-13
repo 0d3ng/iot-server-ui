@@ -80,13 +80,16 @@ class combination extends CI_Controller {
             // print_r($field);
             // echo "</pre>";
             // exit();
-                	
+            if(empty($this->input->post('stream')))
+                $stream = false;
+            else 
+                $stream = true;      	
             $input = array(
         		"name" => $this->input->post('name'),
         		"schema_code" => $this->input->post('schema'),
 				"add_by" => $data['user_now']->id,        	    
         	    "time_loop" => $this->input->post('time_loop'),
-        	    "stream" => $this->input->post('stream'),
+        	    "stream" => $stream,
                 "information" => array(
                         "detail" => $this->input->post('detail'),
                         "purpose" => $this->input->post('purpose'),
@@ -146,13 +149,17 @@ class combination extends CI_Controller {
             // print_r($this->input->post());
             // print_r($field);
             // echo "</pre>";
-            // exit();                	
+            // exit();    
+            if(empty($this->input->post('stream')))
+                $stream = false;
+            else 
+                $stream = true;            	
             $input = array(
         		"name" => $this->input->post('name'),
         		"schema_code" => $this->input->post('schema'),
 				"add_by" => $data['user_now']->id,        	    
         	    "time_loop" => $this->input->post('time_loop'),
-        	    "stream" => $this->input->post('stream'),
+        	    "stream" => $stream,
                 "information" => array(
                         "detail" => $this->input->post('detail'),
                         "purpose" => $this->input->post('purpose'),
