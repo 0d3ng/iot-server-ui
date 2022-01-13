@@ -77,7 +77,7 @@ class schema_form_m extends My_Model{
                         <input type="text" class="form-control" data-plugin="datepicker" id="inputDate-'.$field.'-date" name="'.$field.'-date" value="'.$date_val.'" autocomplete="off">
                     </div>
                     <div class="col-6">
-                        <input type="text" class="form-control " data-plugin="clockpicker" id="inputDate-'.$field.'-time" name="'.$field.'-time" value="'.$time_val.'" autocomplete="off">
+                        <input type="text" class="form-control " data-autoclose="true"  data-plugin="clockpicker" id="inputDate-'.$field.'-time" name="'.$field.'-time" value="'.$time_val.'" autocomplete="off">
                     </div>
                 </div>
             </div>

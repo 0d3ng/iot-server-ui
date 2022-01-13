@@ -315,7 +315,6 @@
     $("#btnUpdateField").click(function(){
       var inputField = $("#inputField").val();
       var inputFieldType = $("#inputFieldType").val();
-      alert(inputFieldType);
       if(inputField == ""){
         toastr.error('Child field name not found', 'Failed', {timeOut: 3000});
       } else if(inputFieldType == ""){
