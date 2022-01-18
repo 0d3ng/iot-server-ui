@@ -44,6 +44,7 @@
         <input type="text" class="form-control" id="inputDefault_<?= $key ?>" name="<?= $key ?>_default_val" value="" 
         autocomplete="off" />
     </div>
+    <input type="hidden" id="inputCollect_<?= $key ?>" name="<?= $key ?>_collection" value="" />
     <div class="form-group form-material col-xl-4 col-md-6 col-6">
         <label class="form-control-label" for="inputMethod_<?= $key ?>">Method</label>
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >

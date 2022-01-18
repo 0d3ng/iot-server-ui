@@ -117,7 +117,7 @@
                   </div>
                 </div>
                 <div class="form-group form-material">
-                    <button type="submit" name="save" value="save" class="btn btn-primary">Update Device</button>&nbsp; &nbsp;
+                    <button type="submit" name="save" value="save" class="btn btn-primary">Update Schema</button>&nbsp; &nbsp;
                     <a href="<?= base_url();?>schema"><button type="button" class="btn btn-default">Cancel</button></a>
                     <input type="hidden" name="id" value="<?= $data->id ?>">
                     <input type="hidden" name="field" id="listField">

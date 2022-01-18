@@ -145,13 +145,15 @@
         data: {},
         success: function (result){
           var item = "";
-          for (let i = 0; i < result.length; i++) {
-            item+='<option value="'+result[i]+'">'+result[i]+'</option>';
+          var collect = result.collect;
+          for (let i = 0; i < result.field.length; i++) {
+            item+='<option value="'+result.field[i]+'">'+result.field[i]+'</option>';
           }
           var keyform='<option value="">--- Select Field as Key ---</option>'+item;
           var valform='<option value="">--- Select Field as Value ---</option>'+item;
           $("#inputKey_"+field).html(keyform);
           $("#inputValue_"+field).html(valform);
+          $("#inputCollect_"+field).val(collect);
         }
     });
   }

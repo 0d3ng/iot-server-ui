@@ -69,6 +69,9 @@ class combination extends CI_Controller {
                                 "option" => $this->input->post($key."_method"),
                                 "default" => $this->input->post($key."_default_val")
                             );
+                            if( !empty($this->input->post($key."_collection")) ){
+                                $items[$key]["collectid"] = $this->input->post($key."_collection");
+                            }
                         }
                         array_push($field,$items);
                     }
@@ -139,6 +142,9 @@ class combination extends CI_Controller {
                                 "option" => $this->input->post($key."_method"),
                                 "default" => $this->input->post($key."_default_val")
                             );
+                            if( !empty($this->input->post($key."_collection")) ){
+                                $items[$key]["collectid"] = $this->input->post($key."_collection");
+                            }
                         }
                         array_push($field,$items);
                     }
@@ -172,7 +178,7 @@ class combination extends CI_Controller {
                 $data['success']=$respo->message;                  
             } else {                
                 $data['error']=$respo->message;
-            }                     
+            }   
         }
         
         $data['data'] = $this->combination_m->get_detail($id);       
@@ -321,8 +327,19 @@ class combination extends CI_Controller {
     public function device($id){       
         $data = $this->device_m->get_detail($id)->data;
         $field = $this->extract($data->field);
+        $collect = "";
+        if($data->group_code_name !="other"){
+            $group_sensor = $this->groupsensor_m->get_detail($data->group_code_name);
+            if($group_sensor->status){
+                $collect = $group_sensor->data->id;
+            }
+        }
+        $result = array(
+            "field" => $field,
+            "collect" => $collect
+        );
         header("Content-Type: application/json");
-        echo json_encode($field);
+        echo json_encode($result);
         exit();
     } 
 

@@ -1,9 +1,9 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Schemas</h1>
+  <h1 class="page-title">Schema</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item active">Schemas</li>
+    <li class="breadcrumb-item active">Schema</li>
   </ol>
   <div class="page-header-actions">
     <a href="<?= base_url()?>schema/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">

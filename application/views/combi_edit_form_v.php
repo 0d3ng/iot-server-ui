@@ -7,6 +7,7 @@
         $status_key = false;
         $def_value = "";
         $method_value = "";
+        $collect_value = "";
         foreach($item as $key=>$value) {           
             if(!empty($combi[$key])){
                 $status = true;
@@ -18,6 +19,9 @@
                     $item_data = $combi[$key]->data;
                     $def_value = $combi[$key]->default;
                     $method_value = $combi[$key]->option;
+                    if(!empty($combi[$key]->collectid)){
+                        $collect_value = $combi[$key]->collectid;
+                    }
                 }
             }
 ?>
@@ -80,6 +84,7 @@
         <input type="text" class="form-control" id="inputDefault_<?= $key ?>" name="<?= $key ?>_default_val" value="<?= $def_value; ?>" 
         autocomplete="off" />
     </div>
+    <input type="hidden" id="inputCollect_<?= $key ?>" name="<?= $key ?>_collection" value="<?= $collect_value ?>" />
     <div class="form-group form-material col-xl-4 col-md-6 col-6">
         <label class="form-control-label" for="inputMethod_<?= $key ?>">Method</label>
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >

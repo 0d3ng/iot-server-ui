@@ -72,7 +72,7 @@
     <div class="col-md-12">
       <div class="panel">
         <div class="panel-heading">
-          <h3 class="panel-title">Sensor Data</h3>
+          <h3 class="panel-title">Data</h3>
           <div class="panel-actions" style="text-align: right;">    
               <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
                 <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data&nbsp;&nbsp; 
