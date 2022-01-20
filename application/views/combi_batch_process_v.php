@@ -24,7 +24,7 @@
         </div>
         <ul class="pricing-features font-size-16" style="background-color: #fff;" >
           <li>
-            <strong>Schema Target :</strong> <?= $data->name; ?> [<?= $data->schema_code; ?>]</li>
+            <strong>Schema Target :</strong> <?= (!empty($schema))?$schema:""; ?> [<?= $data->schema_code; ?>]</li>
           <li>
             <strong>Stream Process :</strong> 
             <?php if($data->stream){ ?>
@@ -94,7 +94,7 @@
         <div class="panel-body bg-white">
             <div class="example-wrap">
               <div class="example">
-                <h5>Process Status</h5>
+                <h5>Process Status <span id="statusProcess">: <span class="badge badge-primary">No Process</span></span></h5>
                 <div class="progress progress-lg">
                   <div class="progress-bar progress-bar-danger" id="progresbar" style="width: 0%;" role="progressbar">0%</div>
                 </div>
@@ -137,10 +137,23 @@
       }
     }
 
-    var totalRecord = 0;
+    var statusStart = ': <span class="badge badge-primary">No Process</span>';
+    var statusFinish = ': <span class="badge badge-success">Finish</span>';
+    var statusProcess = ': <span class="badge badge-warning">On Process</span>';
     
+    var totalRecord = 0;
+    function resetprog(){
+      progres = 0;
+      totalRecord = 0;
+      console.log(progres+"%");
+      $("#progresbar").html(progres+"%");
+      $("#progresbar").css("width",progres+"%");
+      $("#total").html(totalRecord);
+    }
+
     function batch(start,end,datalist,current,enddate){
       console.log(start+" --- "+end);
+      $("#statusProcess").html(statusProcess);
       $.ajax({
           type: 'post',
           url: '<?= base_url()?>combination/batchprocess/<?= $data->combi_code; ?>',
@@ -158,6 +171,8 @@
               batch(datalist[current],enddate,datalist,current,enddate);
             } else if(datalist.length > current){
               batch(datalist[current],datalist[current+1],datalist,current,enddate);
+            } else {
+              $("#statusProcess").html(statusFinish);
             }
           }
       });
@@ -195,6 +210,7 @@
             enddate = enddate + " " + endtime;
             datalist = findList(startdate,enddate);
             current = 0;
+            resetprog();
             if(datalist.length == 1){
                 batch(datalist[current],enddate,datalist,current,enddate);
             } else {

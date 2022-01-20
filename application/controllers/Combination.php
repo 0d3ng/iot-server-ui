@@ -219,6 +219,10 @@ class combination extends CI_Controller {
         $data['data'] = $this->combination_m->get_detail($id);       
         if($data['data']->status){
             $data['data'] = $data['data']->data;
+            $schema = $this->schema_m->get_detail($data['data']->schema_code);
+            if($schema->status){
+                $data['schema'] = $schema->data->name;
+            }
             $data['id'] = $id;
 		    $this->load->view('combi_batch_process_v', $data);
         } else {
