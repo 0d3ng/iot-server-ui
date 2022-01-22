@@ -50,6 +50,7 @@
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >
             <option value="">--- Select Method ---</option>
             <option value="average">Average</option>
+            <option value="variance">Variance</option>
         </select>
     </div>
 </div>

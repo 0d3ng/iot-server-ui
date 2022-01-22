@@ -182,10 +182,11 @@
         var getDaysBetweenDates = function(startDate, endDate) {
             var now = startDate.clone(), dates = [];
     
-            while (now.isSameOrBefore(endDate)) {
+            while (now.isBefore(endDate)) {
                 dates.push(now.format('YYYY-MM-DD HH:mm'));
-                now.add(<?= (int)$data->time_loop * 10 ?>, 'minutes');
+                now.add(<?= (int)$data->time_loop * 5 ?>, 'minutes');
             }
+            console.log(dates);
             return dates;
         };
     

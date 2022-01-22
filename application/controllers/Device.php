@@ -391,7 +391,8 @@ class Device extends CI_Controller {
                 }
                 $item[$k] = $val;
             }
-            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server_unix"}/1000);
+            // $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server_unix"}/1000);
+            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server"}->{'$date'}/1000);
             $data[] = $item;
         }
         $response = array(

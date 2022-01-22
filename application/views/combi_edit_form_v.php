@@ -90,6 +90,7 @@
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >
             <option value="">--- Select Method ---</option>
             <option value="average" <?= ($method_value == "average")?"selected":""; ?>  >Average</option>
+            <option value="variance" <?= ($method_value == "variance")?"selected":""; ?>  >Variance</option>
         </select>
     </div>
 </div>
