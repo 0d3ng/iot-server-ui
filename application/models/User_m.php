@@ -47,13 +47,13 @@ class user_m extends My_Model{
 		return json_decode($this->sendPost($url,$data));
 	}
 
-	function register($email, $pass, $name){
+	function register($email, $pass, $name, $link){
 		$data = array(
 			"email" => $email,
 			"name" => $name,
 			"password" => $pass,
 			"sendlink" => true,
-			"link" => $this->config->item('index_page').'auth/activation/'
+			"link" => $link
 		);
 		$url = $this->config->item('url_node')."user/add/";				
 		return json_decode($this->sendPost($url,$data));

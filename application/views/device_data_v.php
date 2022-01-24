@@ -310,6 +310,9 @@
         if( itemfield in data){
           values = data[itemfield];         
         }
+        if( values == "" ){
+          values = "-";
+        }
         $("#last-"+itemfield).html(values);
       }
       var timestamp = moment.unix(data['date_add_server_unix']/1000);

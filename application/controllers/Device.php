@@ -9,7 +9,7 @@ class Device extends CI_Controller {
 		$this->load->model('group_m');
         $this->load->model('groupsensor_m');
 		$this->load->model('device_m');
-        $this->limit_data = 1000;
+        $this->limit_data = 3000;
         $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
     }

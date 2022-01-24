@@ -1,6 +1,6 @@
 <?php include("header.php") ?>
 <div class="page-content page-content container-fluid">
-  <div class="row" data-plugin="matchHeight" data-by-row="true">
+  <!-- <div class="row" data-plugin="matchHeight" data-by-row="true">
     <?php for($i=0; $i< $max_panel; $i++){ ?>
         <div class="col-md-12" id="addDiv-<?= $i?>">
           <div class="panel panel-bordered animation-scale-up " style="animation-fill-mode: backwards; animation-duration: 250ms; animation-delay: 0ms;">
@@ -47,8 +47,7 @@
           </div>
         </div>  
     <?php } ?>
-    
-  </div>
+  </div> -->
 </div>
 
 <button class="btn btn-primary" data-target="#modalData" id="btnModal" data-toggle="modal"

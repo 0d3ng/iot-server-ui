@@ -26,9 +26,9 @@ class auth extends CI_Controller {
                 $pass = $this->input->post('password');
                 $respo = $this->user_m->login($email, $pass);
                 if($respo->status){
-                    $array = (array) $respo->data; 
-                    $array["user_role"] = $role;
-                    $respo->data = (object) $array;
+                    // $array = (array) $respo->data; 
+                    // $array["user_role"] = $role;
+                    // $respo->data = (object) $array;
                     $this->session->set_userdata('dasboard_iot',$respo->data);
                     //$this->session->set_userdata('dasboard_iot_role',);                
                     redirect(base_url(''));                           
@@ -57,7 +57,8 @@ class auth extends CI_Controller {
                 $pass = $this->input->post('password');
                 $email = $this->input->post('email');
                 $name = $this->input->post('name');
-                $respo = $this->user_m->register($email, $pass, $name);
+                $link = base_url().'auth/activation/';
+                $respo = $this->user_m->register($email, $pass, $name, $link);
                 if($respo->status){       
                     $data['success']  = $respo->message;                        
                 } else {
@@ -72,13 +73,15 @@ class auth extends CI_Controller {
         $email = str_replace(md5('@'),"@", $email);
         if(($email) && ($token)){ 
             $respo = $this->user_m->activation($email,$token); 
-            print_r($respo);                       
+            // print_r($respo);                       
             if($respo->status){
                 $data = array('email'=> $email);                                 
                 $user_req = $this->user_m->search($data);                        
-                if($user_req->status){                     
-                    $this->session->set_userdata('dasboard_iot',$user_req->data);
-                    redirect(base_url('dashboard'));                
+                if($user_req->status){   
+                    // $userdata = (array) $user_req->data[0]; 
+                    // $array["user_role"] = $role;
+                    $this->session->set_userdata('dasboard_iot',$user_req->data[0]);                  
+                    redirect(base_url(''));                
                 }               
             }else{
                 $data['error'] = "Your Activation Link is Wrong";
