@@ -211,7 +211,7 @@ class combination extends CI_Controller {
 		$data=array();
 		$data['success']='';
 		$data['error']='';
-		$data['title']= 'Combination Edit';		
+		$data['title']= 'Combination Batch Process';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
         $query = array(
             "add_by" => $data['user_now']->id

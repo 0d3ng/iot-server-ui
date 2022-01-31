@@ -9,6 +9,7 @@ class Device extends CI_Controller {
 		$this->load->model('group_m');
         $this->load->model('groupsensor_m');
 		$this->load->model('device_m');
+		$this->load->model('deviceprocess_m');
         $this->limit_data = 3000;
         $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
@@ -414,6 +415,118 @@ class Device extends CI_Controller {
         return $value;
     }
 
+    public function process($id,$method="list",$field=""){
+        $data=array();
+		$data['success']='';
+		$data['error']='';				
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	                        
+        $data['data'] = $this->device_m->get_detail($id);        
+		$data['id'] = $id;
+        if(!$data['data']->status){
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+            return "";
+        }
+        $data['data'] = $data['data']->data;
+        if($method=="list"){
+            $this->process_list($data);
+        } else if($method=="add"){
+            $this->process_add($data,$id);
+        } else if($method=="edit"){
+            $this->process_edit($data,$id,$field);
+        } else if($method=="delete"){
+            $this->process_delete($id,$field);
+        } else if($method=="batch"){
+            $this->process_batch($data,$id);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
+    }
+
+    function process_list($data){
+        $data['title']= 'Device Process List';
+        if($this->input->get('alert')=='success') $data['success']='Delete device successfully';	
+		if($this->input->get('alert')=='failed') $data['error']="Failed to delete device";
+        $this->load->view('device_process_v', $data);
+    }
+
+    function process_add($data,$id){       
+		$data['title']= 'Device Process Add';		
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+		if($this->input->post('save')){ 
+            $input = array(
+        		"device_code" => $id,
+        		"field" => $this->input->post('field'),
+        		"pre" => $this->input->post('pre'),
+        		"process" => $this->input->post('process'),
+                "var" => $this->input->post('var')
+            );
+            $respo = $this->deviceprocess_m->add($input);
+            if($respo->status){             
+                $data['success']=$respo->message;                  
+            } else {                
+                $data['error']=$respo->message;
+            }                       
+        }
+        $data["id"] = $id;
+		$this->load->view('device_process_add_v', $data);
+	}
+
+    function process_edit($data,$id,$field){       
+		$data['title']= 'Device Process Edit';		
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	
+		if($this->input->post('save')){ 
+            $input = array(
+        		"device_code" => $id,
+        		"oldfield" => $this->input->post('oldfield'),
+        		"field" => $this->input->post('field'),
+        		"pre" => $this->input->post('pre'),
+        		"process" => $this->input->post('process'),
+                "var" => $this->input->post('var')
+            );
+            $respo = $this->deviceprocess_m->edit($input);
+            if($respo->status){             
+                $data['success']=$respo->message;   
+                $data['data'] = $this->device_m->get_detail($id)->data;                
+            } else {                
+                $data['error']=$respo->message;
+            }                       
+        }
+        $data["id"] = $id;
+        $data["field"] = $field;
+        $data["item"] = $data["data"]->field_process->{$field};
+		$this->load->view('device_process_edit_v', $data);
+	}
+
+    function process_delete($id,$field){       
+		if($id){
+            $respo = $this->deviceprocess_m->del($id,$field);
+            if($respo->status){             
+				redirect(base_url().'device/process/'.$id.'/?alert=success') ; 			
+            } else {                
+				redirect(base_url().'device/process/'.$id.'/?alert=failed') ; 			
+            }                       
+        }        
+		redirect(base_url().'device/process/'.$id.'/?alert=failed') ;		
+	}
+
+    function process_batch($data,$id){       
+		$data['title']= 'Device Process - Batch Processing';		
+        $data['id'] = $id;
+        $this->load->view('device_process_batch_v', $data);
+        
+	}
+    
+    public function batchprocess($id){ 
+        $input = array(
+            "date_start" => $this->input->post("date_start"),
+            "date_end" => $this->input->post("date_end")
+        );
+        $data = $this->deviceprocess_m->batch_process($id,$input);
+        header("Content-Type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    
 }
 
 
