@@ -98,7 +98,7 @@
                         <div class="form-group form-material col-md-12">
                           <label class="form-control-label" for="inputTopic">Topic</label>
                           <input type="text" class="form-control" id="inputTopic" name="topic" value="" 
-                            placeholder="Port" autocomplete="off" />
+                            placeholder="Topic" autocomplete="off" />
                         </div>
                       </div>
                     </div>

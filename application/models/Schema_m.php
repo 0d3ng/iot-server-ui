@@ -69,18 +69,14 @@ class schema_m extends My_Model{
 	}
 
 	function edit_data($schema,$id,$data){
-		if(isset($data["id"])){
-			$data+=["_id" => $id];
-		} else {
-			$data+=["id" => $id];
-		}
+		$data+=["_id" => $id];
 		$url = $this->config->item('url_node')."schema/data/".$schema."/edit/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 	
 	function del_data($schema,$id){
 		$data = array(
-			"id" => $id
+			"_id" => $id
 		);
 		$url = $this->config->item('url_node')."schema/data/".$schema."/delete/";				
 		return json_decode($this->sendPost($url,$data));
@@ -88,12 +84,16 @@ class schema_m extends My_Model{
 
 	function get_detail_data($schema,$id){
 		$data = array(
-			"id" => $id
+			"_id" => $id
 		);
 		$url = $this->config->item('url_node')."schema/data/".$schema."/detail/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 	
+	function findone_data($schema,$query){
+		$url = $this->config->item('url_node')."schema/data/".$schema."/detail/";				
+		return json_decode($this->sendPost($url,$query));
+	}
 }
 
 /* End of file admin_model.php */

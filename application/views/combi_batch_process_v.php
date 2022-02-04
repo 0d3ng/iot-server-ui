@@ -184,7 +184,7 @@
     
             while (now.isBefore(endDate)) {
                 dates.push(now.format('YYYY-MM-DD HH:mm'));
-                now.add(<?= (int)$data->time_loop * 5 ?>, 'minutes');
+                now.add(<?= (int)$data->time_loop * 2 ?>, 'minutes');
             }
             console.log(dates);
             return dates;
