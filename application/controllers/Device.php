@@ -248,6 +248,15 @@ class Device extends CI_Controller {
         }
         $data['data'] = $this->device_m->get_detail($id)->data;        
 		$data['id'] = $id;
+        if($data['data']->group_code_name == "other"){
+            $http_qerry = array(
+                "device_code" => $data['data']->device_code,
+                "channel_type" => "http-post"
+            );
+            $comm = $this->device_m->get_com_chanel($http_qerry);
+            if($comm->status)
+                $data["http"] = $comm->data->token_access;            
+        }
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";

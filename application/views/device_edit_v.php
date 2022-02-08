@@ -68,7 +68,7 @@
                           <div class="float-left">
                             <label class="float-left pt-3" for="inputBasicOff">Off</label>
                             <div class="float-left ml-20 mr-20">
-                              <input type="checkbox" id="inputBasicOff" name="http_post" data-plugin="switchery" 
+                              <input type="checkbox" id="inputHTTP"  name="http_post" data-plugin="switchery" 
                               <?= ($data->communication->{'http-post'})?'checked':'' ?> />
                             </div>
                             <label class="pt-3" for="inputBasicOn">On</label>
@@ -87,7 +87,13 @@
                           </div>
                         </div>
                       </div>
-                      
+                      <div class="row" id="httpform" style="<?= ($data->communication->{'http-post'})?'':'display:none' ?>">
+                        <div class="form-group form-material col-md-12">
+                          <label class="form-control-label" for="inputTopic">Token Access for HTTP POST</label>
+                          <input type="text" class="form-control" id="inputToken" name="token" value="<?= (!empty($http))?$http:""; ?>" 
+                            placeholder="token" autocomplete="off" readonly />
+                        </div>
+                      </div>
                       <div class="row" id="mqttform" style="<?= ($data->communication->{'mqtt'})?'':'display:none' ?>">
                         <div class="form-group form-material col-xl-6 col-md-12">
                           <label class="form-control-label" for="inputServer">Server</label>
@@ -245,6 +251,14 @@
         $("#inputTopic").removeAttr("required");
         $("#inputServer").removeAttr("required");
         $("#inputPort").removeAttr("required");
+      }
+    });
+
+    $("#inputHTTP").change(function(){   // 1st
+      if($(this).prop("checked")){
+        $("#httpform").removeAttr("style");
+      } else {
+        $("#httpform").css("display","none");
       }
     });
 

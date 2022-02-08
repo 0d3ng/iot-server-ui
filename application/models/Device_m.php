@@ -82,6 +82,10 @@ class device_m extends My_Model{
 		return json_decode($this->sendPost($url,$data));
 	}
 	
+	function get_com_chanel($data){
+		$url = $this->config->item('url_node')."comchannel/detail/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 }
 
 /* End of file admin_model.php */
