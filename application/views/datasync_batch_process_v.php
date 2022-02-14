@@ -1,9 +1,9 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Combination Function Batch Process</h1>
+  <h1 class="page-title">Data Synchronization Service Batch Process</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Combination</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>datasync">Data Synchronization</a></li>
     <li class="breadcrumb-item active">Batch Process</li>
   </ol>
   <div class="page-header-actions">
@@ -15,12 +15,12 @@
     <div class="col-md-6">
       <div class="pricing-list text-left">
         <div class="pricing-header bg-blue-600">
-          <div class="pricing-title">Combination Function Info</div>
+          <div class="pricing-title">Data Synchronization Service Info</div>
           <div class="pricing-price" style="padding-top:0px; padding-bottom: 0px;font-size: 2.858rem;">
             <span class="pricing-currency"><i class="icon md-input-composite" aria-hidden="true"></i></span>
             <span class="pricing-amount"><?= $data->name; ?></span>            
           </div>
-          <p class="px-30 font-size-16" ><strong>Combination Code</strong>: <i><?= $data->combi_code; ?></i></p>
+          <p class="px-30 font-size-16" ><strong>Data Synchronization Code</strong>: <i><?= $data->datasync_code; ?></i></p>
         </div>
         <ul class="pricing-features font-size-16" style="background-color: #fff;" >
           <li>
@@ -34,7 +34,7 @@
             <?php } ?>
           </li>
           <li>
-            <strong>Time Loop Process :</strong> <?= $data->time_loop; ?> Minute</li>
+            <strong>Sampling Time :</strong> <?= $data->time_loop; ?> Second</li>
           <li>
             <strong>Purpose :</strong> <?= $data->information->purpose; ?></li>
           <li>
@@ -89,7 +89,7 @@
       </div>
       <div class="panel-bordered panel-info mt-10" id="progressDiv">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Combination Function Batch Process</h3>
+          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Data Synchronization Function Batch Process</h3>
         </div>
         <div class="panel-body bg-white">
             <div class="example-wrap">
@@ -156,7 +156,7 @@
       $("#statusProcess").html(statusProcess);
       $.ajax({
           type: 'post',
-          url: '<?= base_url()?>combination/batchprocess/<?= $data->combi_code; ?>',
+          url: '<?= base_url()?>datasync/batchprocess/<?= $data->datasync_code; ?>',
           data: {"date_start":start,"date_end":end},
           success: function (result){
             totalRecord = totalRecord + result["data"]["insert_count"];
@@ -183,8 +183,8 @@
             var now = startDate.clone(), dates = [];
     
             while (now.isBefore(endDate)) {
-                dates.push(now.format('YYYY-MM-DD HH:mm'));
-                now.add(<?= (int)$data->time_loop * 2 ?>, 'minutes');
+                dates.push(now.format('YYYY-MM-DD HH:mm:ss'));
+                now.add(<?= (int)$data->time_loop * 2 ?>, 'seconds');
             }
             console.log(dates);
             return dates;
@@ -200,7 +200,7 @@
     $("#formBatch").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
-        alertify.confirm('Do you continue to combination process?', 
+        alertify.confirm('Do you continue to datasync process?', 
         function(){ 
             totalRecord = 0;
             var startdate = $("#inputDateStart").val();

@@ -41,7 +41,7 @@
 </div>
 <div class="row" id="form_<?= $key ?>" <?= (empty($status_form))?'style="display:none;"':''; ?> >
     <div class="form-group form-material col-xl-4 col-md-6 col-6">
-        <label class="form-control-label" for="inputDevice_<?= $key ?>">Device Data</label>
+        <label class="form-control-label" for="inputDevice_<?= $key ?>">Device (Data Source)</label>
         <select class="form-control " id="inputDevice_<?= $key ?>" name="<?= $key ?>_device" onchange="deviceForm('<?= $key ?>')">
             <option value="">--- Select Device ---</option>
             <?php foreach ($device as $d) { ?>
@@ -86,10 +86,12 @@
     </div>
     <input type="hidden" id="inputCollect_<?= $key ?>" name="<?= $key ?>_collection" value="<?= $collect_value ?>" />
     <div class="form-group form-material col-xl-4 col-md-6 col-6">
-        <label class="form-control-label" for="inputMethod_<?= $key ?>">Method</label>
+        <label class="form-control-label" for="inputMethod_<?= $key ?>">Sampling Function Method</label>
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >
             <option value="">--- Select Method ---</option>
             <option value="average" <?= ($method_value == "average")?"selected":""; ?>  >Average</option>
+            <option value="first" <?= ($method_value == "first")?"selected":""; ?>  >First Data</option>
+            <option value="last" <?= ($method_value == "last")?"selected":""; ?>  >Last Data</option>
             <option value="variance" <?= ($method_value == "variance")?"selected":""; ?>  >Variance</option>
         </select>
     </div>

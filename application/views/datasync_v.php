@@ -1,13 +1,13 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Combination</h1>
+  <h1 class="page-title">Data Synchronization</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item active">Combination</li>
+    <li class="breadcrumb-item active">Data Synchronization</li>
   </ol>
   <div class="page-header-actions">
-    <a href="<?= base_url()?>combination/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
-      <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Combination Function&nbsp;&nbsp; 
+    <a href="<?= base_url()?>datasync/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
+      <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data Synchronization Service&nbsp;&nbsp; 
     </button></a>
   </div>
 </div>
@@ -18,14 +18,14 @@
       <div class="panel">
         <header class="panel-heading">
           <div class="panel-actions"></div>
-          <h3 class="panel-title">List of Combination Function</h3>
+          <h3 class="panel-title">List of Data Synchronization Service</h3>
         </header>
         <div class="panel-body">
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Combination Code</th>
+                <th>Data Synchronization Code</th>
                 <th>Schema Code</th>
                 <th>Stream Process</th>
                 <th>Purpose</th>
@@ -37,7 +37,7 @@
             <tfoot>
               <tr>
                 <th>Name</th>
-                <th>Combination Code</th>
+                <th>Data Synchronization Code</th>
                 <th>Schema Code</th>
                 <th>Stream Process</th>
                 <th>Purpose</th>
@@ -67,11 +67,11 @@
                 <td class="actions">
                   <a href="<?= base_url()?>schema/data/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Show Data" target="_blank"><i class="icon md-grid" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>combination/batch/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                  <a href="<?= base_url()?>datasync/batch/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Batch Process"><i class="icon md-storage" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>combination/edit/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                  <a href="<?= base_url()?>datasync/edit/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>combination/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                  <a href="<?= base_url()?>datasync/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
                 </td>
               </tr>
@@ -100,7 +100,7 @@
     $(".btn-leave").click(function(e){
       e.preventDefault();
       link = $(this).attr('href');
-      alertify.confirm('Do you continue to delete this combination?', 
+      alertify.confirm('Do you continue to delete this service?', 
         function(){ 
           location.replace(link);
         },function(){ 

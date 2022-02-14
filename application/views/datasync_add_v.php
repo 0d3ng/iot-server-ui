@@ -1,10 +1,10 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Combiantion Function Update</h1>
+  <h1 class="page-title">Add New Data Synchronization Service</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Combination</a></li>
-    <li class="breadcrumb-item active">Update</li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>datasync">Data Synchronization</a></li>
+    <li class="breadcrumb-item active">Add</li>
   </ol>
 </div>
 
@@ -16,18 +16,13 @@
         
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form Combiantion Function  Update</h4>
+            <h4 class="example-title">Form Add New Data Synchronization Function</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group form-material">
-                      <label class="form-control-label" for="inputLocation">Combination Function Code</label>
-                      <input type="text" class="form-control" id="inputLocation" name="combicode" value="<?= (empty($data->combi_code))?'':$data->combi_code;  ?>"
-                        readonly/>
-                    </div>
                     <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputBasicFirstName">Combination Function Name</label>
+                      <label class="form-control-label" for="inputBasicFirstName">Data Synchronization Service Name</label>
                       <input type="text" class="form-control" id="inputBasicName" name="name" value="<?= (empty($data->name))?'':$data->name;  ?>" 
                         placeholder="Name" autocomplete="off" required/>
                     </div>
@@ -36,12 +31,12 @@
                       <select class="form-control " id="inputSchema" name="schema" required>
                           <option value="">--- Select Schema Target ---</option>
                           <?php foreach ($schema as $d) { ?>
-                          <option value="<?= $d->schema_code?>" <?= ($d->schema_code==$data->schema_code)?"selected":""; ?> ><?= $d->name?> [<?= $d->schema_code?>]</option>
+                          <option value="<?= $d->schema_code?>"><?= $d->name?> [<?= $d->schema_code?>]</option>
                           <?php } ?>
                       </select>
                     </div>
                     <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputTime">Time Loop Process (minute)</label>
+                      <label class="form-control-label" for="inputTime">Sampling Time (in second)</label>
                       <input type="number" class="form-control" id="inputTime" name="time_loop" value="<?= (empty($data->time_loop))?'':$data->time_loop;  ?>" 
                         placeholder="Name" autocomplete="off" required/>
                     </div>
@@ -51,7 +46,7 @@
                             <label class="float-left pt-3" for="inputStream">Off</label>
                             <div class="float-left ml-20 mr-20">
                                 <input type="checkbox" id="inputStream" name="stream" data-plugin="switchery"
-                                <?= ($data->stream)?'checked':'' ?> />
+                                />
                             </div>
                             <label class="pt-3" for="inputStream">On</label>
                         </div>
@@ -59,7 +54,7 @@
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputPurpose">Purpose</label>
                       <input type="text" class="form-control" id="inputPurpose" name="purpose" value="<?= (empty($data->purpose))?'':$data->purpose;  ?>"
-                        placeholder="Purpose combinations group" autocomplete="off" />
+                        placeholder="Purpose data syncs group" autocomplete="off" />
                     </div>
                     <div class="form-group form-material">
                         <label class="form-control-label">Detail Information</label>
@@ -72,9 +67,8 @@
                   </div>
                 </div>
                 <div class="form-group form-material">
-                  <button type="submit" name="save" value="save" class="btn btn-primary">Combination Function Update</button>&nbsp; &nbsp;
-                  <a href="<?= base_url();?>combination"><button type="button" class="btn btn-default">Cancel</button></a>
-                  <input type="hidden" name="id" value="<?= $data->id ?>">
+                  <button type="submit" name="save" value="save" class="btn btn-primary">Add New Data Synchronization Service</button>&nbsp; &nbsp;
+                  <a href="<?= base_url();?>datasync"><button type="button" class="btn btn-default">Cancel</button></a>
                   <input type="hidden" name="field" id="listField">
                 </div>
               </form>
@@ -104,14 +98,13 @@
         var shcema = $("#inputSchema").val();
         $.ajax({
             type: 'post',
-            url: '<?= base_url()?>combination/schema/'+shcema+"/<?= $data->combi_code ?>",
+            url: '<?= base_url()?>datasync/schema/'+shcema,
             data: {},
             success: function (result){
                 $("#form_schema").html(result);
             }
         });
     });    
-    $("#inputSchema").change();
   });
 
   var key = "";
@@ -148,7 +141,7 @@
     var device = $("#inputDevice_"+field).val();
     $.ajax({
         type: 'post',
-        url: '<?= base_url()?>combination/device/'+device,
+        url: '<?= base_url()?>datasync/device/'+device,
         data: {},
         success: function (result){
           var item = "";

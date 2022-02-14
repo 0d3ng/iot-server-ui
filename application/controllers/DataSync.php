@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class combination extends CI_Controller {
+class datasync extends CI_Controller {
 
 	public function __construct() {
 
@@ -9,7 +9,7 @@ class combination extends CI_Controller {
 		$this->load->model('group_m');
 		$this->load->model('device_m');
         $this->load->model('groupsensor_m');
-		$this->load->model('combination_m');
+		$this->load->model('datasync_m');
 		$this->load->model('schema_m');
         $this->limit_data = 1000;
         $this->limit_table = 25;
@@ -20,27 +20,27 @@ class combination extends CI_Controller {
 		$data=array();
 		$data['success']='';
 		$data['error']='';
-		if($this->input->get('alert')=='success') $data['success']='Delete combination successfully';	
-		if($this->input->get('alert')=='failed') $data['error']="Failed to delete combination";	
-		$data['title']='Combination List';
+		if($this->input->get('alert')=='success') $data['success']='Delete data synchronization successfully';	
+		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data synchronization";	
+		$data['title']='Data Synchronization List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
         $query = array(
             "add_by" => $data['user_now']->id
         );
-        $data["data"] =  $this->combination_m->search($query);
+        $data["data"] =  $this->datasync_m->search($query);
         if($data["data"]->status){
             $data["data"] = $data["data"]->data;
         } else {
             $data['data'] = array();
         }
-        $this->load->view('combi_v', $data);
+        $this->load->view('datasync_v', $data);
 	}
 
 	public function add(){       
 		$data=array();
 		$data['success']='';
 		$data['error']='';
-		$data['title']= 'Combination Add';		
+		$data['title']= 'Data Synchronization Add';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
 		
         
@@ -99,21 +99,21 @@ class combination extends CI_Controller {
                     ),
                 "field" => $field
             );
-            $respo = $this->combination_m->add($input);
+            $respo = $this->datasync_m->add($input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
             } else {                
                 $data['error']=$respo->message;
             }                       
         }
-		$this->load->view('combi_add_v', $data);
+		$this->load->view('datasync_add_v', $data);
 	}
 
 	public function edit($id){       
 		$data=array();
 		$data['success']='';
 		$data['error']='';
-		$data['title']= 'Combination Edit';		
+		$data['title']= 'Data Synchronization Edit';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
         $query = array(
             "add_by" => $data['user_now']->id
@@ -125,7 +125,7 @@ class combination extends CI_Controller {
             $data["schema"] = [];
         }
 		if($this->input->post('save')){    
-            $idcombi = $this->input->post('id');
+            $iddatasync = $this->input->post('id');
             
             $schema = $this->schema_m->get_detail($this->input->post('schema'))->data;            
             $field = array();
@@ -173,7 +173,7 @@ class combination extends CI_Controller {
                 "field" => $field
             );
 
-            $respo = $this->combination_m->edit($idcombi,$input);
+            $respo = $this->datasync_m->edit($iddatasync,$input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
             } else {                
@@ -181,11 +181,11 @@ class combination extends CI_Controller {
             }   
         }
         
-        $data['data'] = $this->combination_m->get_detail($id);       
+        $data['data'] = $this->datasync_m->get_detail($id);       
         if($data['data']->status){
             $data['data'] = $data['data']->data;
             $data['id'] = $id;
-		    $this->load->view('combi_edit_v', $data);
+		    $this->load->view('datasync_edit_v', $data);
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
         }
@@ -194,29 +194,29 @@ class combination extends CI_Controller {
 	public function delete($id,$other=""){       
 		if($id){
             if($other){
-                $respo = $this->combination_m->del_other($id);
+                $respo = $this->datasync_m->del_other($id);
             } else {
-        	    $respo = $this->combination_m->del($id);
+        	    $respo = $this->datasync_m->del($id);
             } 
             if($respo->status){             
-				redirect(base_url().'combination/?alert=success') ; 			
+				redirect(base_url().'data synchronization/?alert=success') ; 			
             } else {                
-				redirect(base_url().'combination/?alert=failed') ; 			
+				redirect(base_url().'data synchronization/?alert=failed') ; 			
             }                       
         }        
-		redirect(base_url().'combination/?alert=failed') ; 			
+		redirect(base_url().'data synchronization/?alert=failed') ; 			
 	}	
 
     public function batch($id){       
 		$data=array();
 		$data['success']='';
 		$data['error']='';
-		$data['title']= 'Combination Batch Process';		
+		$data['title']= 'Data Synchronization Batch Process';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
         $query = array(
             "add_by" => $data['user_now']->id
         );
-        $data['data'] = $this->combination_m->get_detail($id);       
+        $data['data'] = $this->datasync_m->get_detail($id);       
         if($data['data']->status){
             $data['data'] = $data['data']->data;
             $schema = $this->schema_m->get_detail($data['data']->schema_code);
@@ -224,7 +224,7 @@ class combination extends CI_Controller {
                 $data['schema'] = $schema->data->name;
             }
             $data['id'] = $id;
-		    $this->load->view('combi_batch_process_v', $data);
+		    $this->load->view('datasync_batch_process_v', $data);
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
         }
@@ -239,14 +239,14 @@ class combination extends CI_Controller {
             "date_start" => $this->input->post("date_start"),
             "date_end" => $this->input->post("date_end")
         );
-        $data = $this->combination_m->batch_process($id,$input);
+        $data = $this->datasync_m->batch_process($id,$input);
         header("Content-Type: application/json");
         echo json_encode($data);
         exit();
     }
 
 
-    public function schema($code,$idcombi=""){       
+    public function schema($code,$iddatasync=""){       
         $schema = $this->schema_m->get_detail($code);
         if($schema->status){
             $data = array();
@@ -302,28 +302,28 @@ class combination extends CI_Controller {
             }else{
                 $data["device"] = [];
             }
-            $data["combi"] = array();
-            if($idcombi){
-                $combi = $this->combination_m->get_detail($idcombi);
-                if($combi->status){
-                    $combi = $combi->data;
-                    for ($i = 0; $i < count($combi->field); $i++) { 
-                        $item = $combi->field[$i];
+            $data["datasync"] = array();
+            if($iddatasync){
+                $datasync = $this->datasync_m->get_detail($iddatasync);
+                if($datasync->status){
+                    $datasync = $datasync->data;
+                    for ($i = 0; $i < count($datasync->field); $i++) { 
+                        $item = $datasync->field[$i];
                         foreach($item as $key=>$value) {                               
-                            $data["combi"][$key] = $value;
+                            $data["datasync"][$key] = $value;
                             if($value=="key"){
                                 continue;
                             }                                                      
                             $device_field = $this->device_m->get_detail($value->data[0])->data;                                                    
-                            $data["combi"][$key]->device_field = $this->extract($device_field->field);                            
+                            $data["datasync"][$key]->device_field = $this->extract($device_field->field);                            
                         }                        
                     }    
                 }
             }
-            if($data["combi"]){                     
-                $this->load->view('combi_edit_form_v', $data);
+            if($data["datasync"]){                     
+                $this->load->view('datasync_edit_form_v', $data);
             }else{
-                $this->load->view('combi_add_form_v', $data);
+                $this->load->view('datasync_add_form_v', $data);
             }
         }
     }
@@ -348,15 +348,15 @@ class combination extends CI_Controller {
     } 
 
 
-    function list($id,$combi){       
+    function list($id,$datasync){       
         $data=array();
         $data['success']='';
         $data['error']='';
-        $data['title']= 'combi Data '.$id.' - Table View';       
+        $data['title']= 'Data Synchronization Data '.$id.' - Table View';       
 		if($this->input->get('alert')=='success') $data['success']='Delete data successfully';	
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data";	
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
-        $data['data'] = $combi; 
+        $data['data'] = $datasync; 
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");
         $data["date_end"] = date("Y-m-d");
@@ -364,7 +364,7 @@ class combination extends CI_Controller {
             $data["date_str"] = $this->input->get('start');
         if($this->input->get('end'))
             $data["date_end"] = $this->input->get('end');
-        $this->load->view('combi_data_v', $data);
+        $this->load->view('datasync_data_v', $data);
     }
 
     function extract($list,$prefix=''){

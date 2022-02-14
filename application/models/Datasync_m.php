@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class combination_m extends My_Model{
+class datasync_m extends My_Model{
 	private $aes;
 	
 	function __construct() {
@@ -9,20 +9,20 @@ class combination_m extends My_Model{
 
 	function get_detail($id){
 		$data = array(
-			"combi_code" => $id
+			"datasync_code" => $id
 		);
-		$url = $this->config->item('url_node')."combination/detail/";				
+		$url = $this->config->item('url_node')."datasync/detail/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 
 	function add($data){
-		$url = $this->config->item('url_node')."combination/add/";				
+		$url = $this->config->item('url_node')."datasync/add/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 
 	function edit($id,$data){
 		$data+=["id" => $id];
-		$url = $this->config->item('url_node')."combination/edit/";				
+		$url = $this->config->item('url_node')."datasync/edit/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 	
@@ -30,12 +30,12 @@ class combination_m extends My_Model{
 		$data = array(
 			"id" => $id
 		);
-		$url = $this->config->item('url_node')."combination/delete/";				
+		$url = $this->config->item('url_node')."datasync/delete/";				
 		return json_decode($this->sendPost($url,$data));
 	}	
 
 	function search($data){
-		$url = $this->config->item('url_node')."combination/";				
+		$url = $this->config->item('url_node')."datasync/";				
 		$result =  json_decode($this->sendPost($url,$data));
 		if(!$result->status)
 			$result->data = array();
@@ -43,28 +43,28 @@ class combination_m extends My_Model{
 	}
 
 	function search_count($data){
-		$url = $this->config->item('url_node')."combination/count/";				
+		$url = $this->config->item('url_node')."datasync/count/";				
 		return json_decode($this->sendPost($url,$data));
 	}
 
-	function datasensor($combination,$data){
-		$url = $this->config->item('url_node')."combination/data/".$combination."/";				
+	function datasensor($datasync,$data){
+		$url = $this->config->item('url_node')."datasync/data/".$datasync."/";				
 		$result =  json_decode($this->sendPost($url,$data));
 		if(!$result->status)
 			$result->data = array();
 		return $result;
 	}
 
-	function count_datasensor($combination,$data){
-		$url = $this->config->item('url_node')."combination/data/".$combination."/count/";				
+	function count_datasensor($datasync,$data){
+		$url = $this->config->item('url_node')."datasync/data/".$datasync."/count/";				
 		$result =  json_decode($this->sendPost($url,$data));
 		if(!$result->status)
 			$result->data = 0;
 		return $result;
 	}
 	
-	function batch_process($combination,$data){
-		$url = $this->config->item('url_node')."combination/batch/".$combination."/";			
+	function batch_process($datasync,$data){
+		$url = $this->config->item('url_node')."datasync/batch/".$datasync."/";			
 		return json_decode($this->sendPost($url,$data));
 	}
 }
