@@ -203,9 +203,9 @@
 	                    </a>
 	              	</li>
                   <li class="site-menu-item has-sub">
-	                	<a class="animsition-link" href="<?= base_url()?>combination">
-	                        <i class="site-menu-icon md-input-composite" aria-hidden="true"></i>
-	                        <span class="site-menu-title">Combination</span>
+	                	<a class="animsition-link" href="<?= base_url()?>datasync">
+	                        <i class="site-menu-icon md-refresh-sync" aria-hidden="true"></i>
+	                        <span class="site-menu-title">Data Synchronization</span>
 	                    </a>
 	              	</li>
 	              	<!-- <li class="site-menu-item has-sub">

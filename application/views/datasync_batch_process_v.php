@@ -17,7 +17,7 @@
         <div class="pricing-header bg-blue-600">
           <div class="pricing-title">Data Synchronization Service Info</div>
           <div class="pricing-price" style="padding-top:0px; padding-bottom: 0px;font-size: 2.858rem;">
-            <span class="pricing-currency"><i class="icon md-input-composite" aria-hidden="true"></i></span>
+            <span class="pricing-currency"><i class="icon wb-loop" aria-hidden="true"></i></span>
             <span class="pricing-amount"><?= $data->name; ?></span>            
           </div>
           <p class="px-30 font-size-16" ><strong>Data Synchronization Code</strong>: <i><?= $data->datasync_code; ?></i></p>
@@ -89,7 +89,7 @@
       </div>
       <div class="panel-bordered panel-info mt-10" id="progressDiv">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Data Synchronization Function Batch Process</h3>
+          <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Data Synchronization Service - Batch Process</h3>
         </div>
         <div class="panel-body bg-white">
             <div class="example-wrap">
@@ -184,7 +184,7 @@
     
             while (now.isBefore(endDate)) {
                 dates.push(now.format('YYYY-MM-DD HH:mm:ss'));
-                now.add(<?= (int)$data->time_loop * 2 ?>, 'seconds');
+                now.add(<?= (int)$data->time_loop * 5 ?>, 'seconds');
             }
             console.log(dates);
             return dates;
@@ -212,6 +212,7 @@
             datalist = findList(startdate,enddate);
             current = 0;
             resetprog();
+            enddate = enddate+":00"; 
             if(datalist.length == 1){
                 batch(datalist[current],enddate,datalist,current,enddate);
             } else {

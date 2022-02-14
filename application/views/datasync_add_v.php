@@ -38,7 +38,7 @@
                     <div class="form-group form-material ">
                       <label class="form-control-label" for="inputTime">Sampling Time (in second)</label>
                       <input type="number" class="form-control" id="inputTime" name="time_loop" value="<?= (empty($data->time_loop))?'':$data->time_loop;  ?>" 
-                        placeholder="Name" autocomplete="off" required/>
+                        placeholder="Sampling time in second" autocomplete="off" required/>
                     </div>
                     <div class="form-group form-material">
                         <label class="form-control-label mt-3" for="inputLocation"  style="width:100px;">Stream Process</label>

@@ -52,7 +52,7 @@
               foreach($data as $d){ ?>
               <tr>
                 <td><?= $d->name?></td>
-                <td><?= $d->combi_code?></td>
+                <td><?= $d->datasync_code?></td>
                 <td><?= $d->schema_code?></td>
                 <td>
                     <?php if($d->stream){ ?>
@@ -67,9 +67,9 @@
                 <td class="actions">
                   <a href="<?= base_url()?>schema/data/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Show Data" target="_blank"><i class="icon md-grid" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>datasync/batch/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                  <a href="<?= base_url()?>datasync/batch/<?= $d->datasync_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Batch Process"><i class="icon md-storage" aria-hidden="true"></i></a>
-                  <a href="<?= base_url()?>datasync/edit/<?= $d->combi_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                  <a href="<?= base_url()?>datasync/edit/<?= $d->datasync_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>datasync/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>

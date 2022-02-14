@@ -9,18 +9,18 @@
         $method_value = "";
         $collect_value = "";
         foreach($item as $key=>$value) {           
-            if(!empty($combi[$key])){
+            if(!empty($datasync[$key])){
                 $status = true;
-                if($combi[$key] == 'key'){
+                if($datasync[$key] == 'key'){
                     $status_key = true;
                 } else {
                     $status_form = true;
-                    $device_field = $combi[$key]->device_field;
-                    $item_data = $combi[$key]->data;
-                    $def_value = $combi[$key]->default;
-                    $method_value = $combi[$key]->option;
-                    if(!empty($combi[$key]->collectid)){
-                        $collect_value = $combi[$key]->collectid;
+                    $device_field = $datasync[$key]->device_field;
+                    $item_data = $datasync[$key]->data;
+                    $def_value = $datasync[$key]->default;
+                    $method_value = $datasync[$key]->option;
+                    if(!empty($datasync[$key]->collectid)){
+                        $collect_value = $datasync[$key]->collectid;
                     }
                 }
             }

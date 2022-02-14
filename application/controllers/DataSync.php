@@ -199,12 +199,12 @@ class datasync extends CI_Controller {
         	    $respo = $this->datasync_m->del($id);
             } 
             if($respo->status){             
-				redirect(base_url().'data synchronization/?alert=success') ; 			
+				redirect(base_url().'datasync/?alert=success') ; 			
             } else {                
-				redirect(base_url().'data synchronization/?alert=failed') ; 			
+				redirect(base_url().'datasync/?alert=failed') ; 			
             }                       
         }        
-		redirect(base_url().'data synchronization/?alert=failed') ; 			
+		redirect(base_url().'datasync/?alert=failed') ; 			
 	}	
 
     public function batch($id){       

@@ -1,9 +1,9 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Data Synchronization Function Service</h1>
+  <h1 class="page-title">Data Synchronization Service</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>combination">Data Synchronization</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>datasync">Data Synchronization</a></li>
     <li class="breadcrumb-item active">Update</li>
   </ol>
 </div>
@@ -16,14 +16,14 @@
         
           <!-- Example Basic Form (Form grid) -->
           <div class="example-wrap">
-            <h4 class="example-title">Form Data Synchronization Service  Update</h4>
+            <h4 class="example-title">Form Data Synchronization Service Update</h4>
             <div class="example">
               <form method="post" autocomplete="off">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputLocation">Data Synchronization Service Code</label>
-                      <input type="text" class="form-control" id="inputLocation" name="combicode" value="<?= (empty($data->combi_code))?'':$data->combi_code;  ?>"
+                      <input type="text" class="form-control" id="inputLocation" name="combicode" value="<?= (empty($data->datasync_code))?'':$data->datasync_code;  ?>"
                         readonly/>
                     </div>
                     <div class="form-group form-material ">
@@ -43,7 +43,7 @@
                     <div class="form-group form-material ">
                       <label class="form-control-label" for="inputTime">Sampling Time (in second)</label>
                       <input type="number" class="form-control" id="inputTime" name="time_loop" value="<?= (empty($data->time_loop))?'':$data->time_loop;  ?>" 
-                        placeholder="Name" autocomplete="off" required/>
+                        placeholder="Sampling time in second" autocomplete="off" required/>
                     </div>
                     <div class="form-group form-material">
                         <label class="form-control-label mt-3" for="inputLocation"  style="width:100px;">Stream Process</label>
@@ -59,7 +59,7 @@
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputPurpose">Purpose</label>
                       <input type="text" class="form-control" id="inputPurpose" name="purpose" value="<?= (empty($data->purpose))?'':$data->purpose;  ?>"
-                        placeholder="Purpose combinations group" autocomplete="off" />
+                        placeholder="Purpose datasyncs group" autocomplete="off" />
                     </div>
                     <div class="form-group form-material">
                         <label class="form-control-label">Detail Information</label>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="form-group form-material">
                   <button type="submit" name="save" value="save" class="btn btn-primary">Data Synchronization Service Update</button>&nbsp; &nbsp;
-                  <a href="<?= base_url();?>combination"><button type="button" class="btn btn-default">Cancel</button></a>
+                  <a href="<?= base_url();?>datasync"><button type="button" class="btn btn-default">Cancel</button></a>
                   <input type="hidden" name="id" value="<?= $data->id ?>">
                   <input type="hidden" name="field" id="listField">
                 </div>
@@ -104,7 +104,7 @@
         var shcema = $("#inputSchema").val();
         $.ajax({
             type: 'post',
-            url: '<?= base_url()?>combination/schema/'+shcema+"/<?= $data->combi_code ?>",
+            url: '<?= base_url()?>datasync/schema/'+shcema+"/<?= $data->datasync_code ?>",
             data: {},
             success: function (result){
                 $("#form_schema").html(result);
@@ -148,7 +148,7 @@
     var device = $("#inputDevice_"+field).val();
     $.ajax({
         type: 'post',
-        url: '<?= base_url()?>combination/device/'+device,
+        url: '<?= base_url()?>datasync/device/'+device,
         data: {},
         success: function (result){
           var item = "";
