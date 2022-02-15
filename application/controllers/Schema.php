@@ -419,18 +419,24 @@ class schema extends CI_Controller {
             "date_end" => $date_end
         );
         $count_data = $this->schema_m->count_datasensor($schema->schema_code,$query)->data;
-        $query["limit"] = intval($limit);
-        $query["skip"] = intval($offset);
-		$list = $this->schema_m->datasensor($schema->schema_code,$query)->data;
+        if(!empty($limit))
+            $query["limit"] = intval($limit);
+        if(!empty($offset))
+            $query["skip"] = intval($offset);
+        if(empty($offset) && empty($limit))
+            $export = true;
+        else
+            $export = false;
+        $list = $this->schema_m->datasensor($schema->schema_code,$query)->data;
         $data = array();
         foreach($list as $d){
             $item = array();
             foreach($extract as $k){
                 if (strpos($k, '-') !== false) {
                     $nested_k = explode("-",$k);
-                    $val = $this->dataget_nested($nested_k,$d);
+                    $val = $this->dataget_nested($nested_k,$d,$export);
                 } else {
-                    $val = (empty($d->{$k}))?"-":$d->{$k};
+                    $val = (empty($d->{$k}))?((!$export)?"-":""):$d->{$k};
                 }
                 $item[$k] = $val;
             }
@@ -455,10 +461,13 @@ class schema extends CI_Controller {
         echo json_encode($response);
     }
 
-    function dataget_nested($key,$value){
+    function dataget_nested($key,$value,$export){
         foreach($key as $d){
             if(empty($value->{$d})){
-                $value = "-";
+                if(!$export)
+                    $value = "-";
+                else
+                    $value = "";
                 break;    
             }
             $value = $value->{$d}; 

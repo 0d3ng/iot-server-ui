@@ -96,7 +96,7 @@
                       <i class="icon md-delete" aria-hidden="true"></i>
                   </button>
                   </div> -->
-                  <table id="sensordata" data-mobile-responsive="true">
+                  <table id="sensordata" data-mobile-responsive="true" data-show-export="true">
                   <thead>
                       <tr>
                         <th data-field="date" style="white-space:nowrap;">DATE</th>
@@ -117,12 +117,15 @@
 </div>
 
 <?php include("footer.php") ?>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/moment/moment.js"></script>
 <script src="<?= base_url()?>assets/js/mqttws31.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 <script src="<?= base_url()?>assets/global/js/Plugin/bootstrap-datepicker.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
 <!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
 <script>
   $( document ).ready(function() {
@@ -142,7 +145,15 @@
         icons: {
           refresh: 'md-refresh',
           toggle: 'md-receipt',
-          columns: 'md-view-list-alt'
+          columns: 'md-view-list-alt',
+          export: 'md-download'
+        },
+        exportDataType: "all",
+        exportTypes: ['json','csv', 'txt','excel'],
+        exportOptions: {
+            ignoreColumn: ["action-form"],
+            fileName: 'Device - <?=  $data->device_code; ?> | <?= $date_str?> - <?= $date_end?>',
+            preventInjection: false
         }
     });
   });
