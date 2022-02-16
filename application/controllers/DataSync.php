@@ -33,6 +33,7 @@ class datasync extends CI_Controller {
         } else {
             $data['data'] = array();
         }
+        
         $this->load->view('datasync_v', $data);
 	}
 
