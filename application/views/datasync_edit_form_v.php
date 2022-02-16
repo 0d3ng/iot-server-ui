@@ -85,7 +85,7 @@
         autocomplete="off" />
     </div>
     <input type="hidden" id="inputCollect_<?= $key ?>" name="<?= $key ?>_collection" value="<?= $collect_value ?>" />
-    <div class="form-group form-material col-xl-4 col-md-6 col-6">
+    <div class="form-group form-material col-xl-6 col-md-6 col-6">
         <label class="form-control-label" for="inputMethod_<?= $key ?>">Sampling Function Method</label>
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >
             <option value="">--- Select Method ---</option>
