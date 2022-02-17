@@ -484,6 +484,7 @@ class schema extends CI_Controller {
         $data['title']= 'Schema Data '.$id.' - Import Data';
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
         $data['data'] = $schema; 
+        $data['id'] = $id;
 		if($this->input->post('save')){
 			
 	    }

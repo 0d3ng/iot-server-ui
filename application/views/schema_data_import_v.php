@@ -4,7 +4,8 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
-    <li class="breadcrumb-item active">Table Data</li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>schema/data/<?= $id ?>">Data</a></li>
+    <li class="breadcrumb-item active">Import</li>
   </ol>
   <div class="page-header-actions">
   </div>
@@ -33,7 +34,7 @@
     <div class="col-md-6">
       <div class="panel-bordered panel-success">
         <div class="panel-heading">
-            <h3 class="panel-title"><i class="icon wb-upload" aria-hidden="true"></i> &nbsp;Import Data</h3>
+            <h3 class="panel-title"><i class="icon wb-upload" aria-hidden="true"></i> &nbsp;Data Import</h3>
             <div class="panel-actions" style="text-align: right;">
                 <div class="btn-group dropdown">
                     <button type="button" class="btn btn-success dropdown-toggle waves-effect waves-classic" id="BulletDropdown2" data-toggle="dropdown" aria-expanded="false">
