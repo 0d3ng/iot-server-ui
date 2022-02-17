@@ -244,6 +244,8 @@ class schema extends CI_Controller {
             $this->data_edit($id,$schema->data,$data_id);
         } else if($action=="delete"){
             $this->data_delete($id,$schema->data,$data_id);
+        } else if($action=="import"){
+            $this->data_import($id,$schema->data);
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
         } 
@@ -475,6 +477,101 @@ class schema extends CI_Controller {
         return $value;
     }
 
+    public function data_import($id,$schema){
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+        $data['title']= 'Schema Data '.$id.' - Import Data';
+        $data['user_now'] = $this->session->userdata('dasboard_iot');   
+        $data['data'] = $schema; 
+		if($this->input->post('save')){
+			
+	    }
+   		$this->load->view('schema_data_import_v', $data);	
+	}
+
+    function import_excel(){
+        include APPPATH.'libraries/PHPExcel/PHPExcel.php';
+        $config['upload_path'] = 'assets/excel';
+        $config['allowed_types'] = 'xlsx|xls|csv';
+        $config['max_size'] = '10000';
+        $config['encrypt_name'] = true;
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('file')) {
+            $data['error']= $this->upload->display_errors();//'Import gagal';
+        } else {
+            $data_upload = $this->upload->data();
+            $excelreader     = new PHPExcel_Reader_Excel2007();
+            $loadexcel         = $excelreader->load('assets/excel/'.$data_upload['file_name']); // Load file yang telah diupload ke folder excel
+            $index = $this->input->post('index');
+            if($index) $index = 0;
+            $sheet             = $loadexcel->getActiveSheet($index)->toArray(null, true, true ,true);
+            $lat = $this->input->post('lat');
+            $lng = $this->input->post('lng');
+            $str = $this->input->post('start_line');
+            $end = $this->input->post('end_line');
+            $kec = $this->input->post('kecamatan');
+            $kode_import = date("dhis");
+            $data_excel = $this->excel_format_puskesmas($sheet,$str,$end,$kode_import,$lat,$lng);
+
+            //delete file from server
+            unlink(realpath('assets/excel/'.$data_upload['file_name']));
+            //upload success
+            // echo "<pre>";
+            // print_r($data_excel);
+            // echo "</pre>";
+            // exit();
+            $data['import'] = $kode_import;
+            $data['import_count'] = count($data_excel);
+            $data['success']='Process Import';         
+        }
+    }
+
+    public function template($type,$id){
+        $schema = $this->schema_m->get_detail($id);
+        if(!$schema->status){
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+            return;
+        }
+        if($type == "csv"){
+            $this->csvtemplate($schema->data);
+        }else if($type == "excel"){
+            $this->exceltemplate($schema->data);
+        }else{
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
+    }
+
+    function csvtemplate($schema){
+        $filename = "schema_".$schema->schema_code."_template.csv";
+        $f = fopen('php://memory', 'w'); 
+        $field = $this->extract($schema->field);
+        fputcsv($f, $field); 
+        fseek($f, 0);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'";');
+        fpassthru($f);
+    }
+
+    function exceltemplate($schema){
+        $filename = "schema_".$schema->schema_code."_template.xlsx";
+        include APPPATH.'libraries/PHPExcel/PHPExcel.php';
+        $objPHPExcel    =   new PHPExcel();
+        $field = $this->extract($schema->field);
+        $objPHPExcel->setActiveSheetIndex(0);
+        $letter = 'A';
+        $letterAscii = ord($letter);
+        foreach($field as $item){
+            $objPHPExcel->getActiveSheet()->SetCellValue(chr($letterAscii).'1', $item);
+            $letterAscii++;
+        }
+        $objWriter  =   new PHPExcel_Writer_Excel2007($objPHPExcel);
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
+        $objWriter->save('php://output');
+    }
 
 
 }

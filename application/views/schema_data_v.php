@@ -77,6 +77,9 @@
               <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
                 <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data&nbsp;&nbsp; 
               </button></a>
+              <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/import/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
+                <i class="icon md-upload" aria-hidden="true"></i> &nbsp; Import Data&nbsp;&nbsp; 
+              </button></a>
           </div>
         </div>
         <div class="panel-body">
@@ -165,6 +168,7 @@
           columns: 'md-view-list-alt',
           export: 'md-download'
         },
+        exportDataType: "all",
         exportTypes: ['json','csv', 'txt','excel'],
         exportOptions: {
             ignoreColumn: ["action-form"],
