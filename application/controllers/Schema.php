@@ -486,46 +486,59 @@ class schema extends CI_Controller {
         $data['data'] = $schema; 
         $data['id'] = $id;
 		if($this->input->post('save')){
-			
+            $name = strtolower($_FILES["import"]["name"]);
+            $type = $_FILES["import"]["type"];
+            if( $type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && strpos($name, ".xlsx") !== false  ){
+                //Import Excel (xlsx)
+                $data = $this->import_excel($data,"xlsx");
+            } else if($type == "application/vnd.ms-excel" && strpos($name, ".xls") !== false ){
+                //Import Excel (xls)
+                $data = $this->import_excel($data,"xls");
+            } else if($type == "application/vnd.ms-excel" && strpos($name, ".csv") !== false ){
+                //Import CSV (csv)
+                $data = $this->import_excel($data,"csv");
+            } else {
+                $data['error']='Wrong file type';
+            }
 	    }
    		$this->load->view('schema_data_import_v', $data);	
 	}
 
-    function import_excel(){
-        include APPPATH.'libraries/PHPExcel/PHPExcel.php';
+    function import_excel($data,$type){
         $config['upload_path'] = 'assets/excel';
         $config['allowed_types'] = 'xlsx|xls|csv';
         $config['max_size'] = '10000';
         $config['encrypt_name'] = true;
         $this->load->library('upload', $config);
-        if (!$this->upload->do_upload('file')) {
+        if (!$this->upload->do_upload('import')) {
             $data['error']= $this->upload->display_errors();//'Import gagal';
         } else {
-            $data_upload = $this->upload->data();
-            $excelreader     = new PHPExcel_Reader_Excel2007();
-            $loadexcel         = $excelreader->load('assets/excel/'.$data_upload['file_name']); // Load file yang telah diupload ke folder excel
-            $index = $this->input->post('index');
-            if($index) $index = 0;
-            $sheet             = $loadexcel->getActiveSheet($index)->toArray(null, true, true ,true);
-            $lat = $this->input->post('lat');
-            $lng = $this->input->post('lng');
-            $str = $this->input->post('start_line');
-            $end = $this->input->post('end_line');
-            $kec = $this->input->post('kecamatan');
-            $kode_import = date("dhis");
-            $data_excel = $this->excel_format_puskesmas($sheet,$str,$end,$kode_import,$lat,$lng);
-
-            //delete file from server
-            unlink(realpath('assets/excel/'.$data_upload['file_name']));
-            //upload success
+            $data_upload    = $this->upload->data();
+            if($type == "xlsx"){
+                include APPPATH.'libraries/PHPExcel/PHPExcel.php';
+                $objectReader  = new PHPExcel_Reader_Excel2007();
+            }else{
+                include APPPATH.'libraries/PHPExcel/PHPExcel/IOFactory.php';
+                $file_type	   = PHPExcel_IOFactory::identify('assets/excel/'.$data_upload['file_name']);
+                $objectReader  = PHPExcel_IOFactory::createReader($file_type);
+            }
+            $loadObject = $objectReader->load('assets/excel/'.$data_upload['file_name']); // Load file yang telah diupload ke folder excel
+            $sheet      = $loadObject->getActiveSheet()->toArray(null, true, true ,true);
             // echo "<pre>";
-            // print_r($data_excel);
+            // print_r($sheet[1]);
             // echo "</pre>";
-            // exit();
-            $data['import'] = $kode_import;
-            $data['import_count'] = count($data_excel);
+            $header = $sheet[1];
+            $data["header"] = array();
+            foreach($header as $key => $val){
+                $data["header"][$val] = $key;
+            }
+            unset($sheet[1]);
+            $data["list"] = $sheet;
+            $data["list_count"] = count($data["list"]);
+            unlink(realpath('assets/excel/'.$data_upload['file_name']));
             $data['success']='Process Import';         
         }
+        return $data;
     }
 
     public function template($type,$id){
@@ -572,6 +585,19 @@ class schema extends CI_Controller {
         header('Cache-Control: max-age=0'); //no cache
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
         $objWriter->save('php://output');
+    }
+
+    public function import_add($id){
+        $data = array();
+        $input = $this->input->post();
+        $respo = $this->schema_m->add_data($id,$input);
+        if($respo->status){  
+            $data["status"] = true;
+        } else {                
+            $data["status"] = false;
+        } 
+        header("Content-Type: application/json");
+        echo json_encode($data);
     }
 
 

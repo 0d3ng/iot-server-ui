@@ -62,6 +62,9 @@
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/clockpicker/clockpicker.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/progress-bars.css">
 
+        <!-- File Upload -->
+        <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/blueimp-file-upload/jquery.fileupload.css">
+        <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/dropify/dropify.css">
     
     <!-- Fonts -->
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/web-icons/web-icons.css">
