@@ -105,7 +105,7 @@
         <div class="page-content">
             <div class="row row-lg">
                 <?php foreach($id as $d){ ?>
-                    <div class="col-md-3">
+                    <div class="col-md-4 col-6 col-xl-3">
                         <div class="card p-30 flex-row justify-content-between">
                                 <div class="white">
                                     <i class="icon icon-circle icon-2x md-pin bg-blue-600" aria-hidden="true"></i>

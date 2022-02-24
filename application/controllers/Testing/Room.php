@@ -16,8 +16,9 @@ class room extends CI_Controller {
 	}
     
     public function getroom(){
+        $url = "http://103.106.72.188:3001/";
         $id = $this->input->post("id");
-        $schema = "u834oe";
+        $schema = "5y76py";
         $query = array(
             "id" => $id,
             '$and' => [
@@ -25,7 +26,7 @@ class room extends CI_Controller {
                 array("room"=>array('$ne'=>""))
             ]
         );
-        $data= $this->schema_m->findone_data($schema,$query);
+        $data= $this->schema_m->findone_data2($url,$schema,$query);
         if($data->status){
             $data = $data->data;
             $room = $data->room;

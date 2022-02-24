@@ -438,7 +438,7 @@ class schema extends CI_Controller {
                     $nested_k = explode("-",$k);
                     $val = $this->dataget_nested($nested_k,$d,$export);
                 } else {
-                    $val = (empty($d->{$k}))?((!$export)?"-":""):$d->{$k};
+                    $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k};
                 }
                 $item[$k] = $val;
             }
@@ -465,7 +465,7 @@ class schema extends CI_Controller {
 
     function dataget_nested($key,$value,$export){
         foreach($key as $d){
-            if(empty($value->{$d})){
+            if(!isset($value->{$d})){
                 if(!$export)
                     $value = "-";
                 else

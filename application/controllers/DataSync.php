@@ -92,7 +92,7 @@ class datasync extends CI_Controller {
         		"name" => $this->input->post('name'),
         		"schema_code" => $this->input->post('schema'),
 				"add_by" => $data['user_now']->id,        	    
-        	    "time_loop" => $this->input->post('time_loop'),
+        	    "time_loop" => intval($this->input->post('time_loop')),
         	    "stream" => $stream,
                 "information" => array(
                         "detail" => $this->input->post('detail'),
@@ -165,7 +165,7 @@ class datasync extends CI_Controller {
         		"name" => $this->input->post('name'),
         		"schema_code" => $this->input->post('schema'),
 				"add_by" => $data['user_now']->id,        	    
-        	    "time_loop" => $this->input->post('time_loop'),
+        	    "time_loop" =>intval($this->input->post('time_loop')),
         	    "stream" => $stream,
                 "information" => array(
                         "detail" => $this->input->post('detail'),

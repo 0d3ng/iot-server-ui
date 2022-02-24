@@ -94,6 +94,14 @@ class schema_m extends My_Model{
 		$url = $this->config->item('url_node')."schema/data/".$schema."/detail/";				
 		return json_decode($this->sendPost($url,$query));
 	}
+
+	function findone_data2($url,$schema,$query){
+		if(empty($url)){
+			$url = $this->config->item('url_node');
+		}
+		$url = $url."schema/data/".$schema."/detail/";				
+		return json_decode($this->sendPost($url,$query));
+	}
 }
 
 /* End of file admin_model.php */
