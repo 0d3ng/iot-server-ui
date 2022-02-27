@@ -195,7 +195,7 @@
     $("#formBatch").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
-        alertify.confirm('Do you continue to combination process?', 
+        alertify.confirm('Do you continue to data synchronization process?', 
         function(){ 
             totalRecord = 0;
             var startdate = $("#inputDateStart").val();

@@ -23,7 +23,7 @@
                   <div class="col-md-6">
                     <div class="form-group form-material">
                       <label class="form-control-label" for="inputLocation">Data Synchronization Service Code</label>
-                      <input type="text" class="form-control" id="inputLocation" name="combicode" value="<?= (empty($data->datasync_code))?'':$data->datasync_code;  ?>"
+                      <input type="text" class="form-control" id="inputLocation" name="datasynccode" value="<?= (empty($data->datasync_code))?'':$data->datasync_code;  ?>"
                         readonly/>
                     </div>
                     <div class="form-group form-material ">

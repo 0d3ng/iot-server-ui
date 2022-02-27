@@ -82,7 +82,7 @@
     var device = $("#inputCode").val();
     $.ajax({
         type: 'post',
-        url: '<?= base_url()?>combination/device/'+device,
+        url: '<?= base_url()?>datasync/device/'+device,
         data: {},
         success: function (result){
           var collect = result.collect;
