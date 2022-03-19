@@ -91,14 +91,24 @@
                 });
 
                 $menu.find('li').click(function () {
+                    var exportHiddenColumns = that.options.exportHiddenColumns;
                     var type = $(this).data('type'),
                         doExport = function () {
                             that.$el.tableExport($.extend({}, that.options.exportOptions, {
                                 type: type,
                                 escape: false
                             }));
+                            if (exportHiddenColumns != null) {
+                                $.each(exportHiddenColumns, function(index, value) {
+                                    that.hideColumn(value);
+                                });
+                            }
                         };
-
+                    if (exportHiddenColumns != null) {
+                        $.each(exportHiddenColumns, function(index, value) {
+                            that.showColumn(value);
+                        });
+                    }
                     if (that.options.exportDataType === 'all' && that.options.pagination) {
                         that.$el.one(that.options.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table', function () {
                             doExport();
@@ -123,7 +133,7 @@
                         that.load(data);
                     } else {
                         doExport();
-                    }
+                    }                    
                 });
             }
         }

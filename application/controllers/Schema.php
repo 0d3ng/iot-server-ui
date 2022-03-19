@@ -440,13 +440,18 @@ class schema extends CI_Controller {
                 } else {
                     $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k};
                 }
-                $item[$k] = $val;
+                $item[$k] = is_float($val)?number_format($val, 2):$val;
             }
             $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+            if($export){
+                $item["date"] = date('Y-m-d', $d->{"date_add_auto"}->{'$date'}/1000);
+                $item["time"] = date('H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+            }
             if(!empty($d->_id))
                 $iddata = $d->_id;
             else
                 $iddata = $d->id;
+            if(!$export)
             $item["action-form"] = '
                 <a href="'.base_url().'schema/data/'.$id.'/edit/'.$iddata.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                 data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
@@ -457,7 +462,8 @@ class schema extends CI_Controller {
         }
         $response = array(
             "total" => $count_data,
-            "rows" =>  $data
+            "rows" =>  $data,
+            "export" => $export
         );     
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);

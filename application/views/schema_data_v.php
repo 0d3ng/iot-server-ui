@@ -102,6 +102,7 @@
                   <thead>
                       <tr>
                         <th data-field="date" style="white-space:nowrap;">DATE ADD</th>
+                        <th data-field="time" data-visible="false">TIME ADD</th>
                         <?php foreach($extract as $d){ ?>
                         <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
                         <?php } ?>
@@ -174,7 +175,8 @@
             ignoreColumn: ["action-form"],
             fileName: 'Schema - <?=  $data->schema_code; ?> | <?= $date_str?> - <?= $date_end?>',
             preventInjection: false
-        }
+        },
+        exportHiddenColumns:["time"]
     });
   });
 </script>
