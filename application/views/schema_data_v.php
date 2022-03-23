@@ -98,10 +98,10 @@
                       <i class="icon md-delete" aria-hidden="true"></i>
                   </button>
                   </div> -->
-                  <table id="sensordata" data-mobile-responsive="true" data-show-export="true">
+                  <table id="sensordata" data-mobile-responsive="true" data-show-export="true" data-sort-name="date" data-sort-order="desc"">
                   <thead>
                       <tr>
-                        <th data-field="date" style="white-space:nowrap;">DATE ADD</th>
+                        <th data-field="date" data-sortable="true" style="white-space:nowrap;">DATE ADD</th>
                         <th data-field="time" data-visible="false">TIME ADD</th>
                         <?php foreach($extract as $d){ ?>
                         <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
@@ -157,6 +157,7 @@
         pageSize: '25',
         pageList: '[10,25, 50, 100]',
         // search: true,
+        sortable: true,
         showRefresh: true,
         showToggle: true,
         showColumns: true,

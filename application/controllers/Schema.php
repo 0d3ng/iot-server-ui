@@ -408,7 +408,8 @@ class schema extends CI_Controller {
         $schema = $this->schema_m->get_detail($id)->data; 
         $extract = $this->extract($schema->field);
         $limit=$this->input->get('limit');
-        $offset = $this->input->get('offset');
+        $order = $this->input->get('order');
+        $sort = $this->input->get('sort');
         $date_str = date("Y-m-d");
         $date_end = date("Y-m-d");
         if($this->input->get('start'))
@@ -424,7 +425,21 @@ class schema extends CI_Controller {
         if(!empty($limit))
             $query["limit"] = intval($limit);
         if(!empty($offset))
-            $query["skip"] = intval($offset);
+            $query["skip"] = intval($offset);        
+
+        if(!empty($order) && !empty($sort) ){
+            $field = $sort;
+            if($sort == "date")
+                $field = "date_add_auto";
+            if($order == "asc")
+                $type = 1;
+            else 
+                $type = -1;
+            $query["sort"] = array(
+                "field" => $field,
+                "type" => $type
+            );
+        }
         if(empty($offset) && empty($limit))
             $export = true;
         else
