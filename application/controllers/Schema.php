@@ -479,8 +479,7 @@ class schema extends CI_Controller {
         $response = array(
             "total" => $count_data,
             "rows" =>  $data,
-            "export" => $export,
-            "query"=>$query
+            "export" => $export
         );     
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
