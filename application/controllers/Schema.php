@@ -408,6 +408,7 @@ class schema extends CI_Controller {
         $schema = $this->schema_m->get_detail($id)->data; 
         $extract = $this->extract($schema->field);
         $limit=$this->input->get('limit');
+        $offset=$this->input->get('offset');
         $order = $this->input->get('order');
         $sort = $this->input->get('sort');
         $date_str = date("Y-m-d");
@@ -478,7 +479,8 @@ class schema extends CI_Controller {
         $response = array(
             "total" => $count_data,
             "rows" =>  $data,
-            "export" => $export
+            "export" => $export,
+            "query"=>$query
         );     
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
