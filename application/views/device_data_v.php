@@ -75,7 +75,7 @@
                   <div class="dropdown-divider"></div>
                   <div id="checkbox-search" class="dropdown-item-form" >
                     <input type="checkbox" class="icheckbox-primary" id="searchState" name="search"
-                              data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" onchange="alert('test');" <?= (empty($search))?"":"checked"; ?>/>
+                              data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" <?= (empty($search))?"":"checked"; ?>/>
                       <label for="lastData">Search By Date</label>
                       <button type="submit" id="ceks" class="btn btn-sm btn-primary waves-effect waves-classic waves-effect waves-classic" style="float:right;margin-top: -5px;">Apply</button>
                   </div>

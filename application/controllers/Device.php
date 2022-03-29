@@ -358,10 +358,19 @@ class Device extends CI_Controller {
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");
         $data["date_end"] = date("Y-m-d");
+        $data["time_str"] = date("H:i");
+        $data["time_end"] = date("H:i");
+        $data["with_time"] = FALSE;
         if($this->input->get('start'))
             $data["date_str"] = $this->input->get('start');
         if($this->input->get('end'))
             $data["date_end"] = $this->input->get('end');
+        if($this->input->get('tstart'))
+            $data["time_str"] = $this->input->get('tstart');
+        if($this->input->get('tend'))
+            $data["time_end"] = $this->input->get('tend');
+        if($this->input->get('with_time'))
+            $data["with_time"] = TRUE;
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
@@ -375,7 +384,7 @@ class Device extends CI_Controller {
         $limit=$this->input->get('limit');
         $offset = $this->input->get('offset');
         $date_str = date("Y-m-d");
-        $date_end = date("Y-m-d");
+        $date_end = date("Y-m-d"); 
         if($this->input->get('start'))
             $date_str = $this->input->get('start');
         if($this->input->get('end'))
@@ -385,12 +394,32 @@ class Device extends CI_Controller {
             "date_start" => $date_str,
             "date_end" => $date_end
         );
+
+        if($this->input->get('tstart')){
+            $query["time_start"] = $this->input->get('tstart').":00";
+        }
+        if($this->input->get('tend')){
+            $query["time_end"] = $this->input->get('tend').":00";
+        }
+
         $count_data = $this->device_m->count_datasensor($device->device_code,$query)->data;
         if(!empty($limit))
             $query["limit"] = intval($limit);
         if(!empty($offset))
             $query["skip"] = intval($offset);
-            
+        if(!empty($order) && !empty($sort) ){
+            $field = $sort;
+            if($sort == "date")
+                $field = "date_add_server";
+            if($order == "asc")
+                $type = 1;
+            else 
+                $type = -1;
+            $query["sort"] = array(
+                "field" => $field,
+                "type" => $type
+            );
+        }
         if(empty($offset) && empty($limit))
             $export = true;
         else
@@ -414,7 +443,8 @@ class Device extends CI_Controller {
         }
         $response = array(
             "total" => $count_data,
-            "rows" =>  $data
+            "rows" =>  $data,
+            "query" =>  $query
         );     
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);

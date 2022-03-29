@@ -44,14 +44,33 @@
                         <div class="form-group form-material row">
                             <div class="input-daterange" data-plugin="datepicker">
                                 <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="icon md-calendar" aria-hidden="true"></i>
-                                </span>
-                                <input type="text" class="form-control" name="start" value="<?= $date_str?>" data-date-format="yyyy-mm-dd"/>
+                                  <span class="input-group-addon">
+                                      <i class="icon md-calendar" aria-hidden="true"></i>
+                                  </span>
+                                  <input type="text" class="form-control" name="start" value="<?= $date_str?>" data-date-format="yyyy-mm-dd"/>
                                 </div>
                                 <div class="input-group">
-                                <span class="input-group-addon">to</span>
-                                <input type="text" class="form-control" name="end" value="<?= $date_end?>" data-date-format="yyyy-mm-dd"/>
+                                  <span class="input-group-addon">to</span>
+                                  <input type="text" class="form-control" name="end" value="<?= $date_end?>" data-date-format="yyyy-mm-dd"/>
+                                </div>
+                            </div>
+                            <div class="input-group" style="margin-top:20px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="checkbox" class="icheckbox-primary" id="searchState" name="with_time"
+                                      data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" <?= ($with_time)?"checked":""; ?>/>  
+                                    </span>
+                                    <label style="margin-top: 10px;" for="lastData">Search By Date</label>
+                                </div>
+                                <div class="input-group">
+                                  <span class="input-group-addon">
+                                      <i class="icon md-time-countdown" aria-hidden="true"></i>
+                                  </span>
+                                  <input type="text" class="form-control search-time" data-autoclose="true" data-plugin="clockpicker" id="inputTimeStart" name="tstart"  value="<?= $time_str ?>" autocomplete="off" required>
+                                </div>
+                                <div class="input-group">
+                                  <span class="input-group-addon">to</span>
+                                  <input type="text" class="form-control search-time" data-autoclose="true" data-plugin="clockpicker" id="inputTimeEnd" name="tend" value="<?= $time_end ?>" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>    
@@ -98,7 +117,7 @@
                       <i class="icon md-delete" aria-hidden="true"></i>
                   </button>
                   </div> -->
-                  <table id="sensordata" data-mobile-responsive="true" data-show-export="true" data-sort-name="date" data-sort-order="desc"">
+                  <table id="sensordata" data-mobile-responsive="true" data-show-export="true" data-sort-name="date" data-sort-order="desc">
                   <thead>
                       <tr>
                         <th data-field="date" data-sortable="true" style="white-space:nowrap;">DATE ADD</th>
@@ -130,6 +149,8 @@
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/clockpicker/bootstrap-clockpicker.js"></script>
+<script src="<?= base_url()?>assets/global/js/Plugin/clockpicker.js"></script>
 <!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
 <script>
   function del(link){
@@ -140,6 +161,13 @@
     });
   }
   $( document ).ready(function() {
+    $('input').on('ifChecked', function(event){
+      $(".search-time").removeAttr('disabled');
+    });
+    $('input').on('ifUnchecked', function(event){
+      $(".search-time").attr('disabled','disabled');
+    });
+
     // Override global options
     toastr.options = {
       positionClass: 'toast-top-center'
@@ -151,7 +179,7 @@
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
     $('#sensordata').bootstrapTable({
-        url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?>",
+        url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?><?= ($with_time)?"&tstart=".$time_str."&tend=".$time_end:""; ?>",
         pagination: true,
         sidePagination: 'server',
         pageSize: '25',
