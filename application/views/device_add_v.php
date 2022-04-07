@@ -24,11 +24,10 @@
                     <div class="form-group form-material" id="selectGroup">
                       <label class="form-control-label" for="inputSelectGroup">Devices Group</label>
                       <select class="form-control " id="inputSelectGroup" name="group" required>
-                          <option value="">--- Select Group Device ---</option>
+                          <option value="other">Default Group Device</option>
                           <?php foreach ($device_group as $d) { ?>
                           <option value="<?= $d->code_name?>"><?= $d->name?></option>
                           <?php } ?>
-                          <option value="other">Non-group Device</option>
                       </select>
                     </div>
 
@@ -51,12 +50,10 @@
                       <input type="text" class="form-control" id="inputLocation" name="location" value="<?= (empty($data->location))?'':$data->location;  ?>"
                         placeholder="Location devices group" autocomplete="off" />
                     </div> 
-                    
-
                   </div>
 
                   <div class="col-md-6">
-                    <div class="form-group form-material" id="commchannel" style="display:none">
+                    <div class="form-group form-material" id="commchannel">
                       <label class="form-control-label font-size-16" for="inputLocation">Communication Channel</label>
                       <div class="row">
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">
@@ -74,12 +71,12 @@
                         <div class="example col-md-12 col-xl-6 mt-2 mb-2">
                           <label class="form-control-label float-left mt-3" for="inputLocation"  style="width:100px;">MQTT</label>
                           <div class="float-left">
-                            <label class="float-left pt-3" for="inputMQTT">On</label>
+                            <label class="float-left pt-3" for="inputMQTT">Off</label>
                             <div class="float-left ml-20 mr-20">
                               <input type="checkbox" id="inputMQTT" name="mqtt" data-plugin="switchery"
                               />
                             </div>
-                            <label class="pt-3" for="inputMQTT">Off</label>
+                            <label class="pt-3" for="inputMQTT">On</label>
                           </div>
                         </div>
                       </div>

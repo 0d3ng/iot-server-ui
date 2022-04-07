@@ -96,14 +96,18 @@
     
     $("#inputSchema").change(function(){
         var shcema = $("#inputSchema").val();
-        $.ajax({
-            type: 'post',
-            url: '<?= base_url()?>datasync/schema/'+shcema,
-            data: {},
-            success: function (result){
-                $("#form_schema").html(result);
-            }
-        });
+        if(shcema == ""){
+          $("#form_schema").html("");
+        } else {
+          $.ajax({
+              type: 'post',
+              url: '<?= base_url()?>datasync/schema/'+shcema,
+              data: {},
+              success: function (result){
+                  $("#form_schema").html(result);
+              }
+          });
+        }
     });    
   });
 

@@ -34,7 +34,7 @@
                           ?>
                           <option value="<?= $d->code_name?>"  <?= ($d->code_name == $data->group_code_name)?'selected':'' ?> ><?= $d->name?></option>
                           <?php } ?>
-                          <option value="other" <?= (empty($data->group_code_name) || ($data->group_code_name=="other"))?'selected':'' ?> >Non-group Device</option>
+                          <option value="other" <?= (empty($data->group_code_name) || ($data->group_code_name=="other"))?'selected':'' ?> >Default Group Device</option>
                       </select>
                     </div>
                     <div class="form-group form-material ">

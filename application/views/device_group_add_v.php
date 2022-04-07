@@ -25,7 +25,9 @@
                       <label class="form-control-label" for="inputSelectType">Type</label>
                       <select class="form-control" id="inputSelectType" name="type">
                           <option value="personal" selected="">Personal</option>
+                          <?php if($group){ ?>
                           <option value="group">Group</option>
+                          <?php } ?>
                       </select>
                     </div>
                     <div class="form-group form-material" id="selectGroup">

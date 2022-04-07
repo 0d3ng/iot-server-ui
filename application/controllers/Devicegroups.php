@@ -21,31 +21,29 @@ class Devicegroups extends CI_Controller {
 		$data['title']='Device Group List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
         $data['group'] = [];
-		$group = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
-        $groupcode = array();
-        foreach ($group as $key) {
-            $groupcode[] = $key->group_code;
-            $data['group'][$key->group_code] = $key;
-        }
-        $groupcode = array(
-            '$in' => $groupcode
-        );
         $data["data_personal"] = array();
         $data["data_group"] = array();
+        $groupcode = array();
+		$group = $this->group_m->search(array("user_id"=>$data['user_now']->id)); //->data
+        if($group->status){
+            $group = $group->data;
+            foreach ($group as $key) {
+                $groupcode[] = $key->group_code;
+                $data['group'][$key->group_code] = $key;
+            }
+            $groupcode = array(
+                '$in' => $groupcode
+            );
+            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));
+            if($data_group->status){
+                $data["data_group"] = $data_group->data;
+            }
+        }
         $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
-        $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));
 		if($data_personal->status){
             $data["data_personal"] = $data_personal->data;
         }
-        if($data_group->status){
-            $data["data_group"] = $data_group->data;
-        }
         $data['device_m'] = $this->device_m;
-  //       echo "<pre>";
-  //       print_r($groupcode);
-  //       print_r($data);
-  //       echo "</pre>";
-		// exit();
         $this->load->view('device_group_v', $data);
 	}
 
@@ -55,8 +53,12 @@ class Devicegroups extends CI_Controller {
 		$data['error']='';
 		$data['title']= 'Device Group Add';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
-        $data['group'] = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
-		if($this->input->post('save')){        	
+        $data['group'] = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+		if($data['group']->status)
+            $data['group'] = $data['group']->data;
+        else
+            $data['group'] = [];
+        if($this->input->post('save')){        	
         	$type = $this->input->post('type');
             $groupcode = '';
             if($type == "group"){
@@ -113,7 +115,11 @@ class Devicegroups extends CI_Controller {
 		$data['error']='';
 		$data['title']= 'Group Edit';		
 		$data['user_now'] = $this->session->userdata('dasboard_iot');	
-        $data['group'] = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
+        $data['group'] = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+		if($data['group']->status)
+            $data['group'] = $data['group']->data;
+        else
+            $data['group'] = [];
 		if($this->input->post('save')){    
             $idgrup = $this->input->post('id');
         	$type = $this->input->post('type');

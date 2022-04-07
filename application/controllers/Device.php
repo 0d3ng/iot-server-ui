@@ -30,27 +30,30 @@ class Device extends CI_Controller {
             $type = 'all';
         $data['device_group'] = [];
         ////get goup////
-        $data['group'] = [];        
-        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
-        $groupcode = array();
-        foreach ($group as $key) {
-            $groupcode[] = $key->group_code;
-            $data['group'][$key->group_code] = $key;
-        }        
-        ///end get goup////
-        ////get device from group///
-        $groupcode = array(
-            '$in' => $groupcode
-        );
-        $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
-        if($data_group->status){
-            $data_group = $data_group->data;
-            if(!empty($data_group))
-                foreach ($data_group as $key) {
-                    $device_groupcode[] = $key->code_name;
-                    $data['device_group'][$key->code_name] = $key;
-                }
+        $data['group'] = []; 
+        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+        if($group->status){
+            $groupcode = array();
+            foreach ($group as $key) {
+                $groupcode[] = $key->group_code;
+                $data['group'][$key->group_code] = $key;
+            }        
+            ///end get goup////
+            ////get device from group///
+            $groupcode = array(
+                '$in' => $groupcode
+            );
+            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
+            if($data_group->status){
+                $data_group = $data_group->data;
+                if(!empty($data_group))
+                    foreach ($data_group as $key) {
+                        $device_groupcode[] = $key->code_name;
+                        $data['device_group'][$key->code_name] = $key;
+                    }
+            }    
         }
+        
         //end get device from group///
         ////get device from personal ///
         $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
@@ -101,7 +104,11 @@ class Device extends CI_Controller {
         $data['device_group'] = array();
         ////get goup////
         $data['group'] = [];        
-        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
+        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+		if($group->status)
+            $group = $group->data;
+        else
+            $group = [];
         $groupcode = array();
         foreach ($group as $key) {
             $groupcode[] = $key->group_code;
@@ -182,7 +189,11 @@ class Device extends CI_Controller {
         $data['device_group'] = array();
         ////get goup////
         $data['group'] = [];        
-        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id))->data;
+        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+		if($group->status)
+            $group = $group->data;
+        else
+            $group = [];
         $groupcode = array();
         foreach ($group as $key) {
             $groupcode[] = $key->group_code;
