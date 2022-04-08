@@ -33,6 +33,7 @@ class Device extends CI_Controller {
         $data['group'] = []; 
         $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
         if($group->status){
+            $group = $group->data;
             $groupcode = array();
             foreach ($group as $key) {
                 $groupcode[] = $key->group_code;
