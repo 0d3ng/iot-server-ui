@@ -527,13 +527,13 @@ class schema extends CI_Controller {
 		if($this->input->post('save')){
             $name = strtolower($_FILES["import"]["name"]);
             $type = $_FILES["import"]["type"];
-            if( $type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && strpos($name, ".xlsx") !== false  ){
+            if( strpos($name, ".xlsx") !== false  ){
                 //Import Excel (xlsx)
                 $data = $this->import_excel($data,"xlsx");
-            } else if($type == "application/vnd.ms-excel" && strpos($name, ".xls") !== false ){
+            } else if( strpos($name, ".xls") !== false ){
                 //Import Excel (xls)
                 $data = $this->import_excel($data,"xls");
-            } else if($type == "application/vnd.ms-excel" && strpos($name, ".csv") !== false ){
+            } else if( strpos($name, ".csv") !== false ){
                 //Import CSV (csv)
                 $data = $this->import_excel($data,"csv");
             } else {
