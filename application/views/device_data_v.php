@@ -141,7 +141,7 @@
                 } else {
                   $values = $itemdata[$fd];
                 }       
-                $sensor_data[$fd][] = [$itemdata['date_add_server_unix'],$values];            
+                $sensor_data[$fd][] = [$itemdata['date_add_server']->{'$date'}/1000,$values];            
               }
             }          
           }
