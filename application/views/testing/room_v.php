@@ -228,7 +228,7 @@
         function getupdate(id){            
             $.ajax({
                 type: 'post',
-                url: '<?= base_url()?>testing/room/getroom/',
+                url: '<?= base_url()?>testing/demo/getroom/',
                 data: {"id":id},
                 success: function (result){
                     if(result){
