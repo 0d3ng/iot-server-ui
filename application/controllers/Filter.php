@@ -75,19 +75,22 @@ class Filter extends CI_Controller {
         // echo "</pre>";
         // exit();
         $data["method"] = array(
-            "lowpass" => array(
-                "name" => "Low Pass Filter",
+            array(
+                "name" => "lowpass",
+                "label" => "Low Pass Filter",
                 "params" => array(
                     "cutoff" => "Cutoff frequency"
-                    )
-                ),
-            "highpass" => array(
-                    "name" => "High Pass Filter",
-                    "params" => array(
+                )
+            ),
+            array(
+                "name" => "highpass",
+                "label" => "High Pass Filter",
+                "params" => array(
                         "cutoff" => "Cutoff frequency"
                     )
-                )
+            )
         );
+        $data["method"] = json_decode(json_encode($data["method"]));
 		$this->load->view('filter_simulation_v', $data);
 	}
 

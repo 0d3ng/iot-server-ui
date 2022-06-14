@@ -12,7 +12,7 @@
 <div class="page-content">
   <div class="row row-lg">
     <div class="col-md-6">
-    <div class="panel-bordered panel-success">
+      <div class="panel-bordered panel-success">
         <div class="panel-heading">
           <h3 class="panel-title"><i class="icon wb-memory" aria-hidden="true"></i> &nbsp;Select Device</h3>
         </div>
@@ -80,6 +80,27 @@
             <!-- End Example Date Range -->
         </div>
       </div>      
+    </div>
+    <div class="col-md-6">
+      <div class="panel-bordered panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="icon wb-memory" aria-hidden="true"></i> &nbsp;Select Filter Method</h3>
+        </div>
+        <div class="panel-body bg-white">
+            <div class="form-group form-material">
+                <label class="form-control-label" for="inputMethod">Method</label>
+                <select class="form-control " id="inputMethod" name="method" onchange="methodForm()">
+                  <option value="">--- Select Method---</option>
+                  <?php foreach ($method as $d) { ?>
+                    <option value="<?= $d->name ?>"><?= $d->label ?></option>
+                  <?php } ?>
+                </select>
+            </div>   
+            <div id="">
+                
+            </div>     
+        </div>
+      </div>  
     </div>
   </div> 
   <div class="row row-lg mt-20">
@@ -213,6 +234,10 @@
           console.log(result)
         }
     });
+  }
+
+  function method(){
+    var device = $("#inputMethod").val();  
   }
 
   $( document ).ready(function() {
