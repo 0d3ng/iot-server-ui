@@ -89,9 +89,10 @@
         <label class="form-control-label" for="inputMethod_<?= $key ?>">Sampling Function Method</label>
         <select class="form-control " id="inputMethod_<?= $key ?>" name="<?= $key ?>_method" >
             <option value="">--- Select Method ---</option>
-            <option value="average" <?= ($method_value == "average")?"selected":""; ?>  >Average</option>
-            <option value="first" <?= ($method_value == "first")?"selected":""; ?>  >First Data</option>
-            <option value="last" <?= ($method_value == "last")?"selected":""; ?>  >Last Data</option>
+            <option value="average" <?= ($method_value == "average")?"selected":""; ?>  >Average (Mean)</option>
+            <option value="current" <?= ($method_value == "current")?"selected":""; ?>  >Current</option>
+            <option value="max" <?= ($method_value == "max")?"selected":""; ?>  >Max</option>
+            <option value="min" <?= ($method_value == "min")?"selected":""; ?>  >Min</option>
             <option value="variance" <?= ($method_value == "variance")?"selected":""; ?>  >Variance</option>
         </select>
     </div>

@@ -54,7 +54,6 @@ class Device extends CI_Controller {
                     }
             }    
         }
-        
         //end get device from group///
         ////get device from personal ///
         $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
@@ -586,6 +585,75 @@ class Device extends CI_Controller {
         header("Content-Type: application/json");
         echo json_encode($data);
         exit();
+    }
+
+    public function compare(){
+        // $list = ["lo14","lo15","lo16"];
+        // $data=array();
+        // $data['success']='';
+        // $data['error']='';
+        // $data['title']= 'Device Data';       
+        // $data['user_now'] = $this->session->userdata('dasboard_iot');   
+        // foreach($list as $id){
+        //     $device = array();
+        //     $device["name"] = "Device 1";
+        //     $device['data'] = $this->device_m->get_detail($id)->data;
+        //     $query = array(
+        //         'limit' => $this->limit_data
+        //     );
+        //     $device['sensor'] = $this->device_m->datasensor($device['data']->device_code,$query)->data;
+        //     $data[$id] = $device;
+        // }
+        // $data["device"] = $device['data'];
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // exit();
+        $id = "lo15";
+        $data=array();
+        $data['success']='';
+        $data['error']='';
+        $data['title']= 'Device Data';       
+        $data['user_now'] = $this->session->userdata('dasboard_iot');   
+        $data['data'] = $this->device_m->get_detail($id)->data;
+        $data['group'] = $this->groupsensor_m->get_detail($data['data']->group_code_name);
+        if(!$data['group']->status)
+            $data['group'] = [];
+        else
+            $data['group'] = $data['group']->data;
+        $data['extract'] = $this->extract($data['data']->field);
+        $data["date_str"] = date("Y-m-d");
+        $data["date_end"] = date("Y-m-d");
+        if($this->input->get('start'))
+            $data["date_str"] = $this->input->get('start');
+        if($this->input->get('end'))
+            $data["date_end"] = $this->input->get('end');
+        $data["search"] = $this->input->get('search');
+        $query = array(
+            'limit' => $this->limit_data
+        );
+        if($data["search"]){
+            $query["date_start"] =  $data["date_str"];
+            $query["date_end"] =  $data["date_end"];
+        }
+        $data['limit_data'] = $this->limit_data;
+        $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+        if($data["search"]){
+            $query = array(
+                'limit' => 1
+            );
+            $last = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+            $data['lastdata'] = (!empty($last))?$last[0]:"";
+        } else {
+            $data['lastdata'] = (!empty($data['sensor']))?$data['sensor'][0]:"";
+        }
+        if(!empty($data['sensor'])) 
+            $data['sensor'] = array_reverse((array)$data['sensor']);
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // exit();
+        $this->load->view('device_data_comp_v', $data);
     }
     
 }

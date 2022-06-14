@@ -458,45 +458,74 @@ class schema extends CI_Controller {
                 "type" => $type
             );
         }
-        if(empty($offset) && empty($limit))
+        if(empty($offset) && empty($limit)){            
             $export = true;
-        else
-            $export = false;
-        $list = $this->schema_m->datasensor($schema->schema_code,$query)->data;
-        $data = array();
-        foreach($list as $d){
-            $item = array();
-            foreach($extract as $k){
-                if (strpos($k, '-') !== false) {
-                    $nested_k = explode("-",$k);
-                    $val = $this->dataget_nested($nested_k,$d,$export);
-                } else {
-                    $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k};
+            $limit=1000;
+            $page = ceil($count_data / $limit);
+            $data = array();
+            for($x=0; $x<$page; $x++){
+                $query["skip"] = $x*$limit;
+                $query["limit"] = $limit;
+                $list = $this->schema_m->datasensor($schema->schema_code,$query)->data;
+                foreach($list as $d){
+                    $item = array();
+                    foreach($extract as $k){
+                        if (strpos($k, '-') !== false) {
+                            $nested_k = explode("-",$k);
+                            $val = $this->dataget_nested($nested_k,$d,$export);
+                        } else {
+                            $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k};
+                        }
+                        $item[$k] = is_float($val)?number_format($val, 2):$val;
+                    }
+                    $item["date"] = date('Y-m-d', $d->{"date_add_auto"}->{'$date'}/1000);
+                    $item["time"] = date('H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+                    if(!empty($d->_id))
+                        $iddata = $d->_id;
+                    else
+                        $iddata = $d->id;
+                    $data[] = $item;
                 }
-                $item[$k] = is_float($val)?number_format($val, 2):$val;
             }
-            $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
-            if($export){
-                $item["date"] = date('Y-m-d', $d->{"date_add_auto"}->{'$date'}/1000);
-                $item["time"] = date('H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+        } else{
+            $export = false;
+            $list = $this->schema_m->datasensor($schema->schema_code,$query)->data;
+            $data = array();
+            foreach($list as $d){
+                $item = array();
+                foreach($extract as $k){
+                    if (strpos($k, '-') !== false) {
+                        $nested_k = explode("-",$k);
+                        $val = $this->dataget_nested($nested_k,$d,$export);
+                    } else {
+                        $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k};
+                    }
+                    $item[$k] = is_float($val)?number_format($val, 2):$val;
+                }
+                $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+                if($export){
+                    $item["date"] = date('Y-m-d', $d->{"date_add_auto"}->{'$date'}/1000);
+                    $item["time"] = date('H:i:s', $d->{"date_add_auto"}->{'$date'}/1000);
+                }
+                if(!empty($d->_id))
+                    $iddata = $d->_id;
+                else
+                    $iddata = $d->id;
+                if(!$export)
+                $item["action-form"] = '
+                    <a href="'.base_url().'schema/data/'.$id.'/edit/'.$iddata.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                    data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
+                    <a onclick="del('."'".base_url().'schema/data/'.$id.'/delete/'.$iddata."'".')" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
+                    data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
+                ';
+                $data[] = $item;
             }
-            if(!empty($d->_id))
-                $iddata = $d->_id;
-            else
-                $iddata = $d->id;
-            if(!$export)
-            $item["action-form"] = '
-                <a href="'.base_url().'schema/data/'.$id.'/edit/'.$iddata.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
-                data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
-                <a onclick="del('."'".base_url().'schema/data/'.$id.'/delete/'.$iddata."'".')" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
-                data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
-            ';
-            $data[] = $item;
-        }
+        }                    
         $response = array(
             "total" => $count_data,
             "rows" =>  $data,
-            "export" => $export
+            "export" => $export,
+            "query" => $query
         );     
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
