@@ -106,28 +106,57 @@ class Filter extends CI_Controller {
         $data=array();
         $field = $this->input->post("field");
         $method = $this->input->post("method");
-        $params = $this->input->post("params");
+        $params = json_decode($this->input->post("params"), true);
         $date_start = $this->input->post("date_start");
-        $time_start = $this->input->post("time_start");
+        $time_start = $this->input->post("time_start").":00";
         $date_end = $this->input->post("date_end");
-        $time_end = $this->input->post("time_end");
-    
-        $query = array(
-            "date_start"=>  $date_start,
-            "date_end"=>  $time_start,
-            "time_start" => $time_start,
-            "time_end" =>  $time_end,
-            "method"=> $method,
-            "field"=> $field,
-            "parameters"=> $params
+        $time_end = $this->input->post("time_end").":00";
+        $search = array(); //$this->input->post("search");
+        $data = array(
+            "field"=>strtoupper($field),
+            "data"=>array(),
+            "filter"=>array()
         );
-        
-        $data = $this->filter_m->simulation($id,$query);
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
-        exit();
-        $this->load->view('device_data_v', $data);
+        if(!empty($method) && !empty($params) ){
+            $query = array(
+                "date_start"=>  $date_start,
+                "date_end"=>  $date_end,
+                "time_start" => $time_start,
+                "time_end" =>  $time_end,
+                "method"=> $method,
+                "field"=> $field,
+                "parameters"=> $params
+            );       
+            if(!empty($search))
+                $query["search"] = $search;
+            $list = $this->filter_m->simulation($id,$query)->data;
+            foreach($list as $d){
+                if(!isset($d->{$field}))
+                    continue;
+                $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
+                $data["filter"][] = [$d->{'date_add_server'}->{'$date'},$d->{"filter_".$field}];
+            }
+        } else {
+            $query = array(
+                "date_start"=>  $date_start,
+                "date_end"=>  $date_end,
+                "time_start" => $time_start,
+                "time_end" =>  $time_end,
+                "sort" => array(
+                    "field" => "date_add_server",
+                    "type" => 1
+                )
+            );  
+            $query=array_merge($query,$search);
+            $list = $this->device_m->datasensor($id,$query)->data;            
+            foreach($list as $d){
+                if(!isset($d->{$field}))
+                    continue;
+                $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
+            }
+        }
+        header("Content-Type: application/json");
+        echo json_encode($data);
     } 
 
 }
