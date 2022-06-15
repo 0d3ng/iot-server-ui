@@ -91,12 +91,16 @@
                 <label class="form-control-label" for="inputMethod">Method</label>
                 <select class="form-control " id="inputMethod" name="method" onchange="methodForm()">
                   <option value="">--- Select Method---</option>
-                  <?php foreach ($method as $d) { ?>
+                  <?php 
+                  $method_list = array();
+                  foreach ($method as $d) { 
+                  $method_list[$d->name] = $d;
+                  ?>
                     <option value="<?= $d->name ?>"><?= $d->label ?></option>
                   <?php } ?>
                 </select>
             </div>   
-            <div id="">
+            <div id="params">
                 
             </div>     
         </div>
@@ -149,8 +153,7 @@
     });
   }
   var mychart1, mychart2;
-  var method = <?php echo json_encode($method); ?>;
-  console.log(method);
+  var method_list = <?php echo json_encode($method_list); ?>;
   function chart_build(field,data,filter){
     Highcharts.stockChart('chart', {
       chart: {
@@ -236,8 +239,20 @@
     });
   }
 
-  function method(){
-    var device = $("#inputMethod").val();  
+  function methodForm(){
+    var method = $("#inputMethod").val();  
+    var params = method_list[method]["params"];
+    $("#params").html("");
+    for (var i = 0; i < params.length; i++) {
+      var obj = params[i];
+      if(obj["type"] == "float"){
+        var item_form = '<div class="form-group form-material ">'+
+              '<label class="form-control-label" for="input'+obj['name']+'">'+obj['label']+'</label>'+
+              '<input type="number" class="form-control" id="input'+obj['name']+'" name="'+obj['name']+'" value="" autocomplete="off">'+
+            '</div>';
+      }
+      $("#params").append(item_form);
+    }
   }
 
   $( document ).ready(function() {

@@ -79,15 +79,23 @@ class Filter extends CI_Controller {
                 "name" => "lowpass",
                 "label" => "Low Pass Filter",
                 "params" => array(
-                    "cutoff" => "Cutoff frequency"
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff frequency",
+                        "type" => "float"
+                    )
                 )
             ),
             array(
                 "name" => "highpass",
                 "label" => "High Pass Filter",
                 "params" => array(
-                        "cutoff" => "Cutoff frequency"
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff Frequency",
+                        "type" => "float"
                     )
+                )
             )
         );
         $data["method"] = json_decode(json_encode($data["method"]));
