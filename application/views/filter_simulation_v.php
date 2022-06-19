@@ -69,11 +69,10 @@
               <div class="example-wrap">
                   <h4 class="example-title">Date Range Data</h4>                
                   <div class="example">
-                      
                     <div class="row">
-                        <div class="form-group form-material col-md-12 col-xl-6">
+                        <div class="form-material col-md-12 col-xl-6">
                             <label class="form-control-label" for="inputDate">From</label>
-                            <div class="form-group form-material row">
+                            <div class="form-material row">
                                 <div class="col-6">
                                     <input type="text" class="form-control" data-plugin="datepicker" id="inputDateStart" name="date_start" value="<?= date("Y-m-d") ?>" autocomplete="off" required>
                                 </div>
@@ -82,9 +81,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group form-material col-md-12 col-xl-6">
+                        <div class="form-material col-md-12 col-xl-6">
                             <label class="form-control-label" for="inputDate">To</label>
-                            <div class="form-group form-material row">
+                            <div class="form-material row">
                                 <div class="col-6">
                                     <input type="text" class="form-control" data-plugin="datepicker" id="inputDateEnd" name="date_end" value="<?= date("Y-m-d") ?>" autocomplete="off" required>
                                 </div>
@@ -94,11 +93,14 @@
                             </div>
                         </div>   
                     </div>
-                    <div class="form-group form-material">
-                        <span class="input-group-addon" style="background:none; border:none;"> </span>
-                        <button type="submit" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
-                    </div>    
-                      
+                  </div>
+                  <h4 class="example-title">Spesific Search Item</h4>
+                  <div class="row" id="specFrm">                    
+                  </div>
+                  <button type="button" id="btnAddChildField" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New Child</button>                
+                  <div class="form-group form-material" id = "frmsearch">
+                      <span class="input-group-addon" style="background:none; border:none;"> </span>
+                      <button type="button" onclick="addForm" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
                   </div>
               </div>
               <!-- End Example Date Range -->
@@ -108,13 +110,44 @@
     </div>
   </form>
   <div class="row row-lg mt-20">
-    <div class="col-md-12">
+    <div class="col-md-12" id="graphdiv">
       <div class="panel panel-primary panel-line">
         <div class="panel-heading">
           <h3 class="panel-title">Data Filter Simulation</h3>
         </div>
         <div class="panel-body">
           <div id="chart" ></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" id="summarydiv">
+    <div class="panel panel-primary panel-line">
+      <div class="panel-heading">
+          <h3 class="panel-title">Summarize Data</h3>
+        </div>
+        <div class="panel-body">
+          <h5><b>Sample Time</b></h5>
+          <div class="row" id="mqttform" style="">
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputTimeMin">Min (seconds)</label>
+              <input type="text" class="form-control" id="inputTimeMin" readonly>
+            </div>
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputTimeMax">Max (seconds)</label>
+              <input type="text" class="form-control" id="inputTimeMax" readonly>
+            </div>
+          </div>
+          <h5><b>Variance</b></h5>
+          <div class="row" id="mqttform" style="">
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputVarReal">Real Data</label>
+              <input type="text" class="form-control" id="inputVarReal" readonly>
+            </div>
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputVarFilter">Filtered Data</label>
+              <input type="text" class="form-control" id="inputVarFilter" readonly>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -135,6 +168,7 @@
 <script src="<?= base_url()?>assets/global/js/Plugin/icheck.js"></script>
 
 <script>
+  var fieldDevice="";
   function deviceForm(){
     var device = $("#inputDevice").val();
     $.ajax({
@@ -147,11 +181,31 @@
           for (let i = 0; i < result.field.length; i++) {
             item+='<option value="'+result.field[i]+'">'+result.field[i]+'</option>';
           }
-          var field='<option value="">--- Select Field---</option>'+item;
-          $("#inputField").html(field);
+          fieldDevice ='<option value="">--- Select Field---</option>'+item;
+          $("#inputField").html(fieldDevice);
         }
     });
   }
+
+  funtion addForm(){
+    var id = (Math.random() + 1).toString(36).substring(7);
+    var forms = '<div class="form-material col-md-12 col-xl-6">'+
+        '<div class="form-material row">'+
+          '<div class="col-6">'+
+              '<label class="form-control-label" for="inputDate">Field</label>'+
+              '<select class="form-control spesificItem" name="src_'+id+'" required>'+
+              fieldDevice + 
+              '</select>'+
+          '</div>'+
+          '<div class="col-6">'+
+            '<label class="form-control-label" for="inputDate">Value</label>'+
+            '<input type="text" class="form-control search" data-autoclose="true" id="input_src_'+id+'" name="search" required>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    $("#specFrm").append(forms);
+  }
+
   var mychart1, mychart2;
   var method_list = <?php echo json_encode($method_list); ?>;
   function chart_build(field,data,filter){
@@ -237,9 +291,35 @@
           filter = result['filter'];
           data = result['data'];
           field = result['field'];
+          $("#graphdiv").addClass( "col-md-8" ).removeClass( "col-md-12" );
           chart_build(field,data,filter); 
+          $("#summarydiv").css("diplay","block");
+          if("variance" in result){
+            variance(result["variance"]);
+          }
+          if("sample_time" in result){
+            sampletime(result["sample_time"]);
+          }
         }
     });
+  }
+
+  function variance(variance){
+    if("unfilter" in variance){
+      $("#inputVarReal").val(variance["unfilter"].toFixed(2));
+    }  
+    if("filter" in variance){
+      $("#inputVarFilter").val(variance["filter"].toFixed(2));
+    }
+  }
+
+  function sampletime(sample){
+    if("min" in sample){
+      $("#inputTimeMin").val(sample["min"].toFixed(2));
+    }  
+    if("max" in sample){
+      $("#inputTimeMax").val(sample["max"].toFixed(2));
+    }
   }
 
   function methodForm(){
@@ -263,6 +343,7 @@
 
   $( document ).ready(function() {
     // Override global options
+    $("#f").css("diplay","none");
     toastr.options = {
       positionClass: 'toast-top-center'
     };

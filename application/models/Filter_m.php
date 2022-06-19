@@ -94,6 +94,14 @@ class filter_m extends My_Model{
 			$result->data = array();
 		return $result;
 	}
+
+	function summary($device,$data){
+		$url = $this->config->item('url_node')."filter/summary/".$device."/";			
+		$result =  json_decode($this->sendPost($url,$data));
+		if(!$result->status)
+			$result->data = array();
+		return $result;
+	}
 }
 
 /* End of file admin_model.php */

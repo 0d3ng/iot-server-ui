@@ -129,31 +129,35 @@ class Filter extends CI_Controller {
             );       
             if(!empty($search))
                 $query["search"] = $search;
-            $list = $this->filter_m->simulation($id,$query)->data;
+            $process = $this->filter_m->simulation($id,$query);
+            $list = $process->data;          
             foreach($list as $d){
                 if(!isset($d->{$field}))
                     continue;
                 $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
                 $data["filter"][] = [$d->{'date_add_server'}->{'$date'},$d->{"filter_".$field}];
             }
+            $data["variance"] =  $process->variance;                
+            $data["sample_time"] =  $process->sample_time;   
         } else {
             $query = array(
                 "date_start"=>  $date_start,
                 "date_end"=>  $date_end,
                 "time_start" => $time_start,
                 "time_end" =>  $time_end,
-                "sort" => array(
-                    "field" => "date_add_server",
-                    "type" => 1
-                )
-            );  
-            $query=array_merge($query,$search);
-            $list = $this->device_m->datasensor($id,$query)->data;            
+                "field"=> $field
+            );   
+            if(!empty($search))
+                $query["search"] = $search;
+            $process = $this->filter_m->summary($id,$query);
+            $list = $process->data;          
             foreach($list as $d){
                 if(!isset($d->{$field}))
                     continue;
                 $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
             }
+            $data["variance"] =  $process->variance;                
+            $data["sample_time"] =  $process->sample_time;             
         }
         header("Content-Type: application/json");
         echo json_encode($data);
