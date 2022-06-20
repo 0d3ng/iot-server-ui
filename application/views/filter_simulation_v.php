@@ -94,13 +94,13 @@
                         </div>   
                     </div>
                   </div>
-                  <h4 class="example-title">Spesific Search Item</h4>
-                  <div class="row" id="specFrm">                    
+                  <h4 class="example-title">Search Query</h4>
+                  <div class="row" id="specFrm">
                   </div>
-                  <button type="button" id="btnAddChildField" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New Child</button>                
+                  <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                
                   <div class="form-group form-material" id = "frmsearch">
                       <span class="input-group-addon" style="background:none; border:none;"> </span>
-                      <button type="button" onclick="addForm" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
+                      <button type="submit" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
                   </div>
               </div>
               <!-- End Example Date Range -->
@@ -126,17 +126,6 @@
           <h3 class="panel-title">Summarize Data</h3>
         </div>
         <div class="panel-body">
-          <h5><b>Sample Time</b></h5>
-          <div class="row" id="mqttform" style="">
-            <div class="form-group form-material col-xl-6 col-md-12">
-              <label class="form-control-label" for="inputTimeMin">Min (seconds)</label>
-              <input type="text" class="form-control" id="inputTimeMin" readonly>
-            </div>
-            <div class="form-group form-material col-xl-6 col-md-12">
-              <label class="form-control-label" for="inputTimeMax">Max (seconds)</label>
-              <input type="text" class="form-control" id="inputTimeMax" readonly>
-            </div>
-          </div>
           <h5><b>Variance</b></h5>
           <div class="row" id="mqttform" style="">
             <div class="form-group form-material col-xl-6 col-md-12">
@@ -146,6 +135,17 @@
             <div class="form-group form-material col-xl-6 col-md-12">
               <label class="form-control-label" for="inputVarFilter">Filtered Data</label>
               <input type="text" class="form-control" id="inputVarFilter" readonly>
+            </div>
+          </div>
+          <h5><b>Sample Time</b></h5>
+          <div class="row" id="mqttform" style="">
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputTimeMin">Min (seconds)</label>
+              <input type="text" class="form-control" id="inputTimeMin" readonly>
+            </div>
+            <div class="form-group form-material col-xl-6 col-md-12">
+              <label class="form-control-label" for="inputTimeMax">Max (seconds)</label>
+              <input type="text" class="form-control" id="inputTimeMax" readonly>
             </div>
           </div>
         </div>
@@ -171,40 +171,69 @@
   var fieldDevice="";
   function deviceForm(){
     var device = $("#inputDevice").val();
-    $.ajax({
-        type: 'post',
-        url: '<?= base_url()?>datasync/device/'+device,
-        data: {},
-        success: function (result){
-          var item = "";
-          var collect = result.collect;
-          for (let i = 0; i < result.field.length; i++) {
-            item+='<option value="'+result.field[i]+'">'+result.field[i]+'</option>';
+    if(device!=""){
+      $.ajax({
+          type: 'post',
+          url: '<?= base_url()?>datasync/device/'+device,
+          data: {},
+          success: function (result){
+            var item = "";
+            var collect = result.collect;
+            for (let i = 0; i < result.field.length; i++) {
+              item+='<option value="'+result.field[i]+'">'+result.field[i]+'</option>';
+            }
+            fieldDevice ='<option value="">--- Select Field---</option>'+item;
+            $("#inputField").html(fieldDevice);
           }
-          fieldDevice ='<option value="">--- Select Field---</option>'+item;
-          $("#inputField").html(fieldDevice);
-        }
-    });
+      });
+    }else{
+      fieldDevice = "";
+      $("#inputField").html('<option value="">--- Select Field---</option>');
+    }
   }
 
-  funtion addForm(){
-    var id = (Math.random() + 1).toString(36).substring(7);
-    var forms = '<div class="form-material col-md-12 col-xl-6">'+
-        '<div class="form-material row">'+
-          '<div class="col-6">'+
-              '<label class="form-control-label" for="inputDate">Field</label>'+
-              '<select class="form-control spesificItem" name="src_'+id+'" required>'+
-              fieldDevice + 
-              '</select>'+
+  function addForm(){
+    if(fieldDevice!=""){
+      var id = (Math.random() + 1).toString(36).substring(7);
+      var forms = '<div class="form-material col-md-12" id="form_src_'+id+'">'+
+          '<div class="form-material row">'+
+            '<div class="col-5">'+
+                '<label class="form-control-label" for="inputDate">Field</label>'+
+                '<select class="form-control" onchange="changeFieldForm(this.value,this.name)" name="src_'+id+'" >'+
+                fieldDevice + 
+                '</select>'+
+            '</div>'+
+            '<div class="col-5">'+
+              '<label class="form-control-label" for="inputDate">Value</label>'+
+              '<input type="text" class="form-control search" data-autoclose="true" id="input_src_'+id+'" name="search" >'+
+            '</div>'+
+            '<div class="col-2">'+
+              '<a onclick="removeForm(this.name)" name="form_src_'+id+'" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove">'+
+                '<i class="icon md-delete" aria-hidden="true"></i>'+
+              '</a>'+
+            '</div>'+
           '</div>'+
-          '<div class="col-6">'+
-            '<label class="form-control-label" for="inputDate">Value</label>'+
-            '<input type="text" class="form-control search" data-autoclose="true" id="input_src_'+id+'" name="search" required>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-    $("#specFrm").append(forms);
+        '</div>';
+      $("#specFrm").append(forms);
+    }else{
+      toastr.error('Please choose the device data.', 'Failed', {timeOut: 3000});  
+    }
   }
+
+  function removeForm(id){
+    console.log(id);
+    $("#"+id).remove();
+  }
+
+  function changeFieldForm(field,id){
+    if(field!=""){
+      $("#input_"+id).attr("name",field);
+      $("#input_"+id).attr("required","true");
+    } else {
+      $("#input_"+id).removeAttr("required");
+      $("#input_"+id).attr("name","search");
+    }
+  } 
 
   var mychart1, mychart2;
   var method_list = <?php echo json_encode($method_list); ?>;
@@ -279,13 +308,13 @@
     });  
   }
 
-  function filtering(device,field,method,params,startdate,starttime,enddate,endtime){
+  function filtering(device,field,search,method,params,startdate,starttime,enddate,endtime){
     var params = JSON.stringify(params);
-    console.log(params);
+    var search = JSON.stringify(search);
     $.ajax({
         type: 'post',
         url: '<?= base_url()?>filter/process/'+device,
-        data: {'method':method,"field":field,"params":params,"date_start":startdate,"time_start":starttime,"date_end":enddate,"time_end":endtime},
+        data: {'method':method,"field":field,"search":search,"params":params,"date_start":startdate,"time_start":starttime,"date_end":enddate,"time_end":endtime},
         success: function (result){
           console.log(result);
           filter = result['filter'];
@@ -293,7 +322,7 @@
           field = result['field'];
           $("#graphdiv").addClass( "col-md-8" ).removeClass( "col-md-12" );
           chart_build(field,data,filter); 
-          $("#summarydiv").css("diplay","block");
+          $("#summarydiv").css("display","block");
           if("variance" in result){
             variance(result["variance"]);
           }
@@ -343,7 +372,7 @@
 
   $( document ).ready(function() {
     // Override global options
-    $("#f").css("diplay","none");
+    
     toastr.options = {
       positionClass: 'toast-top-center'
     };
@@ -374,6 +403,7 @@
         var method = $("#inputMethod").val(); 
         var inputs = $(".inputparams");
         var params = {};
+        var search = {};
         for(var i = 0; i < inputs.length; i++){
           var name = $(inputs[i]).attr('name');
           var type = $(inputs[i]).attr('type');
@@ -382,10 +412,21 @@
             value = parseFloat(value);
           params[name] = value;
         }  
+        var searchs = $(".search");
+        for(var i = 0; i < searchs.length; i++){
+          var name = $(searchs[i]).attr('name');
+          if(name!="search"){
+            var value = $(searchs[i]).val();
+            if(!isNaN(value))
+              value = parseInt(value);
+            search[name] = value;
+          }
+        } 
         console.log(params);
-        filtering(device,field,method,params,startdate,starttime,enddate,endtime); 
+        console.log(search);
+        filtering(device,field,search,method,params,startdate,starttime,enddate,endtime); 
     });
-
+    $("#summarydiv").css("display","none");
   });
 
   

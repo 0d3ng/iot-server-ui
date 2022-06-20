@@ -111,7 +111,7 @@ class Filter extends CI_Controller {
         $time_start = $this->input->post("time_start").":00";
         $date_end = $this->input->post("date_end");
         $time_end = $this->input->post("time_end").":00";
-        $search = array(); //$this->input->post("search");
+        $search = json_decode($this->input->post("search"), true);
         $data = array(
             "field"=>strtoupper($field),
             "data"=>array(),
@@ -156,8 +156,8 @@ class Filter extends CI_Controller {
                     continue;
                 $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
             }
-            $data["variance"] =  $process->variance;                
-            $data["sample_time"] =  $process->sample_time;             
+            $data["variance"] =  (!empty($process->variance))?$process->variance:array();                
+            $data["sample_time"] =  (!empty($process->sample_time))?$process->sample_time:array();
         }
         header("Content-Type: application/json");
         echo json_encode($data);
