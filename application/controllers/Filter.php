@@ -96,6 +96,22 @@ class Filter extends CI_Controller {
                         "type" => "float"
                     )
                 )
+            ),
+            array(
+                "name" => "bandpass",
+                "label" => "Band Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "low_cutoff",
+                        "label" => "Low Cutoff Frequency",
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "high_cutoff",
+                        "label" => "High Cutoff Frequency",
+                        "type" => "float"
+                    )
+                )
             )
         );
         $data["method"] = json_decode(json_encode($data["method"]));
