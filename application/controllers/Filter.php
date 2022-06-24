@@ -112,6 +112,22 @@ class Filter extends CI_Controller {
                         "type" => "float"
                     )
                 )
+            ),
+            array(
+                "name" => "kalmanbasic",
+                "label" => "Kalman Filter",
+                "params" => array(
+                    array(
+                        "name" => "R",
+                        "label" => "Noise Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "Q",
+                        "label" => "Estimated Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    )
+                )
             )
         );
         $data["method"] = json_decode(json_encode($data["method"]));
