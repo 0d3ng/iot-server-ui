@@ -55,7 +55,11 @@
               </div>   
               <div id="params">
                   
-              </div>     
+              </div> 
+              <div class="form-group form-material" id = "frmprocess" style="display:none">
+                  <span class="input-group-addon" style="background:none; border:none;"> </span>
+                  <button type="submit" class="btn btn-primary waves-effect waves-classic">Start Simulation</button>
+              </div>    
           </div>
         </div>  
       </div>
@@ -366,6 +370,11 @@
         }
         $("#params").append(item_form);
       }
+      $("#frmprocess").css("display","block");
+      $("#frmsearch").css("display","none");
+    } else {
+      $("#frmprocess").css("display","none");
+      $("#frmsearch").css("display","block");
     }
   }
 
