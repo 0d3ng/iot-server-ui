@@ -23,7 +23,7 @@
                   <select class="form-control " id="inputDevice" name="device" onchange="deviceForm()" required>
                     <option value="">--- Select Device Data---</option>
                     <?php foreach ($data as $d) { ?>
-                      <option value="<?= $d->device_code?>"><?= $d->name?> [<?= $d->device_code?>] </option>
+                      <option value="<?= $d->device_code?>" <?= ($d->device_code==$setting["device"])?"selected":""; ?>  ><?= $d->name?> [<?= $d->device_code?>] </option>
                     <?php } ?>
                   </select>
               </div>   
@@ -31,6 +31,9 @@
                   <label class="form-control-label" for="inputField">Data Field</label>
                   <select class="form-control " id="inputField" name="field" required>
                       <option value="">--- Select Field---</option>
+                      <?php foreach ($setting["list_field"] as $d) { ?>
+                        <option value="<?= $d?>" <?= ($d==$setting["field"])?"selected":""; ?>  ><?= $d?></option>
+                      <?php } ?>
                   </select>
               </div>     
           </div>
@@ -49,7 +52,7 @@
                     foreach ($method as $d) { 
                     $method_list[$d->name] = $d;
                     ?>
-                      <option value="<?= $d->name ?>"><?= $d->label ?></option>
+                      <option value="<?= $d->name ?>"  <?= ($d->name==$setting["method"])?"selected":""; ?> ><?= $d->label ?></option>
                     <?php } ?>
                   </select>
               </div>   
@@ -59,6 +62,9 @@
               <div class="form-group form-material" id = "frmprocess" style="display:none">
                   <span class="input-group-addon" style="background:none; border:none;"> </span>
                   <button type="submit" class="btn btn-primary waves-effect waves-classic">Start Simulation</button>
+                  <?php if($setting["rollback"]){ ?>
+                    <button type="button" id="backbutton" class="btn btn-info waves-effect waves-classic"> Save Setting</button>
+                  <?php } ?>
               </div>    
           </div>
         </div>  
@@ -100,6 +106,32 @@
                   </div>
                   <h4 class="example-title">Search Query</h4>
                   <div class="row" id="specFrm">
+                      <?php foreach ($setting["query"] as $d) { 
+                        $code = substr(md5(mt_rand()), 0, 5);
+                        ?>
+                        <div class="form-material col-md-12" id="form_src_<?= $code ?>">
+                          <div class="form-material row">
+                            <div class="col-5">
+                              <label class="form-control-label" for="inputDate">Field</label>
+                              <select class="form-control" onchange="changeFieldForm(this.value,this.name)" name="src_<?= $code ?>">
+                                <option value="">--- Select Field---</option>
+                                <?php foreach ($setting["list_field"] as $f) { ?>
+                                  <option value="<?= $f?>" <?= ($d==$f)?"selected":""; ?>  ><?= $f?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                            <div class="col-5">
+                              <label class="form-control-label" for="inputDate">Value</label>
+                              <input type="text" class="form-control search" data-autoclose="true" id="input_src_<?= $code ?>" name="search">
+                            </div>
+                            <div class="col-2">
+                              <a onclick="removeForm(this.name)" name="form_src_<?= $code ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove">
+                                <i class="icon md-delete" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      <?php } ?>
                   </div>
                   <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                
                   <div class="form-group form-material" id = "frmsearch">
@@ -377,7 +409,11 @@
       $("#frmsearch").css("display","block");
     }
   }
-
+  
+  <?php if($setting["device"]){ ?>
+    fieldDevice =  $("#inputField").html();
+  <?php } ?>
+  
 
   $( document ).ready(function() {
     // Override global options
@@ -436,6 +472,20 @@
         filtering(device,field,search,method,params,startdate,starttime,enddate,endtime); 
     });
     $("#summarydiv").css("display","none");
+    methodForm();
+    <?php foreach ($setting["parameter"] as $key => $d) { ?>
+      $("#input<?= $key ?>").val("<?= $d ?>");
+    <?php } ?>
+    
+    
+    <?php if($setting["rollback"]){ ?>
+    $("#backbutton").click(function(e){
+        $("#formAdd").attr('action','<?= base_url()?>filter/<?= $setting["rollback"] ?>/'); 
+        $('.form-control').removeAttr('required'); 
+        $("#save").click();  
+    });
+    <?php } ?>
+
   });
 
   

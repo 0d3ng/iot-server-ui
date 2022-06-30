@@ -7,45 +7,45 @@ class filter_m extends My_Model{
 		parent::__construct();		
 	}			
 
-	// function get_detail($id){
-	// 	$data = array(
-	// 		"filter_code" => $id
-	// 	);
-	// 	$url = $this->config->item('url_node')."filter/detail/";				
-	// 	return json_decode($this->sendPost($url,$data));
-	// }
+	function get_detail($id){
+		$data = array(
+			"filter_code" => $id
+		);
+		$url = $this->config->item('url_node')."filter/detail/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 
-	// function add($data){
-	// 	$url = $this->config->item('url_node')."filter/add/";				
-	// 	return json_decode($this->sendPost($url,$data));
-	// }
+	function add($data){
+		$url = $this->config->item('url_node')."filter/add/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 
-	// function edit($id,$data){
-	// 	$data+=["id" => $id];
-	// 	$url = $this->config->item('url_node')."filter/edit/";				
-	// 	return json_decode($this->sendPost($url,$data));
-	// }
+	function edit($id,$data){
+		$data+=["id" => $id];
+		$url = $this->config->item('url_node')."filter/edit/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 	
-	// function del($id){
-	// 	$data = array(
-	// 		"id" => $id
-	// 	);
-	// 	$url = $this->config->item('url_node')."filter/delete/";				
-	// 	return json_decode($this->sendPost($url,$data));
-	// }	
+	function del($id){
+		$data = array(
+			"id" => $id
+		);
+		$url = $this->config->item('url_node')."filter/delete/";				
+		return json_decode($this->sendPost($url,$data));
+	}	
 
-	// function search($data){
-	// 	$url = $this->config->item('url_node')."filter/";				
-	// 	$result =  json_decode($this->sendPost($url,$data));
-	// 	if(!$result->status)
-	// 		$result->data = array();
-	// 	return $result;
-	// }
+	function search($data){
+		$url = $this->config->item('url_node')."filter/";				
+		$result =  json_decode($this->sendPost($url,$data));
+		if(!$result->status)
+			$result->data = array();
+		return $result;
+	}
 
-	// function search_count($data){
-	// 	$url = $this->config->item('url_node')."filter/count/";				
-	// 	return json_decode($this->sendPost($url,$data));
-	// }
+	function search_count($data){
+		$url = $this->config->item('url_node')."filter/count/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 
 	// function datasensor($device,$data){
 	// 	$url = $this->config->item('url_node')."filter/data/".$device."/";				
