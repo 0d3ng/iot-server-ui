@@ -1,16 +1,16 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Data Synchronization Service Batch Process</h1>
+  <h1 class="page-title">Data Filter Service - Simulation</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>datasync">Filter</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>filter">Data Filter</a></li>
     <li class="breadcrumb-item active">Simulation</li>
   </ol>
   <div class="page-header-actions">
   </div>
 </div>
 <div class="page-content">
-  <form method="POST" id="formSeach" >
+  <form method="POST" id="formSimulation" >
     <div class="row row-lg">
       <div class="col-md-6">
         <div class="panel-bordered panel-success">
@@ -62,9 +62,8 @@
               <div class="form-group form-material" id = "frmprocess" style="display:none">
                   <span class="input-group-addon" style="background:none; border:none;"> </span>
                   <button type="submit" class="btn btn-primary waves-effect waves-classic">Start Simulation</button>
-                  <?php if($setting["rollback"]){ ?>
-                    <button type="button" id="backbutton" class="btn btn-info waves-effect waves-classic"> Save Setting</button>
-                  <?php } ?>
+                  <button type="button" id="backbutton" name="back" value="back" class="btn btn-info waves-effect waves-classic"> Save Setting</button>
+                  <input type="hidden" name="back" value="back">
               </div>    
           </div>
         </div>  
@@ -113,7 +112,7 @@
                           <div class="form-material row">
                             <div class="col-5">
                               <label class="form-control-label" for="inputDate">Field</label>
-                              <select class="form-control" onchange="changeFieldForm(this.value,this.name)" name="src_<?= $code ?>">
+                              <select class="form-control" onchange="changeFieldForm(this.value,this.id)" name="query[]" id="src_<?= $code ?>">
                                 <option value="">--- Select Field---</option>
                                 <?php foreach ($setting["list_field"] as $f) { ?>
                                   <option value="<?= $f?>" <?= ($d==$f)?"selected":""; ?>  ><?= $f?></option>
@@ -136,7 +135,7 @@
                   <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                
                   <div class="form-group form-material" id = "frmsearch">
                       <span class="input-group-addon" style="background:none; border:none;"> </span>
-                      <button type="submit" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
+                      <button type="submit" id="save" class="btn btn-primary waves-effect waves-classic">Search Sensor Data</button>
                   </div>
               </div>
               <!-- End Example Date Range -->
@@ -235,7 +234,7 @@
           '<div class="form-material row">'+
             '<div class="col-5">'+
                 '<label class="form-control-label" for="inputDate">Field</label>'+
-                '<select class="form-control" onchange="changeFieldForm(this.value,this.name)" name="src_'+id+'" >'+
+                '<select class="form-control" onchange="changeFieldForm(this.value,this.id)" name="query[]" id="src_'+id+'" >'+
                 fieldDevice + 
                 '</select>'+
             '</div>'+
@@ -356,14 +355,19 @@
           filter = result['filter'];
           data = result['data'];
           field = result['field'];
-          $("#graphdiv").addClass( "col-md-8" ).removeClass( "col-md-12" );
-          chart_build(field,data,filter); 
-          $("#summarydiv").css("display","block");
-          if("variance" in result){
-            variance(result["variance"]);
-          }
-          if("sample_time" in result){
-            sampletime(result["sample_time"]);
+          chart_build(field,data,filter);
+          if(data.length>1){
+            $("#graphdiv").addClass( "col-md-8" ).removeClass( "col-md-12" );
+            $("#summarydiv").css("display","block");
+            if("variance" in result){
+              variance(result["variance"]);
+            }
+            if("sample_time" in result){
+              sampletime(result["sample_time"]);
+            }
+          }else{
+            $("#graphdiv").addClass( "col-md-12" ).removeClass( "col-md-8" );  
+            $("#summarydiv").css("display","none");
           }
         }
     });
@@ -411,7 +415,7 @@
   }
   
   <?php if($setting["device"]){ ?>
-    fieldDevice =  $("#inputField").html();
+    fieldDevice =  $("#inputField").html().replace('selected','');;
   <?php } ?>
   
 
@@ -436,7 +440,7 @@
       }
     }
 
-    $("#formSeach").submit(function(e) {
+    $("#formSimulation").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
         totalRecord = 0;
         var startdate = $("#inputDateStart").val();
@@ -459,12 +463,12 @@
         }  
         var searchs = $(".search");
         for(var i = 0; i < searchs.length; i++){
-          var name = $(searchs[i]).attr('name');
-          if(name!="search"){
+          var id = $(searchs[i]).attr('id');
+          if(id!="search"){
             var value = $(searchs[i]).val();
             if(!isNaN(value))
               value = parseInt(value);
-            search[name] = value;
+            search[id] = value;
           }
         } 
         console.log(params);
@@ -477,15 +481,12 @@
       $("#input<?= $key ?>").val("<?= $d ?>");
     <?php } ?>
     
-    
-    <?php if($setting["rollback"]){ ?>
     $("#backbutton").click(function(e){
-        $("#formAdd").attr('action','<?= base_url()?>filter/<?= $setting["rollback"] ?>/'); 
+        $("#formSimulation").attr('action','<?= base_url()?>filter/<?= $setting["rollback"] ?>/<?= (!empty($setting["code"]))?$setting["code"]:""; ?>'); 
+        $('#formSimulation').unbind('submit');
         $('.form-control').removeAttr('required'); 
         $("#save").click();  
     });
-    <?php } ?>
-
   });
 
   

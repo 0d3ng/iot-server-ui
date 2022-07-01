@@ -23,20 +23,75 @@ class Filter extends CI_Controller {
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data filter";	
 		$data['title']='Data Filter List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
+
         $query = array(
             "add_by" => $data['user_now']->id
         );
+        $data["device"] = $this->input->get('device');
+        if(!empty($data["device"]))
+            $query["device"] =  $data["device"];
+
         $data["data"] =  $this->filter_m->search($query);
         if($data["data"]->status){
             $data["data"] = $data["data"]->data;
         } else {
             $data['data'] = array();
         }
+
+        $data['device_group'] = [];
+        ////get goup////
+        $data['group'] = []; 
+        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+        if($group->status){
+            $group = $group->data;
+            $groupcode = array();
+            foreach ($group as $key) {
+                $groupcode[] = $key->group_code;
+                $data['group'][$key->group_code] = $key;
+            }        
+            ///end get goup////
+            ////get device from group///
+            $groupcode = array(
+                '$in' => $groupcode
+            );
+            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
+            if($data_group->status){
+                $data_group = $data_group->data;
+                if(!empty($data_group))
+                    foreach ($data_group as $key) {
+                        $device_groupcode[] = $key->code_name;
+                        $data['device_group'][$key->code_name] = $key;
+                    }
+            }    
+        }
+        //end get device from group///
+        ////get device from personal ///
+        $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
+        if($data_personal->status){
+            $data_personal = $data_personal->data;
+            if(!empty($data_group))
+                foreach ($data_personal as $key) {
+                    $device_groupcode[] = $key->code_name;
+                    $data['device_group'][$key->code_name] = $key;
+                }
+        }            
+        ////end get device from personal ///
+        $device_groupcode = array(
+            '$in' => $device_groupcode
+        );
+        $or = array();
+        $or[] = array("group_code_name" =>$device_groupcode);
+        $or[] = array("add_by" => $data['user_now']->id);
+        $query = array(
+            '$or' => $or
+        );
+        $data["device_list"] =  $this->device_m->search($query)->data;
         
         $this->load->view('filter_v', $data);
 	}
 
-	public function add(){       
+	public function add(){   
+             
 		$data=array();
 		$data['success']='';
 		$data['error']='';
@@ -184,6 +239,52 @@ class Filter extends CI_Controller {
                 $data['error']=$respo->message;
             }                       
         }
+
+        $data["setting"]=array(
+            "device"=> "",
+            "list_field"=>[],
+            "field"=> "",
+            "method"=> "",
+            "parameter" =>[],
+            "group"=>[]
+        );
+
+        if($this->input->post('back')){  
+            $device = $this->input->post("device");
+            $field = $this->input->post("field");
+            $method = $this->input->post("method");
+            $params = array();
+            $item_method = array();
+            foreach($data["method"] as $d){
+                if($d->name==$method){
+                    $item_method = $d;
+                    break;
+                }
+            }
+            if(!empty($item_method)){
+                foreach($item_method->params as $d){
+                    $params[$d->name]=$this->input->post($d->name);
+                }
+            }
+            $group_process = $this->input->post("query");
+            if(empty($group_process))
+                $group_process = [];
+            $device_data = $this->device_m->get_detail($device);
+            $listfield = [];
+            if($device_data->status){
+                $device_data = $device_data->data;
+                $listfield = $this->extract($device_data->field);
+            }
+
+            $data["setting"] = array(
+        		"device"=> $device,
+                "list_field"=>$listfield,
+                "field"=> $field,
+                "method"=> $method,
+                "parameter" => $params,
+                "group"=> $group_process
+            );
+        }        
 		$this->load->view('filter_add_v', $data);
 	}
 
@@ -196,71 +297,199 @@ class Filter extends CI_Controller {
         $query = array(
             "add_by" => $data['user_now']->id
         );
-        $data["schema"] =  $this->schema_m->search($query);
-        if($data["schema"]->status){
-            $data["schema"] = $data["schema"]->data;
-        }else{
-            $data["schema"] = [];
-        }
-		if($this->input->post('save')){    
-            $idfilter = $this->input->post('id');
-            
-            $schema = $this->schema_m->get_detail($this->input->post('schema'))->data;            
-            $field = array();
-            for ($i = 0; $i < count($schema->field); $i++) { 
-                $item = $schema->field[$i];
-                foreach($item as $key=>$value) {
-                    $items = array();
-                    if($this->input->post("inputcheck_".$key)){
-                        if($this->input->post("input_field_key") == $key){
-                            $items[$key] = "key";
-                        } else {
-                            $items[$key] = array(
-                                "data" => [$this->input->post($key."_device"),$this->input->post($key."_value_field"),$this->input->post($key."_key_field")],
-                                "option" => $this->input->post($key."_method"),
-                                "default" => $this->input->post($key."_default_val")
-                            );
-                            if( !empty($this->input->post($key."_collection")) ){
-                                $items[$key]["collectid"] = $this->input->post($key."_collection");
-                            }
-                        }
-                        array_push($field,$items);
+        
+        $data['device_group'] = [];
+        ////get goup////
+        $data['group'] = []; 
+        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+        if($group->status){
+            $group = $group->data;
+            $groupcode = array();
+            foreach ($group as $key) {
+                $groupcode[] = $key->group_code;
+                $data['group'][$key->group_code] = $key;
+            }        
+            ///end get goup////
+            ////get device from group///
+            $groupcode = array(
+                '$in' => $groupcode
+            );
+            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
+            if($data_group->status){
+                $data_group = $data_group->data;
+                if(!empty($data_group))
+                    foreach ($data_group as $key) {
+                        $device_groupcode[] = $key->code_name;
+                        $data['device_group'][$key->code_name] = $key;
                     }
+            }    
+        }
+        //end get device from group///
+        ////get device from personal ///
+        $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
+        if($data_personal->status){
+            $data_personal = $data_personal->data;
+            if(!empty($data_group))
+                foreach ($data_personal as $key) {
+                    $device_groupcode[] = $key->code_name;
+                    $data['device_group'][$key->code_name] = $key;
                 }
-            }
+        }            
+        ////end get device from personal ///
+        $device_groupcode = array(
+            '$in' => $device_groupcode
+        );
+        $or = array();
+        $or[] = array("group_code_name" =>$device_groupcode);
+        $or[] = array("add_by" => $data['user_now']->id);
+        $query = array(
+            '$or' => $or
+        );
+        $data["data"] =  $this->device_m->search($query)->data;
+        
+        $data["method"] = array(
+            array(
+                "name" => "lowpass",
+                "label" => "Low Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            array(
+                "name" => "highpass",
+                "label" => "High Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff Frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            array(
+                "name" => "bandpass",
+                "label" => "Band Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "low_cutoff",
+                        "label" => "Low Cutoff Frequency",
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "high_cutoff",
+                        "label" => "High Cutoff Frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            array(
+                "name" => "kalmanbasic",
+                "label" => "Kalman Filter",
+                "params" => array(
+                    array(
+                        "name" => "R",
+                        "label" => "Noise Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "Q",
+                        "label" => "Estimated Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    )
+                )
+            )
+        );
+        $data["method"] = json_decode(json_encode($data["method"]));
+
+        if($this->input->post('save')){  
+            $idfilter = $this->input->post('id');
             // echo "<pre>";
             // print_r($this->input->post());
             // echo "</pre>";
-            // exit();    
+            // exit();
+            $device = $this->input->post("device");
+            $field = $this->input->post("field");
+            $method = $this->input->post("method");
+            $params = $this->input->post("params");
+            $group_process = $this->input->post("group");
+            $waiting_time = intval($this->input->post("waiting"));
             if(empty($this->input->post('stream')))
                 $stream = false;
             else 
-                $stream = true;            	
+                $stream = true;      	
             $input = array(
-        		"name" => $this->input->post('name'),
-        		"schema_code" => $this->input->post('schema'),
-				"add_by" => $data['user_now']->id,        	    
-        	    "time_loop" =>intval($this->input->post('time_loop')),
-        	    "stream" => $stream,
-                "information" => array(
-                        "detail" => $this->input->post('detail'),
-                        "purpose" => $this->input->post('purpose'),
-                    ),
-                "field" => $field
+        		"device"=> $device,
+                "field"=> $field,
+                "stream"=> $stream,
+                "add_by"=> $data['user_now']->id,
+                "waiting_time"=> $waiting_time,
+                "method"=> array(
+                    "name"=> $method,
+                    "parameter"=>$params 
+                ),
+                "group_data"=> $group_process
             );
-
             $respo = $this->filter_m->edit($idfilter,$input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
             } else {                
                 $data['error']=$respo->message;
-            }   
+            }                         
         }
         
-        $data['data'] = $this->filter_m->get_detail($id);       
-        if($data['data']->status){
-            $data['data'] = $data['data']->data;
-            $data['id'] = $id;
+        $detail = $this->filter_m->get_detail($id);       
+        if($detail->status){
+            $detail = $detail->data;
+            $data["filter_code"] = $detail->filter_code;
+            $device_data = $this->device_m->get_detail($detail->device);
+            $listfield = [];
+            if($device_data->status){
+                $device_data = $device_data->data;
+                $listfield = $this->extract($device_data->field);
+            }
+            $data["setting"]=array(
+                "device"=> $detail->device,
+                "list_field"=>$listfield,
+                "field"=> $detail->field,
+                "method"=> $detail->method->name,
+                "parameter" =>$detail->method->parameter,
+                "waiting_time"=> $detail->waiting_time,
+                "stream"=>$detail->stream,
+                "group"=>$detail->group_data
+            );
+            $data['id'] = $detail->id;
+            if($this->input->post('back')){  
+                $data["setting"][ "device"] = $this->input->post("device");
+                $data["setting"]["field"]= $this->input->post("field");
+                $data["setting"]["method"] = $this->input->post("method");
+                $params = array();
+                $item_method = array();
+                foreach($data["method"] as $d){
+                    if($d->name==$data["setting"]["method"]){
+                        $item_method = $d;
+                        break;
+                    }
+                }
+                if(!empty($item_method)){
+                    foreach($item_method->params as $d){
+                        $params[$d->name]=$this->input->post($d->name);
+                    }
+                }
+                $data["setting"]["params"] = $params;
+                $group_process = $this->input->post("query");
+                if(empty($group_process))
+                    $group_process = [];
+                $data["setting"]["group"] = $group_process;
+                $device_data = $this->device_m->get_detail($data["setting"][ "device"]);
+                if($device_data->status){
+                    $device_data = $device_data->data;
+                    $data["setting"]["list_field"] = $this->extract($device_data->field);
+                }
+            }  
 		    $this->load->view('filter_edit_v', $data);
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
@@ -269,11 +498,7 @@ class Filter extends CI_Controller {
 
 	public function delete($id,$other=""){       
 		if($id){
-            if($other){
-                $respo = $this->filter_m->del_other($id);
-            } else {
-        	    $respo = $this->filter_m->del($id);
-            } 
+            $respo = $this->filter_m->del($id);
             if($respo->status){             
 				redirect(base_url().'filter/?alert=success') ; 			
             } else {                
@@ -403,7 +628,7 @@ class Filter extends CI_Controller {
             "field"=> "",
             "method"=> "",
             "parameter" =>[],
-            "rollback"=>"",
+            "rollback"=>"add",
             "query"=>[]
         );
         if($this->input->post('save')){  
@@ -416,7 +641,10 @@ class Filter extends CI_Controller {
             $field = $this->input->post("field");
             $method = $this->input->post("method");
             $params = $this->input->post("params");
+            $code = $this->input->post("filtercode");
             $group_process = $this->input->post("group");
+            if(empty($group_process))
+                $group_process = [];
             $device_data = $this->device_m->get_detail($device);
             $listfield = [];
             if($device_data->status){
@@ -432,6 +660,9 @@ class Filter extends CI_Controller {
                 "rollback"=> $rollback,
                 "query"=> $group_process
             );
+            if(!empty($code)){
+                $data["setting"]["code"] = $code;
+            }
         }
         // echo "<pre>";
         // print_r($data);
@@ -475,8 +706,10 @@ class Filter extends CI_Controller {
                 $data["data"][] = [$d->{'date_add_server'}->{'$date'},$d->{$field}];
                 $data["filter"][] = [$d->{'date_add_server'}->{'$date'},$d->{"filter_".$field}];
             }
-            $data["variance"] =  $process->variance;                
-            $data["sample_time"] =  $process->sample_time;   
+            if(isset($process->variance))
+                $data["variance"] =  $process->variance;                
+            if(isset($process->sample_time))
+                $data["sample_time"] =  $process->sample_time;   
         } else {
             $query = array(
                 "date_start"=>  $date_start,

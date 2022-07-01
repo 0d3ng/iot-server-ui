@@ -4,7 +4,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>filter">Data Filter</a></li>
-    <li class="breadcrumb-item active">Add</li>
+    <li class="breadcrumb-item active">Edit</li>
   </ol>
   <div class="page-header-actions">
   </div>
@@ -18,6 +18,11 @@
             <h3 class="panel-title"><i class="icon wb-memory" aria-hidden="true"></i> &nbsp;Select Device</h3>
           </div>
           <div class="panel-body bg-white">
+              <div class="form-group form-material">
+                    <label class="form-control-label" for="inputLocation">Data Filter Service Code</label>
+                    <input type="text" class="form-control" id="inputLocation" name="filtercode" value="<?= (empty($filter_code))?'':$filter_code;  ?>"
+                    readonly/>
+               </div>
               <div class="form-group form-material" id="selectGroup">
                   <label class="form-control-label" for="inputDevice">Device</label>
                   <select class="form-control " id="inputDevice" name="device" onchange="deviceForm()" required>
@@ -72,7 +77,7 @@
               <div class="example-wrap">
                     <div class="form-group form-material ">
                       <label class="form-control-label" for="inputWaiting">Waiting Tollerance (seconds)</label>
-                      <input type="text" class="form-control" id="inputWaiting" name="waiting"  
+                      <input type="text" class="form-control" id="inputWaiting" name="waiting" value="<?= (empty($setting["waiting_time"]))?'':$setting["waiting_time"];  ?>" 
                         placeholder="60" autocomplete="off" required/>
                     </div>
                     <div class="form-group form-material">
@@ -81,7 +86,7 @@
                             <label class="float-left pt-3" for="inputStream">Off</label>
                             <div class="float-left ml-20 mr-20">
                                 <input type="checkbox" id="inputStream" name="stream" data-plugin="switchery"
-                                />
+                                <?= ($setting["stream"])?'checked':'' ?> />
                             </div>
                             <label class="pt-3" for="inputStream">On</label>
                         </div>
@@ -114,9 +119,10 @@
                     </div>
                     <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                                  
                     <div class="form-group form-material mt-10">
-                        <button type="submit" name="save" value="add" id="save" class="btn btn-primary mt-10">Add New Data Filter</button>&nbsp; &nbsp;
+                        <button type="submit" name="save" value="edit" id="save" class="btn btn-primary mt-10">Data Filter Update</button>&nbsp; &nbsp;
                         <button type="button" id="simulation" class="btn btn-info mt-10">Simulation</button>&nbsp; &nbsp;
                         <a href="<?= base_url();?>filter"><button type="button" class="btn btn-default mt-10">Cancel</button></a>
+                        <input type="hidden" name="id" value="<?= $id ?>">
                     </div>
 
               </div>
