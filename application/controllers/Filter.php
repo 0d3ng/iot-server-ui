@@ -451,6 +451,9 @@ class Filter extends CI_Controller {
                 $device_data = $device_data->data;
                 $listfield = $this->extract($device_data->field);
             }
+            $group_data = $detail->group_data;
+            if(empty($group_data))
+                $group_data = array();
             $data["setting"]=array(
                 "device"=> $detail->device,
                 "list_field"=>$listfield,
@@ -459,7 +462,7 @@ class Filter extends CI_Controller {
                 "parameter" =>$detail->method->parameter,
                 "waiting_time"=> $detail->waiting_time,
                 "stream"=>$detail->stream,
-                "group"=>$detail->group_data
+                "group"=>$group_data
             );
             $data['id'] = $detail->id;
             if($this->input->post('back')){  
