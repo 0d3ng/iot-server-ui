@@ -214,6 +214,18 @@ class Filter extends CI_Controller {
             $field = $this->input->post("field");
             $method = $this->input->post("method");
             $params = $this->input->post("params");
+
+            foreach($data["method"] as $item){
+                $method_item = $item->name;
+                if($method_item == $method){
+                    foreach($item->params as $item_params){
+                        if($item_params->type == "float")
+                            $params[$item_params->name] = floatval($params[$item_params->name]);
+                    }
+                    break;
+                }
+            }
+
             $group_process = $this->input->post("group");
             $waiting_time = intval($this->input->post("waiting"));
             if(empty($this->input->post('stream')))
@@ -232,6 +244,7 @@ class Filter extends CI_Controller {
                 ),
                 "group_data"=> $group_process
             );
+            
             $respo = $this->filter_m->add($input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
@@ -415,6 +428,18 @@ class Filter extends CI_Controller {
             $field = $this->input->post("field");
             $method = $this->input->post("method");
             $params = $this->input->post("params");
+
+            foreach($data["method"] as $item){
+                $method_item = $item->name;
+                if($method_item == $method){
+                    foreach($item->params as $item_params){
+                        if($item_params->type == "float")
+                            $params[$item_params->name] = floatval($params[$item_params->name]);
+                    }
+                    break;
+                }
+            }
+
             $group_process = $this->input->post("group");
             $waiting_time = intval($this->input->post("waiting"));
             if(empty($this->input->post('stream')))
