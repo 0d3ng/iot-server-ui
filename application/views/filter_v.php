@@ -44,7 +44,7 @@
       <div class="panel">
         <header class="panel-heading">
           <div class="panel-actions"></div>
-          <h3 class="panel-title">List of Data Synchronization Service</h3>
+          <h3 class="panel-title">List of Data Filter Service</h3>
         </header>
         <div class="panel-body">
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
@@ -54,6 +54,7 @@
                 <th>Stream Process</th>
                 <th>Device</th>
                 <th>Field</th>
+                <th>Field to Store Data</th>
                 <th>Method</th>
                 <th>Date Add</th>
                 <th>Actions</th>
@@ -64,6 +65,7 @@
                 <th>Data Filter Code</th>
                 <th>Stream Process</th>
                 <th>Device</th>
+                <th>Field to Store Data</th>
                 <th>Field</th>
                 <th>Method</th>
                 <th>Date Add</th>
@@ -85,7 +87,8 @@
                 </td>
                 <td><?= $d->device; ?></td>
                 <td><?= $d->field; ?></td>
-                <td><?= $d->method->name; ?></td>
+                <td><?= $d->save_to; ?></td>
+                <td><?= $method[$d->method->name]["label"]; ?></td>
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td class="actions">
                   <a href="<?= base_url()?>filter/batch/<?= $d->filter_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"

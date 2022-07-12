@@ -91,6 +91,14 @@
               <?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?>
             </li>
             <?php } ?>
+
+            <?php foreach($field_filter_list as $d){ ?>
+            <li class="list-group-item">
+              <span class="badge badge-pill badge-success" id="last-<?= $d ?>" style="padding:5px 10px;">-</span>
+              <?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?>
+            </li>
+            <?php } ?>
+
             <li class="list-group-item">
               <span class="badge badge-pill badge-success" id="last-date" style="padding:5px 10px;">-</span>
               DATA DATE TIME
@@ -129,13 +137,19 @@
         foreach($listfield as $d){
           $sensor_data[$d] = array();
         }
+        foreach($field_filter_list as $d){
+          $sensor_data[$d] = array();
+        }
+        $listfield_filter = array_merge($listfield,$field_filter_list);
+
         if($sensor){
           foreach($sensor as $d){
             $itemdata = (array)$d;
-              if(!empty($itemdata)){
-              foreach($listfield as $fd){    
+            if(!empty($itemdata)){
+              foreach($listfield_filter as $fd){    
                 if(!isset($itemdata[$fd])){
-                  $values = '';
+                  // $values = '';
+                  continue;
                 } else if(!is_numeric($itemdata[$fd])){
                   $values = 0;
                 } else {
@@ -143,9 +157,12 @@
                 }       
                 $sensor_data[$fd][] = [$itemdata['date_add_server']->{'$date'},$values];            
               }
+
             }          
           }
         } 
+
+        
     ?>
 </div>
 
@@ -165,7 +182,7 @@
 <script>
   var myLine = [], lineChart = []; 
   var mychart = [];
-  var listfield = <?php echo json_encode($listfield); ?>;
+  var listfield = <?php echo json_encode($listfield_filter); ?>;
   $( document ).ready(function() {
     $(".dropdown-menu-right").click(function(e){
       e.stopPropagation();
@@ -184,6 +201,16 @@
             load: function () {
               var series = this.series[0];
               mychart['<?= $d ?>'] = series; 
+              <?php 
+                if(isset($filter[$d])){
+                  $n = 1;
+                  foreach($filter[$d] as $ff){ 
+                    echo "var series".($n)." = this.series[".$n."];
+                          mychart['".$ff."'] = series".($n)."; ";
+                    $n++;
+                  } 
+                } 
+              ?>
             }
           }
         },
@@ -191,7 +218,9 @@
         time: {
           useUTC: false
         },
-
+        legend: {
+          enabled: true
+        },
         rangeSelector: {
           buttons: [{
             count: 10,
@@ -223,9 +252,20 @@
         },
 
         series: [{
-          name: '<?= str_replace("_", " ", str_replace("-"," - ",$d)) ; ?>',
+          name: '<?= str_replace("_", " ", str_replace("-"," - ",$d)); ?> <?= (isset($filter[$d]))?"real data":""; ?>',
           data: <?php echo json_encode($sensor_data[$d]); ?>
-        }]
+        }
+        <?php 
+          if(isset($filter[$d])){
+            foreach($filter[$d] as $ff){ ?>
+            ,{
+              name: '<?= str_replace("_", " ", str_replace("-"," - ",$ff)); ?>',
+              data: <?php echo json_encode($sensor_data[$ff]); ?>
+            }
+        <?php } 
+        } ?>
+        
+        ]
       });
     <?php } ?>
     

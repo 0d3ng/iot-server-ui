@@ -70,11 +70,18 @@
           <div class="panel-body bg-white">
               <!-- Example Date Range -->
               <div class="example-wrap">
-                    <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputWaiting">Waiting Tollerance (seconds)</label>
-                      <input type="text" class="form-control" id="inputWaiting" name="waiting"  
-                        placeholder="60" autocomplete="off" required/>
+                    <div class="form-group row">
+                      <div class="form-group form-material col-md-6">
+                        <label class="form-control-label" for="inputWaiting">Waiting Tollerance (seconds)</label>
+                        <input type="text" class="form-control" id="inputWaiting" name="waiting"  
+                          placeholder="60" autocomplete="off" required/>
+                      </div>
+                      <div class="form-group form-material col-md-6">
+                        <label class="form-control-label" for="inputSaveTo">Field Name to Store Filtered Data</label>
+                        <input type="text" class="form-control" id="inputSaveTo" name="save_to" required/>
+                      </div>
                     </div>
+
                     <div class="form-group form-material">
                         <label class="form-control-label mt-3" for="inputLocation"  style="width:100px;">Stream Process</label>
                         <div>
@@ -247,6 +254,10 @@
         $("#formAdd").attr('action','<?= base_url()?>filter/simulation/'); 
         $('.form-control').removeAttr('required'); 
         $("#save").click();  
+    });
+
+    $("#inputField").onchange(function(e){
+        $("#inputSaveTo").val("filtered_"+$("#inputField").val());
     });
 
     <?php if($setting["device"]){ ?>

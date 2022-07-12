@@ -86,7 +86,62 @@ class Filter extends CI_Controller {
             '$or' => $or
         );
         $data["device_list"] =  $this->device_m->search($query)->data;
-        
+        $data["method"] = array(
+            "lowpass" => array(
+                "name" => "lowpass",
+                "label" => "Low Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            "highpass" => array(
+                "name" => "highpass",
+                "label" => "High Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "cutoff",
+                        "label" => "Cutoff Frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            "bandpass" => array(
+                "name" => "bandpass",
+                "label" => "Band Pass Filter",
+                "params" => array(
+                    array(
+                        "name" => "low_cutoff",
+                        "label" => "Low Cutoff Frequency",
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "high_cutoff",
+                        "label" => "High Cutoff Frequency",
+                        "type" => "float"
+                    )
+                )
+            ),
+            "kalmanbasic" => array(
+                "name" => "kalmanbasic",
+                "label" => "Kalman Filter",
+                "params" => array(
+                    array(
+                        "name" => "R",
+                        "label" => "Noise Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    ),
+                    array(
+                        "name" => "Q",
+                        "label" => "Estimated Covariance", //Meaning Covariance????
+                        "type" => "float"
+                    )
+                )
+            )
+        );
         $this->load->view('filter_v', $data);
 	}
 
@@ -212,6 +267,7 @@ class Filter extends CI_Controller {
             // exit();
             $device = $this->input->post("device");
             $field = $this->input->post("field");
+            $save_to = $this->input->post("save_to");
             $method = $this->input->post("method");
             $params = $this->input->post("params");
 
@@ -235,6 +291,7 @@ class Filter extends CI_Controller {
             $input = array(
         		"device"=> $device,
                 "field"=> $field,
+                "save_to"=> $save_to,
                 "stream"=> $stream,
                 "add_by"=> $data['user_now']->id,
                 "waiting_time"=> $waiting_time,
@@ -426,6 +483,7 @@ class Filter extends CI_Controller {
             // exit();
             $device = $this->input->post("device");
             $field = $this->input->post("field");
+            $save_to = $this->input->post("save_to");
             $method = $this->input->post("method");
             $params = $this->input->post("params");
 
@@ -449,6 +507,7 @@ class Filter extends CI_Controller {
             $input = array(
         		"device"=> $device,
                 "field"=> $field,
+                "save_to"=> $save_to,
                 "stream"=> $stream,
                 "add_by"=> $data['user_now']->id,
                 "waiting_time"=> $waiting_time,
@@ -458,6 +517,7 @@ class Filter extends CI_Controller {
                 ),
                 "group_data"=> $group_process
             );
+            
             $respo = $this->filter_m->edit($idfilter,$input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
@@ -483,6 +543,7 @@ class Filter extends CI_Controller {
                 "device"=> $detail->device,
                 "list_field"=>$listfield,
                 "field"=> $detail->field,
+                "save_to"=> $detail->save_to,
                 "method"=> $detail->method->name,
                 "parameter" =>$detail->method->parameter,
                 "waiting_time"=> $detail->waiting_time,

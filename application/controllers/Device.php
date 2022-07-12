@@ -10,6 +10,7 @@ class Device extends CI_Controller {
         $this->load->model('groupsensor_m');
 		$this->load->model('device_m');
 		$this->load->model('deviceprocess_m');
+		$this->load->model('filter_m');
         $this->limit_data = 3000;
         $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
@@ -331,6 +332,24 @@ class Device extends CI_Controller {
         }
         if(!empty($data['sensor'])) 
             $data['sensor'] = array_reverse((array)$data['sensor']);
+        
+        $query = array(
+            "device" => $id
+        );
+        $filter_field1 = array();
+        $filter_field2 = array();
+        $filter =  $this->filter_m->search($query);
+        if($filter->status){
+            $filter = $filter->data;
+            foreach($filter as $d){
+                $filter_field2[] =  $d->save_to;
+                if( !isset($filter_field1[$d->field]) )
+                    $filter_field1[$d->field] = array();
+                $filter_field1[$d->field][] = $d->save_to;
+            }
+        }
+        $data["filter"] = $filter_field1;
+        $data["field_filter_list"] = $filter_field2;
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
@@ -386,6 +405,18 @@ class Device extends CI_Controller {
         // print_r($data);
         // echo "</pre>";
         // exit();
+        $query = array(
+            "device" => $id
+        );
+        $filter_field = array();
+        $filter =  $this->filter_m->search($query);
+        if($filter->status){
+            $filter = $filter->data;
+            foreach($filter as $d){
+                $filter_field[] = $d->save_to;
+            }
+        }        
+        $data['extract'] = array_merge($data['extract'],$filter_field);
         $this->load->view('device_data_table_v', $data);
     }  
 
@@ -436,6 +467,19 @@ class Device extends CI_Controller {
         else
             $export = false;
 		$list = $this->device_m->datasensor($device->device_code,$query)->data;
+
+        $query = array(
+            "device" => $id
+        );
+        $filter_field = array();
+        $filter =  $this->filter_m->search($query);
+        if($filter->status){
+            $filter = $filter->data;
+            foreach($filter as $d){
+                $filter_field[] = $d->save_to;
+            }
+        }   
+
         $data = array();
         foreach($list as $d){
             $item = array();
@@ -447,6 +491,9 @@ class Device extends CI_Controller {
                     $val = (!isset($d->{$k}))?((!$export)?"-":""):$d->{$k}; //$d->{$k}; 
                 }
                 $item[$k] = $val;
+            }
+            foreach($filter_field as $ff){
+                $item[$ff] = (!isset($d->{$ff}))?((!$export)?"-":""):$d->{$ff};
             }
             // $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server_unix"}/1000);
             $item["date"] = date('Y-m-d H:i:s', $d->{"date_add_server"}->{'$date'}/1000);
