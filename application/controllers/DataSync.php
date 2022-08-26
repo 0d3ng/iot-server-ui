@@ -37,7 +37,7 @@ class datasync extends CI_Controller {
         $this->load->view('datasync_v', $data);
 	}
 
-	public function add2(){       
+	public function add(){       
 		$data=array();
 		$data['success']='';
 		$data['error']='';
@@ -285,18 +285,6 @@ class datasync extends CI_Controller {
                 }
                 //end get device from group///
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             
             ////get device from personal ///
             $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
