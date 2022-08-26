@@ -257,8 +257,8 @@ class datasync extends CI_Controller {
             ////get goup////
             $data['group'] = [];     
             $device_groupcode = array();   
-            $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
-            if($group->status){
+            $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));            
+            if(!empty($group->status)){
                 $group = $group->data;
                 $groupcode = array();
                 foreach ($group as $key) {
