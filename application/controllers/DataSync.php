@@ -37,7 +37,7 @@ class datasync extends CI_Controller {
         $this->load->view('datasync_v', $data);
 	}
 
-	public function add(){       
+	public function add2(){       
 		$data=array();
 		$data['success']='';
 		$data['error']='';
@@ -247,7 +247,7 @@ class datasync extends CI_Controller {
     }
 
 
-    public function schema12($code,$iddatasync=""){       
+    public function schema($code,$iddatasync=""){       
         $schema = $this->schema_m->get_detail($code);
         if($schema->status){
             $data = array();
