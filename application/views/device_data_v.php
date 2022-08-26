@@ -335,7 +335,7 @@
       if( itemfield in data){
         values = data[itemfield];         
       }
-      var data_time = data['date_add_server_unix'] 
+      var data_time = data['date_add_server'] 
       mychart[itemfield].addPoint([data_time,values],true,true);
     }
     lastdata(data);
@@ -355,7 +355,7 @@
         }
         $("#last-"+itemfield).html(values);
       }
-      var timestamp = moment.unix(data['date_add_server_unix']/1000);
+      var timestamp = moment.unix(data['date_add_server']/1000);
       $("#last-date").html(timestamp.format("YYYY-MM-DD HH:mm:ss")); 
     }
   }
