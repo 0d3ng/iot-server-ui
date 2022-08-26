@@ -258,10 +258,15 @@ class datasync extends CI_Controller {
             $data['group'] = [];     
             $device_groupcode = array();   
             $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));            
+
             if(!empty($group->status)){
                 $group = $group->data;
                 $groupcode = array();
                 foreach ($group as $key) {
+                    if(empty($key)){
+                        continue;
+                    }
+
                     $groupcode[] = $key->group_code;
                     $data['group'][$key->group_code] = $key;
                 }        
