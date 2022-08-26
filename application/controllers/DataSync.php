@@ -263,10 +263,9 @@ class datasync extends CI_Controller {
                 $group = $group->data;
                 $groupcode = array();
                 foreach ($group as $key) {
-                    if(empty($key)){
+                    if(empty($key->group_code)){
                         continue;
                     }
-
                     $groupcode[] = $key->group_code;
                     $data['group'][$key->group_code] = $key;
                 }        
