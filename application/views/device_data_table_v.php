@@ -97,7 +97,7 @@
     <div class="col-md-12">
       <div class="panel">
         <div class="panel-heading">
-          <h3 class="panel-title">Sensor Data</h3>
+          <h2 class="panel-title" style="font-weight:bold;"><?= $data->name; ?> Data</h2>
         </div>
         <div class="panel-body">
           <div class="col-md-12">
