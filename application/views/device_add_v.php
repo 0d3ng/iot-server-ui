@@ -181,6 +181,16 @@
 </div>
 <?php include("footer.php") ?>
 <script type="text/javascript">
+  const characters ='abcdefghijklmnopqrstuvwxyz0123456789';
+  function generateString(length) {
+      let result = '';
+      const charactersLength = characters.length;
+      for ( let i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+
+      return result;
+  }
   $( document ).ready(function() {
     // Override global options
     toastr.options = {
@@ -208,6 +218,16 @@
         $("#inputTopic").attr("required", true);
         $("#inputServer").attr("required", true);
         $("#inputPort").attr("required", true);
+        if(!$("#inputTopic").val()){
+          $("#inputTopic").val("sensor/"+generateString(5));
+        }
+        if(!$("#inputServer").val()){
+          $("#inputServer").val("localhost");
+        }
+        if(!$("#inputPort").val()){
+          $("#inputPort").val("1883");
+        }
+
       } else {
         $("#mqttform").css("display","none");
         $("#inputTopic").removeAttr("required");
