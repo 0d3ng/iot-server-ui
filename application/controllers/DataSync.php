@@ -247,7 +247,7 @@ class datasync extends CI_Controller {
     }
 
 
-    public function schema($code,$iddatasync=""){       
+    public function schema12($code,$iddatasync=""){       
         $schema = $this->schema_m->get_detail($code);
         if($schema->status){
             $data = array();
