@@ -280,7 +280,7 @@
     //--------------------------------------------///
     //////MQTT SETTING/////
     var mqtt;
-    var reconnectTimeout = 2000, host = '<?= $this->config->item('host_mqtt')?>', port = <?= $this->config->item('port_mqtt')?>,topic = '<?= $topic; ?>/response';
+    var reconnectTimeout = 2000, host = '<?= $this->config->item('host_mqtt')?>', port = <?= $this->config->item('port_mqtt')?>,topic = 'mqtt/output/<?= $topic; ?>';
 
     function MQTTconnect() {
         mqtt = new Paho.MQTT.Client(
