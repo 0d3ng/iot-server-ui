@@ -41,8 +41,9 @@ class Filter extends CI_Controller {
         $data['device_group'] = [];
         ////get goup////
         $data['group'] = []; 
+        $device_groupcode = [];
         $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
-        if($group->status){
+        if(!empty($group->status)){
             $group = $group->data;
             $groupcode = array();
             foreach ($group as $key) {
@@ -156,6 +157,7 @@ class Filter extends CI_Controller {
         $data['device_group'] = [];
         ////get goup////
         $data['group'] = []; 
+        $device_groupcode = [];
         $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
         if($group->status){
             $group = $group->data;
@@ -371,6 +373,7 @@ class Filter extends CI_Controller {
         $data['device_group'] = [];
         ////get goup////
         $data['group'] = []; 
+        $device_groupcode = [];
         $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
         if($group->status){
             $group = $group->data;
@@ -607,6 +610,7 @@ class Filter extends CI_Controller {
         $data['device_group'] = [];
         ////get goup////
         $data['group'] = []; 
+        $device_groupcode = [];
         $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
         if($group->status){
             $group = $group->data;
