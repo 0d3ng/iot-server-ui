@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class datasync extends CI_Controller {
+class datasync2 extends CI_Controller {
 
 	public function __construct() {
 
