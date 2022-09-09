@@ -11,6 +11,7 @@ class Device extends CI_Controller {
 		$this->load->model('device_m');
 		$this->load->model('deviceprocess_m');
 		$this->load->model('filter_m');
+		$this->load->model('edge_m');
         $this->limit_data = 3000;
         $this->limit_table = 25;
 		if(!$this->session->userdata('dasboard_iot')) redirect(base_url() . "auth/login");
@@ -702,6 +703,130 @@ class Device extends CI_Controller {
         // exit();
         $this->load->view('device_data_comp_v', $data);
     }
+    
+
+    public function edge($id,$method="list",$field=""){
+        $data=array();
+		$data['success']='';
+		$data['error']='';				
+		$data['user_now'] = $this->session->userdata('dasboard_iot');	                        
+        $data['data'] = $this->device_m->get_detail($id);        
+		$data['id'] = $id;
+        if(!$data['data']->status){
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+            return "";
+        }
+        $data['data'] = $data['data']->data;
+        if($method=="list"){
+            $this->edge_list($id,$data);
+        } else if($method=="add"){
+            $this->edge_add($data,$id);
+        } else if($method=="edit"){
+            $this->edge_edit($data,$id,$field);
+        } else if($method=="delete"){
+            $this->edge_delete($id,$field);
+        } else if($method=="process"){
+            $this->edge_process($data,$id);
+        } else {
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+        }
+    }
+
+    function edge_list($id,$data){
+        $data['title']= 'Edge Computing Configuration List';
+        if($this->input->get('alert')=='success') $data['success']='Delete edge configuration successfully';	
+        if($this->input->get('alert')=='failed') $data['error']="Failed to delete edge configuration";
+        $src = array(
+            "device_code"=>$id
+        );
+        $data["config_list"] = $this->edge_m->search($src);
+        if( $data["config_list"]->status == 1)
+            $data["config_list"] = $data["config_list"]->data;
+        else
+            $data["config_list"] = [];
+        $data["id"] = $id;
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // exit();
+        $this->load->view('device_edge_v', $data);
+    }
+    
+    function edge_add($data,$id){       
+        $data['title']= 'Edge Computing Configuration Add';		
+        $data['user_now'] = $this->session->userdata('dasboard_iot');	
+        if($this->input->post('save')){ 
+            $method =  $this->input->post('method');                    
+            $object_used = json_decode($this->input->post('object_used')); 
+            $input = array(
+                "device_code" => $id,
+                "method" => $this->input->post('method'),
+                "string_sample" => $this->input->post('string_sample'),
+                "object_used" => $object_used,
+                "string_pattern" => $this->input->post('string_pattern'),
+                "active" => $this->input->post('active')
+            );
+            if($method == "array_list"){
+                $input["delimeter"] = [$this->input->post('delimeter1')];    
+            } else if($method == "json_object"){
+                $input["delimeter"] = [$this->input->post('delimeter1'),$this->input->post('delimeter2')];
+            }
+            $respo = $this->edge_m->add($input);
+            if($respo->status){             
+                $data['success']=$respo->message;                  
+            } else {                
+                $data['error']=$respo->message;
+            }                       
+        }
+        $data["id"] = $id;
+        $this->load->view('device_edge_add_v', $data);
+    }
+    
+    function edge_edit($data,$id,$field){       
+        $data['title']= 'Edge Computing Configuration Edit';		
+        $data['user_now'] = $this->session->userdata('dasboard_iot');	
+        if($this->input->post('save')){ 
+            $input = array(
+                "device_code" => $id,
+                "oldfield" => $this->input->post('oldfield'),
+                "field" => $this->input->post('field'),
+                "pre" => $this->input->post('pre'),
+                "edge" => $this->input->post('edge'),
+                "var" => $this->input->post('var')
+            );
+            $respo = $this->edge_m->edit($input);
+            if($respo->status){             
+                $data['success']=$respo->message;   
+                $data['data'] = $this->device_m->get_detail($id)->data;                
+            } else {                
+                $data['error']=$respo->message;
+            }                       
+        }
+        $data["id"] = $id;
+        $data["field"] = $field;
+        $data["item"] = $data["data"]->field_edge->{$field};
+        $this->load->view('device_edge_edit_v', $data);
+    }
+    
+    function edge_delete($id,$field){       
+        if($id){
+            $respo = $this->edge_m->del($id,$field);
+            if($respo->status){             
+                redirect(base_url().'device/edge/'.$id.'/?alert=success') ; 			
+            } else {                
+                redirect(base_url().'device/edge/'.$id.'/?alert=failed') ; 			
+            }                       
+        }        
+        redirect(base_url().'device/edge/'.$id.'/?alert=failed') ;		
+    }
+
+    function edge_process($id,$field){
+
+        header('Content-Type: application/json; charset=utf-8');   
+        echo json_encode($response);
+    }
+
+
     
 }
 
