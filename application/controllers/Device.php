@@ -705,7 +705,7 @@ class Device extends CI_Controller {
     }
     
 
-    public function edge($id,$method="list",$field=""){
+    public function edge($id,$method="list",$code=""){
         $data=array();
 		$data['success']='';
 		$data['error']='';				
@@ -722,9 +722,15 @@ class Device extends CI_Controller {
         } else if($method=="add"){
             $this->edge_add($data,$id);
         } else if($method=="edit"){
-            $this->edge_edit($data,$id,$field);
+            $edge = $this->edge_m->get_detail($code);
+            if($edge->status){
+                $data["edge"] = $edge->data;
+                $this->edge_edit($data,$id);
+            }else{
+                $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+            }                            
         } else if($method=="delete"){
-            $this->edge_delete($id,$field);
+            $this->edge_delete($id,$code);
         } else if($method=="process"){
             $this->edge_process($data,$id);
         } else {
@@ -755,22 +761,31 @@ class Device extends CI_Controller {
     function edge_add($data,$id){       
         $data['title']= 'Edge Computing Configuration Add';		
         $data['user_now'] = $this->session->userdata('dasboard_iot');	
-        if($this->input->post('save')){ 
+        if($this->input->post('save')){             
+            $object_used =  array();                    
             $method =  $this->input->post('method');                    
-            $object_used = json_decode($this->input->post('object_used')); 
+            $object_pattern = $this->input->post('object_pattern'); 
+            foreach($object_pattern as $i => $item){                
+                $field = $this->input->post('field_'.$item);
+                $pattern = $this->input->post('pattern_'.$item);
+                $object_used[$field] = $pattern;
+            }            
             $input = array(
                 "device_code" => $id,
                 "method" => $this->input->post('method'),
+                "interface" => $this->input->post('interface'),
                 "string_sample" => $this->input->post('string_sample'),
                 "object_used" => $object_used,
                 "string_pattern" => $this->input->post('string_pattern'),
+                "add_by" => $data['user_now']->id,
                 "active" => $this->input->post('active')
             );
             if($method == "array_list"){
-                $input["delimeter"] = [$this->input->post('delimeter1')];    
+                $input["delimeter"] = [$this->input->post('delimeter')[0]];    
             } else if($method == "json_object"){
-                $input["delimeter"] = [$this->input->post('delimeter1'),$this->input->post('delimeter2')];
+                $input["delimeter"] = $this->input->post('delimeter');
             }
+            
             $respo = $this->edge_m->add($input);
             if($respo->status){             
                 $data['success']=$respo->message;                  
@@ -779,49 +794,94 @@ class Device extends CI_Controller {
             }                       
         }
         $data["id"] = $id;
+        $data["interface"] = array("USB Serial");
+        $data['field'] = $this->extract($data['data']->field);
         $this->load->view('device_edge_add_v', $data);
     }
     
-    function edge_edit($data,$id,$field){       
+    function edge_edit($data,$id){       
         $data['title']= 'Edge Computing Configuration Edit';		
         $data['user_now'] = $this->session->userdata('dasboard_iot');	
         if($this->input->post('save')){ 
+            $object_used =  array();                    
+            $method =  $this->input->post('method');                    
+            $object_pattern = $this->input->post('object_pattern'); 
+            foreach($object_pattern as $i => $item){                
+                $field = $this->input->post('field_'.$item);
+                $pattern = $this->input->post('pattern_'.$item);
+                $object_used[$field] = $pattern;
+            }            
             $input = array(
                 "device_code" => $id,
-                "oldfield" => $this->input->post('oldfield'),
-                "field" => $this->input->post('field'),
-                "pre" => $this->input->post('pre'),
-                "edge" => $this->input->post('edge'),
-                "var" => $this->input->post('var')
+                "method" => $this->input->post('method'),
+                "interface" => $this->input->post('interface'),
+                "string_sample" => $this->input->post('string_sample'),
+                "object_used" => $object_used,
+                "string_pattern" => $this->input->post('string_pattern'),
+                "updated_by" => $data['user_now']->id,
+                "active" => $this->input->post('active')
             );
-            $respo = $this->edge_m->edit($input);
+            if($method == "array_list"){
+                $input["delimeter"] = [$this->input->post('delimeter')[0]];    
+            } else if($method == "json_object"){
+                $input["delimeter"] = $this->input->post('delimeter');
+            }            
+            $respo = $this->edge_m->edit($data["edge"]->id, $input);
             if($respo->status){             
                 $data['success']=$respo->message;   
-                $data['data'] = $this->device_m->get_detail($id)->data;                
+                $data['edge'] = $this->edge_m->get_detail($data['edge']->edgeconfig_code)->data;               
             } else {                
                 $data['error']=$respo->message;
             }                       
         }
         $data["id"] = $id;
-        $data["field"] = $field;
-        $data["item"] = $data["data"]->field_edge->{$field};
+        $data["interface"] = array("USB Serial");
+        $data["field"] =  $this->extract($data['data']->field);    
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // exit();           
         $this->load->view('device_edge_edit_v', $data);
     }
     
-    function edge_delete($id,$field){       
+    function edge_delete($id,$code){       
         if($id){
-            $respo = $this->edge_m->del($id,$field);
-            if($respo->status){             
-                redirect(base_url().'device/edge/'.$id.'/?alert=success') ; 			
-            } else {                
+            $data= $this->edge_m->get_detail($code);
+            
+            if($data->status){
+                $edge_id = $data->data->id;
+                $respo = $this->edge_m->del($edge_id);
+                if($respo->status){             
+                    redirect(base_url().'device/edge/'.$id.'/?alert=success') ; 			
+                } else {                
+                    redirect(base_url().'device/edge/'.$id.'/?alert=failed') ; 			
+                } 
+            }else{
                 redirect(base_url().'device/edge/'.$id.'/?alert=failed') ; 			
-            }                       
+            }
+                                  
         }        
         redirect(base_url().'device/edge/'.$id.'/?alert=failed') ;		
     }
 
     function edge_process($id,$field){
-
+        if($this->input->post('method') and $this->input->post('sample')){
+            $method = $this->input->post('method');
+            $input = array(
+                "method" => $this->input->post('method'),
+                "string_sample" => $this->input->post('sample')                
+            );
+            if($method == "array_list"){
+                $input["delimeter"] = [$this->input->post('delimeter1')];    
+            } else if($method == "json_object"){
+                $input["delimeter"] = [$this->input->post('delimeter1'),$this->input->post('delimeter2')];
+            }   
+            $response = $this->edge_m->process($input);
+        } else {
+            $response = array(
+                "status" => false
+            );
+        }
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
     }

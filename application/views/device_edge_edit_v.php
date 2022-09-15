@@ -5,7 +5,7 @@
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>device">Devices</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>device/edge/<?= $id ?>">Edge Configuration</a></li>
-    <li class="breadcrumb-item active">Add</li>
+    <li class="breadcrumb-item active">Edit</li>
   </ol>
   <div class="page-header-actions">
   </div>
@@ -17,10 +17,15 @@
       <div class="panel">
         <div class="panel-body container-fluid">
           <div class="example-wrap">
-            <h4 class="example-title">Form Add Edge Configuration for Device <?= (empty($data->name))?'':$data->name;  ?> </h4>
+            <h4 class="example-title">Form Edit Edge Configuration for Device <?= (empty($data->name))?'':$data->name;  ?> </h4>
             <form method="post" autocomplete="off">
               <div class="row">
                 <div class="col-md-6">
+                  <div class="form-group form-material ">
+                      <label class="form-control-label" for="inputDevice">Edge Computing ID</label>
+                      <input type="text" class="form-control" id="inputDevice" name="name" value="[<?= $id ?>] <?= (empty($data->name))?'':$data->name;  ?>" 
+                          placeholder="Name" readonly="true"/>
+                  </div>
                   <div class="form-group form-material ">
                       <label class="form-control-label" for="inputDevice">Device</label>
                       <input type="text" class="form-control" id="inputDevice" name="name" value="[<?= $id ?>] <?= (empty($data->name))?'':$data->name;  ?>" 
@@ -30,7 +35,7 @@
                       <label class="form-control-label" for="inputInterface">Network Interface</label>
                       <select class="form-control " id="inputInterface" name="interface" required>
                         <?php foreach ($interface as $d) { ?>
-                        <option value="<?= $d?>" ><?= $d?></option>
+                        <option value="<?= $d?>" <?= ($d == $edge->interface)?'selected':'' ?> ><?= $d?></option>
                         <?php } ?>
                       </select>
                   </div>
@@ -38,25 +43,25 @@
                       <label class="form-control-label" for="inputMethod">Method</label>
                       <select class="form-control " id="inputMethod" name="method" required>
                         <option value="">Select Method</option>
-                        <option value="array_list">Covert to Array List</option>
-                        <option value="json_object">Covert to JSON Object</option>                        
+                        <option value="array_list" <?= ($edge->method == "array_list")?'selected':'' ?> >Covert to Array List</option>
+                        <option value="json_object" <?= ($edge->method == "json_object")?'selected':'' ?> >Covert to JSON Object</option>                        
                       </select>
                   </div>
                   <div class="form-group form-material">
                       <label class="form-control-label" for="inputStringSample">Example of Message</label>
-                      <textarea class="form-control empty" rows="3" id="inputStringSample" name="string_sample"></textarea>
+                      <textarea class="form-control empty" rows="3" id="inputStringSample" name="string_sample"><?= (empty($edge->string_sample))?'':$edge->string_sample;  ?></textarea>
                   </div>
                   <div class="row">
                     <div class="col-md-4" id="form_delimeter1">   
                       <div class="form-group form-material ">
                         <label class="form-control-label" for="inputDelimeter1">Delimeter 1</label>
-                        <input type="text" class="form-control" id="inputDelimeter1" name="delimeter[0]"/>
+                        <input type="text" class="form-control" id="inputDelimeter1" name="delimeter[0]" value="<?= (empty($edge->delimeter[0]))?'':$edge->delimeter[0];  ?>"/>
                       </div>
                     </div>   
                     <div class="col-md-4" id="form_delimeter2">   
                       <div class="form-group form-material ">
                         <label class="form-control-label" for="inputDelimeter2">Delimeter 2</label>
-                        <input type="text" class="form-control" id="inputDelimeter2" name="delimeter[1]"/>
+                        <input type="text" class="form-control" id="inputDelimeter2" name="delimeter[1]" value="<?= (empty($edge->delimeter[1]))?'':$edge->delimeter[1];  ?>"/>
                       </div>
                     </div>
                     <div class="col-md-4" id="form_process">
@@ -72,7 +77,7 @@
                 <div class="col-md-6">
                   <div class="form-group form-material">
                     <label class="form-control-label" for="inputPattern">Pattern</label>
-                    <textarea class="form-control empty" rows="3" id="inputPattern" name="string_pattern" readonly></textarea>
+                    <textarea class="form-control empty" rows="3" id="inputPattern" name="string_pattern" readonly><?= (empty($edge->string_pattern))?'':$edge->string_pattern;  ?></textarea>
                   </div>
                   <h4 class="example-title">Sensor Pattern for Data Conveter</h4>
                   <div class="row" id="specFrm">
@@ -88,13 +93,37 @@
                             <label class="form-control-label" style="width: 100%;padding: 5px 5px 5px;background-color: #f1f4f5;">Action</label>
                         </div>                                                      
                       </div>
+                    </div>                    
+                    <?php foreach ($edge->object_used as $key => $val) {  
+                      $code = substr(md5(mt_rand()), 0, 5);
+                      ?>
+                    <div class="form-material col-md-12" id="form_src_<?= $code ?>">
+                      <div class="form-material row">
+                        <div class="col-md-5 col-8">
+                          <select class="form-control" onchange="fieldForm()" name="field_<?= $code ?>" required="">
+                            <option value="<?= $key?>"><?= $key?></option>
+                          </select>
+                        </div>
+                        <div class="col-md-5 col-8">
+                          <select class="form-control" onchange="patternForm()" name="pattern_<?= $code ?>" required="">
+                            <option value="<?= $val?>"><?= $val?></option>
+                          </select>
+                        </div>
+                        <div class="col-md-2 col-4">
+                          <a onclick="removeForm(this.name)" name="form_src_<?= $code ?>" class="btn btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove">
+                            <i class="icon md-delete" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <input type="hidden" name="object_pattern[]" value="<?= $code ?>">                                            
                     </div>
+                    <?php } ?>
                   </div>
                   <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                                                      
                 </div>   
                 <div class="col-md-12" id="btnsave">
                   <div class="form-group form-material">
-                    <button type="submit" name="save" value="save" class="btn btn-primary waves-effect waves-classic">Add New Edge Configuration</button>&nbsp; &nbsp;
+                    <button type="submit" name="save" value="save" class="btn btn-primary waves-effect waves-classic">Update Edge Configuration</button>&nbsp; &nbsp;
                     <a href="<?= base_url();?>device/edge/<?= $id ?>"><button type="button" class="btn btn-default waves-effect waves-classic">Cancel</button></a>                    
                   </div>
                 </div>             
@@ -238,7 +267,7 @@
     var method = $("#inputMethod").val();    
     $("input[name='object_pattern[]']").each(function() {
         id =  $(this).val();
-        var value = $("select[name='field_"+id+"']").val();
+        var value = $("select[name='field_"+id+"']").val();        
         usedFieldDevice.push(value);
     }); 
     $("input[name='object_pattern[]']").each(function() {
@@ -250,41 +279,18 @@
             optionDevice +='<option value="'+fieldDevice[i]+'">'+fieldDevice[i]+'</option>';
           }else if(fieldDevice[i] == value){
             optionDevice +='<option value="'+fieldDevice[i]+'" selected>'+fieldDevice[i]+'</option>';
-          }          
+          }
+          $("select[name='field_"+id+"']").html(optionDevice);
         }
-        $("select[name='field_"+id+"']").html(optionDevice);
     }); 
   }
 
   function patternForm(){
-    $("input[name='object_pattern[]']").each(function() {
-        // console.log($(this).val()); 
-    });   
+    // $("input[name='object_pattern[]']").each(function() {
+    //     console.log($(this).val()); 
+    // });   
   }
 
-  // function methodForm(){
-  //   var method = $("#inputMethod").val(); 
-  //   $("#params").html(""); 
-  //   if(method != ""){
-  //     var params = method_list[method]["params"];    
-  //     for (var i = 0; i < params.length; i++) {
-  //       var obj = params[i];
-  //       if(obj["type"] == "float"){
-  //         var item_form = '<div class="form-group form-material ">'+
-  //               '<label class="form-control-label" for="input'+obj['name']+'">'+obj['label']+'</label>'+
-  //               '<input type="number" class="form-control inputparams" id="input'+obj['name']+'" name="params['+obj['name']+']" value="" step="any" autocomplete="off">'+
-  //             '</div>';
-  //       }
-  //       $("#params").append(item_form);
-  //     }
-  //     $("#frmprocess").css("display","block");
-  //     $("#frmsearch").css("display","none");
-  //   } else {
-  //     $("#frmprocess").css("display","none");
-  //     $("#frmsearch").css("display","block");
-  //   }
-  // }
-  
   function patternFormStart(){
     var method = $("#inputMethod").val();
     var optionPattern = '<option value="">--- Select Data Pattern---</option>';    
@@ -292,20 +298,21 @@
         var optionDevice = '<option value="">--- Select Field---</option>';
         id =  $(this).val();
         var value = $("select[name='pattern_"+id+"']").val();
+        var fields = $("select[name='field_"+id+"']").val();        
         if(method == "array_list"){
           for(var i in objectPattern){
-            if(!usedObjectPattern.includes(i)){
-              optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
-            }else if(objectPattern[i] == value){
+            if(i == value){
               optionPattern +='<option value="'+i+'" selected>item['+i+'] ('+objectPattern[i]+') </option>';
+            }else if(!usedObjectPattern.includes(i)){
+              optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
             }
           }
         } else if(method == "json_object"){
           for(var i in objectPattern){
-            if(!usedObjectPattern.includes(i)){
-              optionPattern +='<option value="'+i+'">'+i+' ('+objectPattern[i]+') </option>';
-            }else if(objectPattern[i] == value){
+            if(i == value){
               optionPattern +='<option value="'+i+'" selected>'+i+' ('+objectPattern[i]+') </option>';
+            }else if(!usedObjectPattern.includes(i)){
+              optionPattern +='<option value="'+i+'">'+i+' ('+objectPattern[i]+') </option>';
             }
           }
         }
@@ -316,10 +323,11 @@
 
   $( document ).ready(function() {
     // Override global options
-    $("#form_delimeter1").hide();
+    
+    <?php if($edge->method == "array_list"){ ?>
     $("#form_delimeter2").hide();
-    $("#form_process").hide();
-    $("#btnsave").hide();
+    <?php } ?>
+   
     toastr.options = {
       positionClass: 'toast-top-center'
     };
@@ -354,7 +362,7 @@
         $("#form_process").hide();
       }
     });
-
+    patternProcess();    
   });
 
   

@@ -25,21 +25,21 @@
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
             <thead>
               <tr>
+                <th>Date Add</th>   
                 <th>Edge Configuration Code</th>
                 <th>Method</th>
                 <th>Example Message</th>                
                 <!-- <th>String Pattern</th>                 -->
-                <th>Date Add</th>   
                 <th>Action</th>
               </tr>
             </thead>
             <tfoot>
               <tr>
+                <th>Date Add</th>   
                 <th>Edge Configuration Code</th>
                 <th>Method</th>
                 <th>Example Message</th>                
                 <!-- <th>String Pattern</th>    -->
-                <th>Date Add</th>   
                 <th>Action</th>
               </tr>
             </tfoot>
@@ -48,8 +48,9 @@
               if(!empty($config_list))
               foreach($config_list as $d){ ?>
               <tr>
+                <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td><?= $d->edgeconfig_code?></td>
-                <td><?= $d->method?></td>
+                <td><?= ($d->method == "array_list")?"Covert to Array List":"Covert to JSON Object" ?></td>
                 <td><?= $d->string_sample?></td>
                 <!-- <td><?= $d->string_pattern?></td> -->
                 <!-- <td>
@@ -59,7 +60,6 @@
                     <span class="badge badge-pill badge-danger font-size-12">Not Active</span> 
                     <?php } ?>
                 </td> -->
-                <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td class="actions">
                   <a target="_blank" href="<?= base_url()?>device/edge/<?= $id; ?>/download/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Download Configuration"><i class="icon md-download" aria-hidden="true"></i></a>
