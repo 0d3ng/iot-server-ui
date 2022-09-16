@@ -733,6 +733,14 @@ class Device extends CI_Controller {
             $this->edge_delete($id,$code);
         } else if($method=="process"){
             $this->edge_process($data,$id);
+        } else if($method=="download"){
+            $edge = $this->edge_m->get_detail($code);
+            if($edge->status){
+                $data["edge"] = $edge->data;
+                $this->edge_download($data,$id);
+            }else{
+                $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
+            }                            
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
         }
@@ -886,6 +894,62 @@ class Device extends CI_Controller {
         echo json_encode($response);
     }
 
+    function edge_download($data,$id){        
+        $filename = 'edge_configuration_['.$id.']_device_'.$data["edge"]->id;
+        
+        $comm = array();        
+        if($data['data']->communication->{"http-post"}){
+            if($data['data']->group_code_name == "other"){
+                $http_qerry = array(
+                    "device_code" => $data['data']->device_code,
+                    "channel_type" => "http-post"
+                );
+                $comm2 = $this->device_m->get_com_chanel($http_qerry);
+                if($comm2->status)
+                    $comm["http_post"] = $comm2->data->token_access;            
+            }
+        }
+        if($data['data']->communication->mqtt){
+            $server = $data['data']->communication->server;
+            if($server == 'localhost'){
+                $server = $this->config->item('host_mqtt');
+            }
+            $comm["mqtt"] = array(
+                "server" => $server,
+                "port" => $data['data']->communication->port,
+                "topic" => $data['data']->communication->topic
+            );
+        }
+        if($data["edge"]->interface == "USB Serial"){
+            $response = array(
+                "device_code" =>$id,
+                "interface" => $data["edge"]->interface,
+                "method" => $data["edge"]->method,
+                "string_sample" => $data["edge"]->string_sample,
+                "delimeter" => $data["edge"]->delimeter,
+                "string_pattern" => $data["edge"]->string_pattern,
+                "object_used" =>$data["edge"]->object_used,
+                "device_info" => array(
+                    "name" => $data["data"]->name,
+                    "field" => $data["data"]->field,
+                    "communication" => $comm,                
+                )
+            );
+        }
+        // echo "<pre>";
+        // print_r($response);
+        // echo "</pre>";
+        // exit();
+        // Force download .json file with JSON in it
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/download");
+        header("Content-disposition: " . $filename . ".json");
+        header("Content-disposition: filename=" . $filename . ".json");
+
+        echo json_encode($response);
+        exit;
+    }
 
     
 }
