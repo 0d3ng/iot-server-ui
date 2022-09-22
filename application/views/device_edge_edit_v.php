@@ -22,9 +22,9 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputDevice">Edge Computing ID</label>
-                      <input type="text" class="form-control" id="inputDevice" name="name" value="[<?= $id ?>] <?= (empty($data->name))?'':$data->name;  ?>" 
-                          placeholder="Name" readonly="true"/>
+                      <label class="form-control-label" for="inputEdgeCode">Edge Computing ID</label>
+                      <input type="text" class="form-control" id="inputEdgeCode" name="code" value="<?= $edge->edgeconfig_code ?>" 
+                          placeholder="Edge Code" readonly="true"/>
                   </div>
                   <div class="form-group form-material ">
                       <label class="form-control-label" for="inputDevice">Device</label>

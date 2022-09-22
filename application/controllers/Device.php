@@ -894,8 +894,33 @@ class Device extends CI_Controller {
         echo json_encode($response);
     }
 
-    function edge_download($data,$id){        
-        $filename = 'edge_configuration_['.$id.']_device_'.$data["edge"]->id;
+    function beautify_filename($filename) {
+        // reduce consecutive characters
+        $filename = preg_replace(array(
+            // "file   name.zip" becomes "file-name.zip"
+            '/ +/',
+            // "file___name.zip" becomes "file-name.zip"
+            '/_+/',
+            // "file---name.zip" becomes "file-name.zip"
+            '/-+/'
+        ), '_', $filename);
+        $filename = preg_replace(array(
+            // "file--.--.-.--name.zip" becomes "file.name.zip"
+            '/-*\.-*/',
+            // "file...name..zip" becomes "file.name.zip"
+            '/\.{2,}/'
+        ), '.', $filename);
+        // lowercase for windows/unix interoperability http://support.microsoft.com/kb/100625
+        $filename = mb_strtolower($filename, mb_detect_encoding($filename));
+        // ".file-name.-" becomes "file-name"
+        $filename = trim($filename, '.-');
+        return $filename;
+    }
+
+    function edge_download($data,$id){  
+        $name =  $data['data']->name;        
+        $filename = 'configuration_'.$data["edge"]->edgeconfig_code.'_device_'.$name.'['.$id.']';
+        $filename = $this->beautify_filename($filename);
         
         $comm = array();        
         if($data['data']->communication->{"http-post"}){
@@ -906,7 +931,7 @@ class Device extends CI_Controller {
                 );
                 $comm2 = $this->device_m->get_com_chanel($http_qerry);
                 if($comm2->status)
-                    $comm["http_post"] = $comm2->data->token_access;            
+                    $comm["http_post"] =   $this->config->item('url_node').'comdata/sensor/'.$comm2->data->token_access;            
             }
         }
         if($data['data']->communication->mqtt){
@@ -920,22 +945,28 @@ class Device extends CI_Controller {
                 "topic" => $data['data']->communication->topic
             );
         }
+        $response = array(
+            "device_code" =>$id,
+            "interface" => array(),
+            "device_info" => array(
+                "name" => $data["data"]->name,
+                "field" => $data["data"]->field,                              
+            ),
+            "communication_protocol" => $comm,  
+        );
+
         if($data["edge"]->interface == "USB Serial"){
-            $response = array(
-                "device_code" =>$id,
-                "interface" => $data["edge"]->interface,
+            $interface = array(        
                 "method" => $data["edge"]->method,
                 "string_sample" => $data["edge"]->string_sample,
                 "delimeter" => $data["edge"]->delimeter,
                 "string_pattern" => $data["edge"]->string_pattern,
-                "object_used" =>$data["edge"]->object_used,
-                "device_info" => array(
-                    "name" => $data["data"]->name,
-                    "field" => $data["data"]->field,
-                    "communication" => $comm,                
-                )
+                "object_used" =>$data["edge"]->object_used,                
             );
+            $response["interface"]["usb_serial"] = $interface;
         }
+
+
         // echo "<pre>";
         // print_r($response);
         // echo "</pre>";
@@ -947,7 +978,9 @@ class Device extends CI_Controller {
         header("Content-disposition: " . $filename . ".json");
         header("Content-disposition: filename=" . $filename . ".json");
 
-        echo json_encode($response);
+
+        $response = stripslashes(json_encode($response));
+        echo $response;
         exit;
     }
 

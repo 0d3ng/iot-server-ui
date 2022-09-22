@@ -19,7 +19,7 @@
       <div class="panel">
         <header class="panel-heading">
           <div class="panel-actions"></div>
-          <h3 class="panel-title">List of Edge Configuration for Devices:[<?= (empty($data->device_code))?'':$data->device_code; ?>] <?= $data->name?></h3>
+          <h3 class="panel-title">Edge Configuration List for: <?= $data->name?> [<?= (empty($data->device_code))?'':$data->device_code; ?>]</h3>
         </header>
         <div class="panel-body">
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
@@ -51,7 +51,7 @@
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td><?= $d->edgeconfig_code?></td>
                 <td><?= ($d->method == "array_list")?"Covert to Array List":"Covert to JSON Object" ?></td>
-                <td><?= $d->string_sample?></td>
+                <td style="word-wrap:break-word; max-width:400px;"><?= $d->string_sample?></td>
                 <!-- <td><?= $d->string_pattern?></td> -->
                 <!-- <td>
                     <?php if($d->active){ ?>

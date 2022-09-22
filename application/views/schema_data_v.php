@@ -140,8 +140,10 @@
 </div>
 
 <?php include("footer.php") ?>
-<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+<!--   -->
+
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-table/tableExport.min.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/bootstrap-table/jspdf.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/moment/moment.js"></script>
 <script src="<?= base_url()?>assets/js/mqttws31.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>

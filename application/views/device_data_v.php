@@ -336,7 +336,8 @@
         values = data[itemfield];         
       }
       var data_time = data['date_add_server'] 
-      mychart[itemfield].addPoint([data_time,values],true,true);
+      mychart[itemfield].addPoint([data_time,values]);
+      // mychart[itemfield].addPoint([data_time,values],true,true);
     }
     lastdata(data);
   }
