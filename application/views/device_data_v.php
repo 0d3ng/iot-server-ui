@@ -150,6 +150,8 @@
                 if(!isset($itemdata[$fd])){
                   // $values = '';
                   continue;
+                } else if(is_string($itemdata[$fd])){
+                  continue;
                 } else if(!is_numeric($itemdata[$fd])){
                   $values = 0;
                 } else {
@@ -342,6 +344,11 @@
     lastdata(data);
   }
 
+  function isInt(value) {
+    var x = parseFloat(value);
+    return !isNaN(value) && (x | 0) === x;
+  }
+
   function lastdata(data){
     console.log(data);
     if(data){
@@ -356,7 +363,12 @@
         }
         $("#last-"+itemfield).html(values);
       }
-      var timestamp = moment.unix(data['date_add_server']/1000);
+      console.log( (typeof(data['date_add_server']) == 'number') );
+      if( typeof(data['date_add_server']) == 'number' ){
+        var timestamp = moment.unix(data['date_add_server']/1000);
+      }else{
+        var timestamp = moment.unix(data['date_add_server']["$date"]/1000);
+      }
       $("#last-date").html(timestamp.format("YYYY-MM-DD HH:mm:ss")); 
     }
   }
