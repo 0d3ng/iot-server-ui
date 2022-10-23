@@ -526,7 +526,8 @@ class schema extends CI_Controller {
             "rows" =>  $data,
             "export" => $export,
             "query" => $query
-        );     
+        );
+          
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
     }

@@ -104,6 +104,11 @@
                                 });
                             }
                         };
+                    
+                    //MAKE SPLIT CODE IN HERE
+                    
+                    //MAKE SPLIT CODE IN HERE
+
                     if (exportHiddenColumns != null) {
                         $.each(exportHiddenColumns, function(index, value) {
                             that.showColumn(value);
@@ -111,7 +116,12 @@
                     }
                     if (that.options.exportDataType === 'all' && that.options.pagination) {
                         that.$el.one(that.options.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table', function () {
+                            // alert("Start");
+                            // console.log("Start");
+                            // console.log(Date.now());
                             doExport();
+                            // console.log("End");
+                            // console.log(Date.now());
                             that.togglePagination();
                         });
                         that.togglePagination();
@@ -128,8 +138,8 @@
                             selectedData[that.options.dataField] = that.getAllSelections();
                         }
 
-                        that.load(selectedData);
-                        doExport();
+                        that.load(selectedData);                        
+                        doExport();                        
                         that.load(data);
                     } else {
                         doExport();
