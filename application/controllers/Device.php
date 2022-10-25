@@ -425,7 +425,9 @@ class Device extends CI_Controller {
         $device = $this->device_m->get_detail($id)->data; 
         $extract = $this->extract($device->field);
         $limit=$this->input->get('limit');
-        $offset = $this->input->get('offset');
+        $offset=$this->input->get('offset');
+        $order = $this->input->get('order');
+        $sort = $this->input->get('sort');
         $date_str = date("Y-m-d");
         $date_end = date("Y-m-d"); 
         if($this->input->get('start'))
@@ -469,11 +471,11 @@ class Device extends CI_Controller {
             $export = false;
 		$list = $this->device_m->datasensor($device->device_code,$query)->data;
 
-        $query = array(
+        $query2 = array(
             "device" => $id
         );
         $filter_field = array();
-        $filter =  $this->filter_m->search($query);
+        $filter =  $this->filter_m->search($query2);
         if($filter->status){
             $filter = $filter->data;
             foreach($filter as $d){
