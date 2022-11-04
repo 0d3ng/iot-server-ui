@@ -39,9 +39,9 @@ class schema_form_m extends My_Model{
             <div class="form-group form-material ">
                 <label class="form-control-label" for="inputBoolean-'.$field.'">'.$title.'</label>
                 <select class="form-control" id="inputBoolean-'.$field.'" name="'.$field.'">
-                    <option value="">Choose Value</option>
-                    <option '.( ($value == "true")?'selected':'').' value="true" >True</option>
-                    <option '.( ($value == "false")?'selected':'').' value="false" >False</option>
+                    <option value="">Choose Value S'.$value.'S</option>
+                    <option '.( ($value == true )?'selected':'').' value="true" >True</option>
+                    <option '.( ($value == false)?'selected':'').' value="false" >False</option>
                 </select>
             </div>
         ';

@@ -368,7 +368,7 @@ class schema extends CI_Controller {
                     } else if($value == "float"){
                         $item_form = $this->schema_form_m->form_float($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
                     } else if($value == "boolean"){
-                        $item_form = $this->schema_form_m->form_boolean($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
+                        $item_form = $this->schema_form_m->form_boolean($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ), $dataval);
                     } else {
                         $item_form = $this->schema_form_m->form_string($key,strtoupper( str_replace("_", " ", str_replace("-"," - ",$key)) ),$dataval);
                     }

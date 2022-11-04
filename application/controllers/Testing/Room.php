@@ -16,7 +16,7 @@ class room extends CI_Controller {
 	}
     
     public function getroom(){
-        $url = "http://103.106.72.188:3001/";
+        $url = "http://103.106.72.181:3001/";
         $id = $this->input->post("id");
         $schema = "5y76py";
         $query = array(
