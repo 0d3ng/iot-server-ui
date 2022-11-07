@@ -313,14 +313,15 @@ class Device extends CI_Controller {
         if($this->input->get('end'))
             $data["date_end"] = $this->input->get('end');
         $data["search"] = $this->input->get('search');
-        $query = array(
-            'limit' => $this->limit_data
-        );
+        $query = array();
         if($data["search"]){
             $query["date_start"] =  $data["date_str"];
             $query["date_end"] =  $data["date_end"];
+        }else {
+            $data['limit_data'] = $this->limit_data;
+            $query['limit']  = $this->limit_data;
         }
-        $data['limit_data'] = $this->limit_data;
+        
         $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
         if($data["search"]){
             $query = array(
