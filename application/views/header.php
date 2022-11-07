@@ -184,10 +184,10 @@
 	              	<li class="site-menu-item has-sub">
 	                <a class="animsition-link" href="<?= base_url()?>groups">
 	                        <i class="site-menu-icon md-group-work" aria-hidden="true"></i>
-	                        <span class="site-menu-title">Group</span>
+	                        <span class="site-menu-title">Users Group</span>
 	                    </a>
 	              	</li>
-	             	<li class="site-menu-item has-sub">
+	             	  <li class="site-menu-item has-sub">
 	                <a class="animsition-link" href="<?= base_url()?>devicegroups">
 	                        <i class="site-menu-icon md-device-hub" aria-hidden="true"></i>
 	                        <span class="site-menu-title">Devices Group</span>

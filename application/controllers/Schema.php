@@ -80,9 +80,23 @@ class schema extends CI_Controller {
         //         "group_code_name" =>$type
         //     );
         // }
-        $query = array(
-            "add_by" => $data['user_now']->id
-        );
+
+
+        if(isset($data['user_now']->role)){
+            $data['role'] = $data['user_now']->role;    
+        }else{
+            $data['role'] = "user";
+        }
+
+
+        if($data['role'] == "user"){
+            $query = array(
+                "add_by" => $data['user_now']->id
+            );
+        } else {
+            $query = array();
+        }
+        
         $data["data"] =  $this->schema_m->search($query);
         if($data["data"]->status){
             $data["data"] = $data["data"]->data;
@@ -260,6 +274,13 @@ class schema extends CI_Controller {
 		if($this->input->get('alert')=='success') $data['success']='Delete data successfully';	
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data";	
         $data['user_now'] = $this->session->userdata('dasboard_iot');   
+
+        if(isset($data['user_now']->role)){
+            $data['role'] = $data['user_now']->role;    
+        }else{
+            $data['role'] = "user";
+        }
+
         $data['data'] = $schema; 
         $data['extract'] = $this->extract($data['data']->field);
         $data["date_str"] = date("Y-m-d");

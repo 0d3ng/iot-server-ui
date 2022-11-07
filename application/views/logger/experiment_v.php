@@ -1,46 +1,33 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Schema Data</h1>
+  <h1 class="page-title">Experiment</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
-    <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>
-    <li class="breadcrumb-item active">Table Data</li>
+    <!-- <li class="breadcrumb-item"><a href="<?= base_url();?>logger/experiment">Experiment</a></li> -->
+    <li class="breadcrumb-item active">Experiment</li>
   </ol>
   <div class="page-header-actions">
   </div>
 </div>
 
 <div class="page-content">
+  <form method="GET">
   <div class="row row-lg">
+  
     <div class="col-md-6">
-      <div class="pricing-list text-left">
-        <div class="pricing-header bg-blue-600">
-          <div class="pricing-title">Schema Info</div>
-          <div class="pricing-price" style="padding-top:0px; padding-bottom: 0px;font-size: 2.858rem;">
-            <span class="pricing-currency"><i class="icon md-collection-text" aria-hidden="true"></i></span>
-            <span class="pricing-amount"><?= $data->name; ?></span>            
-          </div>
-          <p class="px-30 font-size-16" ><strong>Schema Code</strong>: <i><?= $data->schema_code; ?></i></p>
-        </div>
-        <ul class="pricing-features font-size-16" style="background-color: #fff;" >
-          <li>
-            <strong>Purpose :</strong> <?= $data->information->purpose; ?></li>
-          <li>
-            <strong>Detail Infomation :</strong> <?= $data->information->detail; ?></li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="panel-bordered panel-success">
+      <div class="panel-bordered panel-warning">
         <div class="panel-heading">
           <h3 class="panel-title"><i class="icon wb-time" aria-hidden="true"></i> &nbsp;Search Data</h3>
+          <div class="panel-actions panel-actions-keep">
+            <input type="checkbox" name="search" data-plugin="switchery" data-size="small" <?= ($search == TRUE)?'checked':'' ?> />
+          </div>
         </div>
         <div class="panel-body bg-white">
             <!-- Example Date Range -->
             <div class="example-wrap">
                 <h4 class="example-title">Date Range Data</h4>                
                 <div class="example">
-                    <form method="GET">
+                    
                         <div class="form-group form-material row">
                             <div class="input-daterange" data-plugin="datepicker">
                                 <div class="input-group">
@@ -54,31 +41,12 @@
                                   <input type="text" class="form-control" name="end" value="<?= $date_end?>" data-date-format="yyyy-mm-dd"/>
                                 </div>
                             </div>
-                            <div class="input-group" style="margin-top:20px;">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox" class="icheckbox-primary" id="searchState" name="with_time"
-                                      data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" <?= ($with_time)?"checked":""; ?>/>  
-                                    </span>
-                                    <label style="margin-top: 10px;" for="lastData">Search By Date</label>
-                                </div>
-                                <div class="input-group">
-                                  <span class="input-group-addon">
-                                      <i class="icon md-time-countdown" aria-hidden="true"></i>
-                                  </span>
-                                  <input type="text" class="form-control search-time" data-autoclose="true" data-plugin="clockpicker" id="inputTimeStart" name="tstart"  value="<?= $time_str ?>" autocomplete="off" required>
-                                </div>
-                                <div class="input-group">
-                                  <span class="input-group-addon">to</span>
-                                  <input type="text" class="form-control search-time" data-autoclose="true" data-plugin="clockpicker" id="inputTimeEnd" name="tend" value="<?= $time_end ?>" autocomplete="off" required>
-                                </div>
-                            </div>
                         </div>    
                         <div class="form-group form-material row">
                             <span class="input-group-addon" style="background:none; border:none;"> </span>
                             <button type="submit" class="btn btn-primary waves-effect waves-classic">Search </button>
                         </div>    
-                    </form>
+                    
                 </div>
 
             </div>
@@ -86,21 +54,18 @@
         </div>
       </div>
     </div>
+    
   </div>
+  </form>
   <div class="row row-lg mt-20">
     <div class="col-md-12">
       <div class="panel">
         <div class="panel-heading">
-          <h3 class="panel-title">Data</h3>
+          <h3 class="panel-title">Experiment Data</h3>
           <div class="panel-actions" style="text-align: right;">    
-            <?php if($role == "user"){ ?>
-              <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
-                <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data&nbsp;&nbsp; 
+              <a href="<?= base_url() ?>logger/experiment/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
+                <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Experiment Data&nbsp;&nbsp; 
               </button></a>
-              <a href="<?= base_url() ?>schema/data/<?=  $data->schema_code; ?>/import/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic waves-effect waves-classic">
-                <i class="icon md-upload" aria-hidden="true"></i> &nbsp; Data Import&nbsp;&nbsp; 
-              </button></a>
-            <?php } ?>
           </div>
         </div>
         <div class="panel-body">
@@ -108,17 +73,6 @@
               <!-- Example Toolbar -->
             <div class="example-wrap">
               <div class="example">
-                  <!-- <div class="btn-group hidden-sm-down" id="exampleToolbar" role="group">
-                  <button type="button" class="btn btn-info btn-icon">
-                      <i class="icon md-plus" aria-hidden="true"></i>
-                  </button>
-                  <button type="button" class="btn btn-info btn-icon">
-                      <i class="icon md-favorite" aria-hidden="true"></i>
-                  </button>
-                  <button type="button" class="btn btn-info btn-icon">
-                      <i class="icon md-delete" aria-hidden="true"></i>
-                  </button>
-                  </div> -->
                   <table id="sensordata" data-mobile-responsive="true" data-show-export="true" data-sort-name="date" data-sort-order="desc">
                   <thead>
                       <tr>
@@ -127,9 +81,7 @@
                         <?php foreach($extract as $d){ ?>
                         <th data-field="<?= $d ?>"><?= strtoupper( str_replace("_", " ", str_replace("-"," - ",$d)) ); ?></th>
                         <?php } ?>
-                        <?php if($role == "user"){ ?>
                         <th data-field="action-form" style="white-space:nowrap;">ACTION</th>
-                        <?php } ?>
                       </tr>
                   </thead>
                   </table>
@@ -185,7 +137,7 @@
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
     $('#sensordata').bootstrapTable({
-        url: "<?= base_url() ?>schema/datatable/<?=  $data->schema_code; ?>?start=<?= $date_str?>&end=<?= $date_end?><?= ($with_time)?"&tstart=".$time_str."&tend=".$time_end:""; ?>",
+        url: "<?= base_url() ?>logger/experiment/datatable/?<?= ($search)?"&start=".$date_str."&end=".$date_end:""; ?>",
         pagination: true,
         sidePagination: 'server',
         pageSize: '25',
@@ -208,7 +160,7 @@
         exportTypes: ['json','csv', 'txt','excel'],
         exportOptions: {
             ignoreColumn: ["action-form"],
-            fileName: 'Schema - <?=  $data->schema_code; ?> | <?= $date_str?> - <?= $date_end?>',
+            fileName: 'Experiment Data - <?= ($search)?$date_str." to ".$date_end:""; ?>',
             preventInjection: false
         },
         exportHiddenColumns:["time"]

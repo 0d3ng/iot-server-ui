@@ -5,15 +5,18 @@
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item active">Devices</li>
   </ol>
+  <?php if($role == "user"){ ?>
   <div class="page-header-actions">
     <a href="<?= base_url()?>device/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
       <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Device&nbsp;&nbsp; 
     </button></a>
   </div>
+  <?php } ?>
 </div>
 
 <div class="page-content">
   <div class="row row-lg">
+    <?php if($role == "user"){ ?>
     <div class="col-md-6">
       <div class="panel">
           <!-- Example Basic Form (Form grid) -->
@@ -39,13 +42,14 @@
           <!-- End Example Basic Form -->
       </div>
     </div>
+    <?php } ?>
   </div>
   <div class="row row-lg">
     <div class="col-md-12">
       <div class="panel">
         <header class="panel-heading">
           <div class="panel-actions"></div>
-          <h3 class="panel-title">List of Master Devices</h3>
+          <h3 class="panel-title">List of Devices</h3>
         </header>
         <div class="panel-body">
           <table class="table table-hover dataTable table-striped w-full" data-plugin="dataTable">
@@ -86,6 +90,7 @@
                     data-toggle="tooltip" data-original-title="Show Chart View"><i class="icon md-chart" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/table/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Show Table View"><i class="icon md-grid" aria-hidden="true"></i></a>
+                  <?php if($role == "user"){ ?>
                   <a href="<?= base_url()?>device/process/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Process for Device"><i class="icon md-code" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edge/<?= $d->device_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
@@ -94,6 +99,7 @@
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/delete/<?= $d->id; ?><?= ( empty($d->group_code_name) || $d->group_code_name=="other" )?"/true/":""; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
+                  <?php } ?>
                 </td>
               </tr>
               <?php } ?>

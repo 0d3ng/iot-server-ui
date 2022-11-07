@@ -25,68 +25,80 @@ class Device extends CI_Controller {
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete device";	
 		$data['title']='Device List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
-        $device_groupcode = array();
-
+        
+        if(isset($data['user_now']->role)){
+            $data['role'] = $data['user_now']->role;    
+        }else{
+            $data['role'] = "user";
+        }
         $type = $this->input->get('type');
         if(empty($type))
             $type = 'all';
         $data['device_group'] = [];
-        ////get goup////
-        $data['group'] = []; 
-        $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
-        if($group->status){
-            $group = $group->data;
-            $groupcode = array();
-            foreach ($group as $key) {
-                $groupcode[] = $key->group_code;
-                $data['group'][$key->group_code] = $key;
-            }        
-            ///end get goup////
-            ////get device from group///
-            $groupcode = array(
-                '$in' => $groupcode
-            );
-            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
-            if($data_group->status){
-                $data_group = $data_group->data;
+
+        if($data['role'] == "user"){
+            $device_groupcode = array();                    
+            ////get goup////
+            $data['group'] = []; 
+            $group = $this->group_m->search(array("user_id"=>$data['user_now']->id));
+            if($group->status){
+                $group = $group->data;
+                $groupcode = array();
+                foreach ($group as $key) {
+                    $groupcode[] = $key->group_code;
+                    $data['group'][$key->group_code] = $key;
+                }        
+                ///end get goup////
+                ////get device from group///
+                $groupcode = array(
+                    '$in' => $groupcode
+                );
+                $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));     
+                if($data_group->status){
+                    $data_group = $data_group->data;
+                    if(!empty($data_group))
+                        foreach ($data_group as $key) {
+                            $device_groupcode[] = $key->code_name;
+                            $data['device_group'][$key->code_name] = $key;
+                        }
+                }    
+            }
+            //end get device from group///
+            ////get device from personal ///
+            $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
+            if($data_personal->status){
+                $data_personal = $data_personal->data;
                 if(!empty($data_group))
-                    foreach ($data_group as $key) {
+                    foreach ($data_personal as $key) {
                         $device_groupcode[] = $key->code_name;
                         $data['device_group'][$key->code_name] = $key;
                     }
-            }    
+            }            
+            ////end get device from personal ///
+            if($type == "all"){            
+                $device_groupcode = array(
+                    '$in' => $device_groupcode
+                );
+                $or = array();
+                $or[] = array("group_code_name" =>$device_groupcode);
+                $or[] = array("add_by" => $data['user_now']->id);
+                $query = array(
+                    '$or' => $or
+                );
+            } else if($type == "other"){            
+                $query = array(
+                    "add_by" => $data['user_now']->id
+                );
+            } else {
+                $query = array(
+                    "group_code_name" =>$type
+                );
+            }
+            
+        }else{
+            $query = array();   
         }
-        //end get device from group///
-        ////get device from personal ///
-        $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
-        if($data_personal->status){
-            $data_personal = $data_personal->data;
-            if(!empty($data_group))
-                foreach ($data_personal as $key) {
-                    $device_groupcode[] = $key->code_name;
-                    $data['device_group'][$key->code_name] = $key;
-                }
-        }            
-        ////end get device from personal ///
-        if($type == "all"){            
-            $device_groupcode = array(
-                '$in' => $device_groupcode
-            );
-            $or = array();
-            $or[] = array("group_code_name" =>$device_groupcode);
-            $or[] = array("add_by" => $data['user_now']->id);
-            $query = array(
-                '$or' => $or
-            );
-        } else if($type == "other"){            
-            $query = array(
-                "add_by" => $data['user_now']->id
-            );
-        } else {
-            $query = array(
-                "group_code_name" =>$type
-            );
-        }
+
         $data["data"] =  $this->device_m->search($query)->data;
         $data['type'] = $type;
   //       echo "<pre>";

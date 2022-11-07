@@ -6,9 +6,11 @@
     <li class="breadcrumb-item active">Data Synchronization</li>
   </ol>
   <div class="page-header-actions">
+    <?php if($role == "user"){ ?>
     <a href="<?= base_url()?>datasync/add/"><button type="button" class="btn btn-sm btn-icon btn-primary btn-round waves-effect waves-classic">
       <i class="icon md-plus" aria-hidden="true"></i> &nbsp; Add New Data Synchronization Service&nbsp;&nbsp; 
     </button></a>
+    <?php } ?>
   </div>
 </div>
 
@@ -67,12 +69,14 @@
                 <td class="actions">
                   <a href="<?= base_url()?>schema/data/<?= $d->schema_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Show Data" target="_blank"><i class="icon md-grid" aria-hidden="true"></i></a>
+                  <?php if($role == "user"){ ?>
                   <a href="<?= base_url()?>datasync/batch/<?= $d->datasync_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Batch Process"><i class="icon md-storage" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>datasync/edit/<?= $d->datasync_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>datasync/delete/<?= $d->id; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"
                     data-toggle="tooltip" data-original-title="Remove"><i class="icon md-delete" aria-hidden="true"></i></a>
+                  <?php } ?>
                 </td>
               </tr>
               <?php } ?>

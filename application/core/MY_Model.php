@@ -11,12 +11,17 @@ class MY_Model extends CI_Model {
     }	
     //====================================================
     //============== NODE JS API =========================
-    function sendPost($url,$data){      
+    function sendPost($url,$data){    
+        if(empty($data)){
+            $jsdata =  "{}";
+        }else{
+            $jsdata =  json_encode($data);
+        }        
         $options = array(
                 'http' => array(
                 'header'  => "Content-type: application/json\r\n",
                 'method'  => 'POST',
-                'content' => json_encode($data),
+                'content' => $jsdata,
             )
         );
         $context  = stream_context_create($options);

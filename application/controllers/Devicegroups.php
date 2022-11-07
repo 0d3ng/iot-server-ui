@@ -23,28 +23,47 @@ class Devicegroups extends CI_Controller {
         $data['group'] = [];
         $data["data_personal"] = array();
         $data["data_group"] = array();
-        $groupcode = array();
-		$group = $this->group_m->search(array("user_id"=>$data['user_now']->id)); //->data
-        if($group->status){
-            $group = $group->data;
-            foreach ($group as $key) {
-                $groupcode[] = $key->group_code;
-                $data['group'][$key->group_code] = $key;
-            }
-            $groupcode = array(
-                '$in' => $groupcode
-            );
-            $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));
-            if($data_group->status){
-                $data["data_group"] = $data_group->data;
-            }
+        
+        if(isset($data['user_now']->role)){
+            $data['role'] = $data['user_now']->role;    
+        }else{
+            $data['role'] = "user";
         }
-        $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
-		if($data_personal->status){
-            $data["data_personal"] = $data_personal->data;
+        
+        if($data['role'] == "user"){
+            $groupcode = array();
+            $group = $this->group_m->search(array("user_id"=>$data['user_now']->id)); //->data
+            if($group->status){
+                $group = $group->data;
+                foreach ($group as $key) {
+                    $groupcode[] = $key->group_code;
+                    $data['group'][$key->group_code] = $key;
+                }
+                $groupcode = array(
+                    '$in' => $groupcode
+                );
+                $data_group = $this->groupsensor_m->search(array("group_code"=>$groupcode, "group_type"=>"group"));
+                if($data_group->status){
+                    $data["data_group"] = $data_group->data;
+                }
+            }
+            $data_personal = $this->groupsensor_m->search(array("add_by"=>$data['user_now']->id, "group_type"=>"personal"));
+            if($data_personal->status){
+                $data["data_personal"] = $data_personal->data;
+            }
+            $data['device_m'] = $this->device_m;
+            $this->load->view('device_group_v', $data);
+        } else {
+            $query = array();
+            $data['device_m'] = $this->device_m;
+            $data['data'] = $this->groupsensor_m->search($query);
+            if($data["data"]->status){
+                $data["data"] = $data["data"]->data;
+            } else {
+                $data['data'] = array();
+            }
+            $this->load->view('device_group_table_v', $data);
         }
-        $data['device_m'] = $this->device_m;
-        $this->load->view('device_group_v', $data);
 	}
 
 	public function add(){       

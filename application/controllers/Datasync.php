@@ -24,9 +24,21 @@ class datasync extends CI_Controller {
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data synchronization";	
 		$data['title']='Data Synchronization List';
 		$data['user_now'] = $this->session->userdata('dasboard_iot');
-        $query = array(
-            "add_by" => $data['user_now']->id
-        );
+        
+        if(isset($data['user_now']->role)){
+            $data['role'] = $data['user_now']->role;    
+        }else{
+            $data['role'] = "user";
+        }
+        
+        if($data['role'] == "user"){
+            $query = array(
+                "add_by" => $data['user_now']->id
+            );
+        } else {
+            $query = array();
+        }
+        
         $data["data"] =  $this->datasync_m->search($query);
         if($data["data"]->status){
             $data["data"] = $data["data"]->data;

@@ -48,6 +48,12 @@
         </div>  
     <?php } ?>
   </div> -->
+  <div class="alert dark alert-alt alert-primary alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">x</span>
+    </button>
+    Welcome to SEMAR IoT Platform</a>.
+  </div>
 </div>
 
 <button class="btn btn-primary" data-target="#modalData" id="btnModal" data-toggle="modal"

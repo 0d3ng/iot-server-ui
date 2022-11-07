@@ -56,7 +56,7 @@ class schema_m extends My_Model{
 	}
 
 	function count_datasensor($schema,$data){
-		$url = $this->config->item('url_node')."schema/data/".$schema."/count/";				
+		$url = $this->config->item('url_node')."schema/data/".$schema."/count/";	
 		$result =  json_decode($this->sendPost($url,$data));
 		if(!$result->status)
 			$result->data = 0;
