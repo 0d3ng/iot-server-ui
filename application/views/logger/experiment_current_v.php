@@ -99,7 +99,7 @@
       mqtt.subscribe(topic, {qos: 0});      
       if(send == false){
         message = new Paho.MQTT.Message('{"experiment_code":"<?= $data->experiment_code ?>"}');
-        message.destinationName = "logger/start2";
+        message.destinationName = "logger/start";
         mqtt.send(message);
         send = true;
       }
