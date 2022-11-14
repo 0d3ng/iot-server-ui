@@ -1,6 +1,6 @@
 <?php include("header.php") ?>
 <div class="page-header">
-  <h1 class="page-title">Add New Devices Group</h1>
+  <h1 class="page-title">Add New Schema Data</h1>
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
     <li class="breadcrumb-item"><a href="<?= base_url();?>schema">Schema</a></li>

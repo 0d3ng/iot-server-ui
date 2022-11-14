@@ -2,7 +2,7 @@
 <div class="page-header">
   <h1 class="page-title">Experiment</h1>
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="<?= base_url();?>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<?= base_url();?>logger/home">Home</a></li>
     <!-- <li class="breadcrumb-item"><a href="<?= base_url();?>logger/experiment">Experiment</a></li> -->
     <li class="breadcrumb-item active">Experiment</li>
   </ol>

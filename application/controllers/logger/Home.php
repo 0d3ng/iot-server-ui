@@ -42,6 +42,8 @@ class home extends CI_Controller {
         // exit();
 		$this->load->view('logger/home_v', $data);
 	}
+
+    
     
 }
 

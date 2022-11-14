@@ -18,7 +18,7 @@ class experiment extends CI_Controller {
 		$data=array();
         $data['success']='';
         $data['error']='';
-        $data['title']= 'Experiment Data - Add New Data';
+        $data['title']= 'Experiment Data';
         if($this->input->get('alert')=='success') $data['success']='Delete data successfully';	
 		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data";	
            
@@ -47,7 +47,6 @@ class experiment extends CI_Controller {
         // exit();    
         $this->load->view('logger/experiment_v', $data);
 	}
-
 
     public function datatable(){
         $query = array();
@@ -134,9 +133,9 @@ class experiment extends CI_Controller {
                     "temperature_target"=>number_format($d->{"temperature_target"}, 0, ',', '.')."<span>&#176;</span>C",
                     "timer"=>$d->{"timer"},
                     "state"=>$d->{"state"},
-                    "start"=>$d->{"start"},
-                    "finish"=>$d->{"finish"},
-                    "duration"=>$d->{"time_total"},
+                    "start"=>(isset($d->{"start"}))?$d->{"start"}:'',
+                    "finish"=>(isset($d->{"finish"}))?$d->{"finish"}:'',
+                    "duration"=>(isset($d->{"time_total"}))?$d->{"time_total"}:'',
                     "email target"=>$d->{"email_target"},
                     "reminder"=>$d->{"reminder"},
                 );
@@ -151,8 +150,10 @@ class experiment extends CI_Controller {
                     $iddata = $d->id;
                 if(!$export)
                 $item["action-form"] = '
-                    <a href="'.base_url().'logger/detail/'.$iddata.'" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
-                    data-toggle="tooltip" data-original-title="Edit"><i class="icon md-search" aria-hidden="true"></i></a>';
+                    <a href="'.base_url().'logger/detail/'.$iddata.'"> 
+                    <button type="button" class="btn btn-primary waves-effect waves-classic"><i class="icon md-search" aria-hidden="true"></i> Detail</button>
+                    </a>
+                    ';
                 $data[] = $item;
             }
         }                    
@@ -166,6 +167,53 @@ class experiment extends CI_Controller {
         header('Content-Type: application/json; charset=utf-8');   
         echo json_encode($response);
     }
+
+    function randomString($n) { 
+	    $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; 
+	    $randomString = ''; 
+	    for ($i = 0; $i < $n; $i++) { 
+	        $index = rand(0, strlen($characters) - 1); 
+	        $randomString .= $characters[$index]; 
+	    } 
+	    return $randomString; 
+	} 
+
+    public function add(){       
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+		$data['title']= 'Experiment Data - Add New Data';				
+        if($this->input->post('save')){                  	
+            $input = array(
+        		"experiment_code"=>$this->input->post("experiment_code"),
+                "temperature_target"=>$this->input->post("temperature_target"),
+                "timer"=>$this->input->post("timer"),
+                "state"=>True,
+                "email_target"=>$this->input->post("email_target"),
+                "reminder"=>$this->input->post("reminder"),
+            );
+            $respo = $this->schema_m->add_data($this->exp_schema_code,$input);
+            if($respo->status){             
+                $data["data"] = json_decode(json_encode($input));
+                $data['success']=$respo->message; 
+                $this->load->view('logger/experiment_current_v', $data);               
+            } else {                
+                $data['error']=$respo->message;
+                $data["code"]  = $this->input->post("experiment_code");
+                $this->load->view('logger/experiment_add_v', $data);
+            }                       
+        }else{
+            $query = array();
+            $configration =$this->schema_m->datasensor($this->config_schema_code,$query);
+            if($configration->status){
+                $data["configration"] = $configration->data;
+            }else{
+                $data["configration"] = array();
+            }
+            $data["code"] = $this->randomString(6);
+            $this->load->view('logger/experiment_add_v', $data);
+        }
+	}
 
     function dataget_nested($key,$value,$export){
         foreach($key as $d){
