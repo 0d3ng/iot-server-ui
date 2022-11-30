@@ -21,124 +21,124 @@
 
   // Example Wizard Form
   // -------------------
-  (function () {
-    // set up formvalidation
-    (0, _jquery2.default)('#exampleAccountForm').formValidation({
-      framework: 'bootstrap',
-      fields: {
-        username: {
-          validators: {
-            notEmpty: {
-              message: 'The username is required'
-            },
-            stringLength: {
-              min: 6,
-              max: 30,
-              message: 'The username must be more than 6 and less than 30 characters long'
-            },
-            regexp: {
-              regexp: /^[a-zA-Z0-9_\.]+$/,
-              message: 'The username can only consist of alphabetical, number, dot and underscore'
-            }
-          }
-        },
-        password: {
-          validators: {
-            notEmpty: {
-              message: 'The password is required'
-            },
-            different: {
-              field: 'username',
-              message: 'The password cannot be the same as username'
-            }
-          }
-        }
-      },
-      err: {
-        clazz: 'invalid-feedback'
-      },
-      control: {
-        // The CSS class for valid control
-        valid: 'is-valid',
+  // (function () {
+  //   // set up formvalidation
+  //   (0, _jquery2.default)('#exampleAccountForm').formValidation({
+  //     framework: 'bootstrap',
+  //     fields: {
+  //       username: {
+  //         validators: {
+  //           notEmpty: {
+  //             message: 'The username is required'
+  //           },
+  //           stringLength: {
+  //             min: 6,
+  //             max: 30,
+  //             message: 'The username must be more than 6 and less than 30 characters long'
+  //           },
+  //           regexp: {
+  //             regexp: /^[a-zA-Z0-9_\.]+$/,
+  //             message: 'The username can only consist of alphabetical, number, dot and underscore'
+  //           }
+  //         }
+  //       },
+  //       password: {
+  //         validators: {
+  //           notEmpty: {
+  //             message: 'The password is required'
+  //           },
+  //           different: {
+  //             field: 'username',
+  //             message: 'The password cannot be the same as username'
+  //           }
+  //         }
+  //       }
+  //     },
+  //     err: {
+  //       clazz: 'invalid-feedback'
+  //     },
+  //     control: {
+  //       // The CSS class for valid control
+  //       valid: 'is-valid',
 
-        // The CSS class for invalid control
-        invalid: 'is-invalid'
-      },
-      row: {
-        invalid: 'has-danger'
-      }
-    });
+  //       // The CSS class for invalid control
+  //       invalid: 'is-invalid'
+  //     },
+  //     row: {
+  //       invalid: 'has-danger'
+  //     }
+  //   });
 
-    (0, _jquery2.default)("#exampleBillingForm").formValidation({
-      framework: 'bootstrap',
-      fields: {
-        number: {
-          validators: {
-            notEmpty: {
-              message: 'The credit card number is required'
-              // creditCard: {
-              //   message: 'The credit card number is not valid'
-              // }
-            } }
-        },
-        cvv: {
-          validators: {
-            notEmpty: {
-              message: 'The CVV number is required'
-              // cvv: {
-              //   creditCardField: 'number',
-              //   message: 'The CVV number is not valid'
-              // }
-            } }
-        }
-      },
-      err: {
-        clazz: 'invalid-feedback'
-      },
-      control: {
-        // The CSS class for valid control
-        valid: 'is-valid',
+  //   (0, _jquery2.default)("#exampleBillingForm").formValidation({
+  //     framework: 'bootstrap',
+  //     fields: {
+  //       number: {
+  //         validators: {
+  //           notEmpty: {
+  //             message: 'The credit card number is required'
+  //             // creditCard: {
+  //             //   message: 'The credit card number is not valid'
+  //             // }
+  //           } }
+  //       },
+  //       cvv: {
+  //         validators: {
+  //           notEmpty: {
+  //             message: 'The CVV number is required'
+  //             // cvv: {
+  //             //   creditCardField: 'number',
+  //             //   message: 'The CVV number is not valid'
+  //             // }
+  //           } }
+  //       }
+  //     },
+  //     err: {
+  //       clazz: 'invalid-feedback'
+  //     },
+  //     control: {
+  //       // The CSS class for valid control
+  //       valid: 'is-valid',
 
-        // The CSS class for invalid control
-        invalid: 'is-invalid'
-      },
-      row: {
-        invalid: 'has-danger'
-      }
-    });
+  //       // The CSS class for invalid control
+  //       invalid: 'is-invalid'
+  //     },
+  //     row: {
+  //       invalid: 'has-danger'
+  //     }
+  //   });
 
-    // init the wizard
-    var defaults = Plugin.getDefaults("wizard");
-    var options = _jquery2.default.extend(true, {}, defaults, {
-      buttonsAppendTo: '.panel-body'
-    });
+  //   // init the wizard
+  //   var defaults = Plugin.getDefaults("wizard");
+  //   var options = _jquery2.default.extend(true, {}, defaults, {
+  //     buttonsAppendTo: '.panel-body'
+  //   });
 
-    var wizard = (0, _jquery2.default)("#exampleWizardForm").wizard(options).data('wizard');
+  //   var wizard = (0, _jquery2.default)("#exampleWizardForm").wizard(options).data('wizard');
 
-    // setup validator
-    // http://formvalidation.io/api/#is-valid
-    wizard.get("#exampleAccount").setValidator(function () {
-      var fv = (0, _jquery2.default)("#exampleAccountForm").data('formValidation');
-      fv.validate();
+  //   // setup validator
+  //   // http://formvalidation.io/api/#is-valid
+  //   wizard.get("#exampleAccount").setValidator(function () {
+  //     var fv = (0, _jquery2.default)("#exampleAccountForm").data('formValidation');
+  //     fv.validate();
 
-      if (!fv.isValid()) {
-        return false;
-      }
+  //     if (!fv.isValid()) {
+  //       return false;
+  //     }
 
-      return true;
-    });
+  //     return true;
+  //   });
 
-    wizard.get("#exampleBilling").setValidator(function () {
-      var fv = (0, _jquery2.default)("#exampleBillingForm").data('formValidation');
-      fv.validate();
+  //   wizard.get("#exampleBilling").setValidator(function () {
+  //     var fv = (0, _jquery2.default)("#exampleBillingForm").data('formValidation');
+  //     fv.validate();
 
-      if (!fv.isValid()) {
-        return false;
-      }
+  //     if (!fv.isValid()) {
+  //       return false;
+  //     }
 
-      return true;
-    });
-  })();
+  //     return true;
+  //   });
+  // })();
 
   // Example Wizard Form Container
   // -----------------------------
@@ -146,66 +146,66 @@
   (function () {
     var defaults = Plugin.getDefaults("wizard");
     var options = _jquery2.default.extend(true, {}, defaults, {
-      onInit: function onInit() {
-        (0, _jquery2.default)('#exampleFormContainer').formValidation({
-          framework: 'bootstrap',
-          fields: {
-            username: {
-              validators: {
-                notEmpty: {
-                  message: 'The username is required'
-                }
-              }
-            },
-            password: {
-              validators: {
-                notEmpty: {
-                  message: 'The password is required'
-                }
-              }
-            },
-            number: {
-              validators: {
-                notEmpty: {
-                  message: 'The credit card number is not valid'
-                }
-              }
-            },
-            cvv: {
-              validators: {
-                notEmpty: {
-                  message: 'The CVV number is required'
-                }
-              }
-            }
-          },
-          err: {
-            clazz: 'invalid-feedback'
-          },
-          control: {
-            // The CSS class for valid control
-            valid: 'is-valid',
+      // onInit: function onInit() {
+      //   (0, _jquery2.default)('#exampleFormContainer').formValidation({
+      //     framework: 'bootstrap',
+      //     fields: {
+      //       username: {
+      //         validators: {
+      //           notEmpty: {
+      //             message: 'The username is required'
+      //           }
+      //         }
+      //       },
+      //       password: {
+      //         validators: {
+      //           notEmpty: {
+      //             message: 'The password is required'
+      //           }
+      //         }
+      //       },
+      //       number: {
+      //         validators: {
+      //           notEmpty: {
+      //             message: 'The credit card number is not valid'
+      //           }
+      //         }
+      //       },
+      //       cvv: {
+      //         validators: {
+      //           notEmpty: {
+      //             message: 'The CVV number is required'
+      //           }
+      //         }
+      //       }
+      //     },
+      //     err: {
+      //       clazz: 'invalid-feedback'
+      //     },
+      //     control: {
+      //       // The CSS class for valid control
+      //       valid: 'is-valid',
 
-            // The CSS class for invalid control
-            invalid: 'is-invalid'
-          },
-          row: {
-            invalid: 'has-danger'
-          }
-        });
-      },
+      //       // The CSS class for invalid control
+      //       invalid: 'is-invalid'
+      //     },
+      //     row: {
+      //       invalid: 'has-danger'
+      //     }
+      //   });
+      // },
       validator: function validator() {
-        var fv = (0, _jquery2.default)('#exampleFormContainer').data('formValidation');
+        // var fv = (0, _jquery2.default)('#exampleFormContainer').data('formValidation');
 
-        var $this = (0, _jquery2.default)(this);
+        // var $this = (0, _jquery2.default)(this);
 
-        // Validate the container
-        fv.validateContainer($this);
+        // // Validate the container
+        // fv.validateContainer($this);
 
-        var isValidStep = fv.isValidContainer($this);
-        if (isValidStep === false || isValidStep === null) {
-          return false;
-        }
+        // var isValidStep = fv.isValidContainer($this);
+        // if (isValidStep === false || isValidStep === null) {
+        //   return false;
+        // }
 
         return true;
       },

@@ -27,9 +27,11 @@
               <tr>
                 <th>Date Add</th>   
                 <th>Edge Configuration Code</th>
-                <th>Method</th>
-                <th>Example Message</th>                
-                <!-- <th>String Pattern</th>                 -->
+                <th>Resouce</th>
+                <th>Interface</th>                
+                <th>Time Interval</th>                
+                <th>Communication</th>                
+                <!-- <th>Status</th>                 -->
                 <th>Action</th>
               </tr>
             </thead>
@@ -37,9 +39,11 @@
               <tr>
                 <th>Date Add</th>   
                 <th>Edge Configuration Code</th>
-                <th>Method</th>
-                <th>Example Message</th>                
-                <!-- <th>String Pattern</th>    -->
+                <th>Resouce</th>
+                <th>Interface</th>                
+                <th>Time Interval</th>
+                <th>Communication</th>                
+                <!-- <th>Status</th>                 -->
                 <th>Action</th>
               </tr>
             </tfoot>
@@ -50,9 +54,14 @@
               <tr>
                 <td><?= date( "Y-m-d H:i:s", $d->date_add->{'$date'}/1000); ?></td>
                 <td><?= $d->edgeconfig_code?></td>
-                <td><?= ($d->method == "array_list")?"Covert to Array List":"Covert to JSON Object" ?></td>
-                <td style="word-wrap:break-word; max-width:400px;"><?= $d->string_sample?></td>
-                <!-- <td><?= $d->string_pattern?></td> -->
+                <td><?= $d->resource?></td>
+                <td><?php
+                  $type = $d->interface[0]->type;
+                  if($type == 'usb_serial')
+                    echo "USB Serial";
+                ?></td>
+                <td><?= $d->time_interval?> seconds</td>
+                <td><?= ($d->comm_service=="mqtt")?"MQTT":(($d->comm_service=="http")?"HTTP-POST":"") ?> </td>
                 <!-- <td>
                     <?php if($d->active){ ?>
                     <span class="badge badge-pill badge-success font-size-12">Active</span> 
@@ -63,6 +72,8 @@
                 <td class="actions">
                   <a target="_blank" href="<?= base_url()?>device/edge/<?= $id; ?>/download/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Download Configuration"><i class="icon md-download" aria-hidden="true"></i></a>
+                  <a target="_blank" href="<?= base_url()?>device/edge/<?= $id; ?>/deploy/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                    data-toggle="tooltip" data-original-title="Deploy Configuration to Device"><i class="icon fa-microchip" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edge/<?= $id; ?>/edit/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edge/<?= $id; ?>/delete/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default btn-leave on-default remove-row"

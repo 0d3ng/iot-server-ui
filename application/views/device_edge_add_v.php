@@ -14,99 +14,101 @@
 <div class="page-content">
   <div class="row row-lg">
     <div class="col-md-12">
-      <div class="panel">
-        <div class="panel-body container-fluid">
-          <div class="example-wrap">
-            <h4 class="example-title">Form Add Edge Configuration for Device <?= (empty($data->name))?'':$data->name;  ?> </h4>
-            <form method="post" autocomplete="off">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputDevice">Device</label>
-                      <input type="text" class="form-control" id="inputDevice" name="name" value="[<?= $id ?>] <?= (empty($data->name))?'':$data->name;  ?>" 
-                          placeholder="Name" readonly="true"/>
-                  </div>
-                  <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputInterface">Network Interface</label>
-                      <select class="form-control " id="inputInterface" name="interface" required>
-                        <?php foreach ($interface as $d) { ?>
-                        <option value="<?= $d?>" ><?= $d?></option>
-                        <?php } ?>
-                      </select>
-                  </div>
-                  <div class="form-group form-material ">
-                      <label class="form-control-label" for="inputMethod">Method</label>
-                      <select class="form-control " id="inputMethod" name="method" required>
-                        <option value="">Select Method</option>
-                        <option value="array_list">Covert to Array List</option>
-                        <option value="json_object">Covert to JSON Object</option>                        
-                      </select>
-                  </div>
-                  <div class="form-group form-material">
-                      <label class="form-control-label" for="inputStringSample">Example of Message</label>
-                      <textarea class="form-control empty" rows="3" id="inputStringSample" name="string_sample"></textarea>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4" id="form_delimeter1">   
-                      <div class="form-group form-material ">
-                        <label class="form-control-label" for="inputDelimeter1">Delimeter 1</label>
-                        <input type="text" class="form-control" id="inputDelimeter1" name="delimeter[0]"/>
-                      </div>
-                    </div>   
-                    <div class="col-md-4" id="form_delimeter2">   
-                      <div class="form-group form-material ">
-                        <label class="form-control-label" for="inputDelimeter2">Delimeter 2</label>
-                        <input type="text" class="form-control" id="inputDelimeter2" name="delimeter[1]"/>
-                      </div>
+        <div class="panel" id="exampleWizardFormContainer">
+            <div class="panel-heading">
+            <h3 class="panel-title">Pearls Steps</h3>
+            </div>
+            <div class="panel-body">
+            <!-- Steps -->
+            <div class="pearls row">
+                <div class="pearl current col-4">
+                <div class="pearl-icon"><i class="icon md-account" aria-hidden="true"></i></div>
+                <span class="pearl-title">Account Info</span>
+                </div>
+                <div class="pearl col-4">
+                <div class="pearl-icon"><i class="icon md-card" aria-hidden="true"></i></div>
+                <span class="pearl-title">Billing Info</span>
+                </div>
+                <div class="pearl col-4">
+                <div class="pearl-icon"><i class="icon md-check" aria-hidden="true"></i></div>
+                <span class="pearl-title">Confirmation</span>
+                </div>
+            </div>
+            <!-- End Steps -->
+
+            <!-- Wizard Content -->
+            <form id="exampleFormContainer">
+                <div class="wizard-content">
+                <div class="wizard-pane active" role="tabpanel">
+                    <div class="form-group form-material">
+                    <label class="form-control-label" for="inputUserNameOne">Username</label>
+                    <input type="text" class="form-control" id="inputUserNameOne" name="username" >
                     </div>
-                    <div class="col-md-4" id="form_process">
-                      <div class="form-group form-material" id="frmprocess" style="display: block;">
-                        <span class="input-group-addon" style="background:none; border:none;"> </span>
-                        <button type="button" onclick="patternProcess()" class="btn btn-info waves-effect waves-classic waves-effect waves-classic">Process</button>
-                        <input type="hidden" name="back" value="back">
-                      </div>
-                    </div>   
-                  </div>
-                  
-                </div>  
-                <div class="col-md-6">
-                  <div class="form-group form-material">
-                    <label class="form-control-label" for="inputPattern">Pattern</label>
-                    <textarea class="form-control empty" rows="3" id="inputPattern" name="string_pattern" readonly></textarea>
-                  </div>
-                  <h4 class="example-title">Sensor Pattern for Data Conveter</h4>
-                  <div class="row" id="specFrm">
-                    <div class="form-material col-md-12">
-                      <div class="form-material row">
-                        <div class="col-md-5 col-sm-4 col-8">
-                            <label class="form-control-label" style="width: 100%;padding: 5px 10px 5px;background-color: #f1f4f5;">Sensor Field</label>
-                        </div>  
-                        <div class="col-md-5 col-sm-5 col-8">
-                            <label class="form-control-label" style="width: 100%;padding: 5px 10px 5px;background-color: #f1f4f5;">Data Pattern</label>
-                        </div>    
-                        <div class="col-md-2 col-sm-3 col-4" >
-                            <label class="form-control-label" style="width: 100%;padding: 5px 5px 5px;background-color: #f1f4f5;">Action</label>
-                        </div>                                                      
-                      </div>
+                    <div class="form-group form-material">
+                    <label class="form-control-label" for="inputPasswordOne">Password</label>
+                    <input type="password" class="form-control" id="inputPasswordOne" name="password"
+                        >
                     </div>
-                  </div>
-                  <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                                                      
-                </div>   
-                <div class="col-md-12" id="btnsave">
-                  <div class="form-group form-material">
-                    <button type="submit" name="save" value="save" class="btn btn-primary waves-effect waves-classic">Add New Edge Configuration</button>&nbsp; &nbsp;
-                    <a href="<?= base_url();?>device/edge/<?= $id ?>"><button type="button" class="btn btn-default waves-effect waves-classic">Cancel</button></a>                    
-                  </div>
-                </div>             
-              </div>  
-            </form> 
-          </div>          
-        </div>
-      </div>
+                </div>
+                <div class="wizard-pane" id="exampleBillingOne" role="tabpanel">
+                    <div class="form-group form-material">
+                    <label class="form-control-label" for="inputCardNumberOne">Card Number</label>
+                    <input type="text" class="form-control" id="inputCardNumberOne" name="number" placeholder="Card number">
+                    </div>
+                    <div class="form-group form-material">
+                    <label class="form-control-label" for="inputCVVOne">CVV</label>
+                    <input type="text" class="form-control" id="inputCVVOne" name="cvv" placeholder="CVV">
+                    </div>
+                </div>
+                <div class="wizard-pane" id="exampleGettingOne" role="tabpanel">
+                    <div class="text-center my-20">
+                    <h4>Please confrim your order.</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover text-right">
+                        <thead>
+                            <tr>
+                            <th class="text-center">#</th>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit Cost</th>
+                            <th class="text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td class="text-center">1</td>
+                            <td class="text-left">Server hardware purchase</td>
+                            <td>32</td>
+                            <td>$75</td>
+                            <td>$2152</td>
+                            </tr>
+                            <tr>
+                            <td class="text-center">2</td>
+                            <td class="text-left">Office furniture purchase</td>
+                            <td>15</td>
+                            <td>$169</td>
+                            <td>$4169</td>
+                            </tr>
+                            <tr>
+                            <td class="text-center">3</td>
+                            <td class="text-left">Company Anual Dinner Catering</td>
+                            <td>69</td>
+                            <td>$49</td>
+                            <td>$1260</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            <!-- Wizard Content -->
+            </div>
+        </div>        
     </div>
   </div>
 </div>
-
 
 
 <?php include("footer.php") ?>
@@ -121,243 +123,20 @@
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/icheck/icheck.min.js"></script>
 <script src="<?= base_url()?>assets/global/js/Plugin/icheck.js"></script>
-
-<script>  
-  var fieldDevice=<?php echo json_encode($field); ?>;
-  var usedFieldDevice=[];
-  var objectPattern = {};
-  var usedObjectPattern = [];
-  function patternProcess(){
-    var method = $("#inputMethod").val();
-    var sample = $("#inputStringSample").val();
-    var del1 = $("#inputDelimeter1").val();
-    var del2 = $("#inputDelimeter2").val();
-    
-    if(method!="" && sample!=""){
-      data = {
-        "method":method,
-        "sample":sample
-      };
-      if(del1!=""){ data["delimeter1"] = del1; }
-      if(del2!=""){ data["delimeter2"] = del2; }
-      $.ajax({
-          type: 'post',
-          url: '<?= base_url()?>device/edge/<?= $id ?>/process',
-          data: data,
-          success: function (result){
-           status = result["status"];
-           console.log(result);
-           if(status){            
-            if(method == "array_list"){
-              $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
-              objectPattern = result["data"]["list"]; 
-            } else if(method == "json_object"){              
-              $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
-              $("#inputDelimeter2").val(result["data"]["delimeter"][1]);
-              objectPattern = result["data"]["object"]; 
+<script src="<?= base_url()?>assets/global/vendor/jquery-wizard/jquery-wizard.js"></script>
+<script src="<?= base_url()?>assets/global/js/Plugin/jquery-wizard.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/slidepanel/jquery-slidePanel.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/formvalidation/formValidation.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/formvalidation/framework/bootstrap.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/matchheight/jquery.matchHeight-min.js"></script>
+<script src="<?= base_url()?>assets/examples/js/forms/wizard.js"></script>
+<script>
+    $( document ).ready(function() {
+        $('#exampleEnableWhenVisited').wizard({
+            enableWhenVisited: true,
+            onFinish: function() {
+              alert('finish');
             }
-            $("#inputPattern").val(result["data"]["string_pattern"]);
-            fieldForm();
-            patternFormStart();
-            $("#btnsave").show();
-           }else{
-            toastr.error('Process Failed', 'Failed', {timeOut: 3000});
-           }
-          }
-      });
-    }else{      
-      toastr.error('Please choose method and fill example of message input', 'Failed', {timeOut: 3000});
-    }
-  }
-
-  function addForm(){
-    if($("input[name='object_pattern[]']").length < fieldDevice.length){
-      var method = $("#inputMethod").val();
-      var pattern = $("#inputPattern").val();
-      var optionDevice = '<option value="">--- Select Field---</option>';
-      var optionPattern = '<option value="">--- Select Data Pattern---</option>';
-      for(var i in fieldDevice){
-        if(!usedFieldDevice.includes(fieldDevice[i])){
-          optionDevice +='<option value="'+fieldDevice[i]+'">'+fieldDevice[i]+'</option>';
-        }
-      }
-      if(method == "array_list"){
-        for(var i in objectPattern){
-          if(!usedObjectPattern.includes(i)){
-            optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
-          }
-        }
-      } else if(method == "json_object"){
-        for(var i in objectPattern){
-          if(!usedObjectPattern.includes(i)){
-            optionPattern +='<option value="'+i+'">'+i+' ('+objectPattern[i]+') </option>';
-          }
-        }
-      }
-          
-      if(method!="" && pattern!=""){
-        var id = (Math.random() + 1).toString(36).substring(7);
-        var forms = '<div class="form-material col-md-12" id="form_src_'+id+'">'+
-            '<div class="form-material row">'+            
-              '<div class="col-md-5 col-8">'+
-                  '<select class="form-control" onchange="fieldForm()" name="field_'+id+'" required>'+
-                  optionDevice + 
-                  '</select>'+
-              '</div>'+
-              '<div class="col-md-5 col-8">'+
-                  '<select class="form-control" onchange="patternForm()" name="pattern_'+id+'" required>'+
-                  optionPattern + 
-                  '</select>'+
-              '</div>'+
-              '<div class="col-md-2 col-4">'+
-                '<a onclick="removeForm(this.name)" name="form_src_'+id+'" class="btn btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove" >'+
-                  '<i class="icon md-delete" aria-hidden="true"></i>'+
-                '</a>'+
-              '</div>'+
-            '</div>'+
-            '<input type="hidden" name="object_pattern[]" value="'+id+'"/>'+
-          '</div>';
-        $("#specFrm").append(forms);
-      }else{
-        toastr.error('Please choose the device data.', 'Failed', {timeOut: 3000});  
-      }
-    }else{
-      toastr.error('You have reached the maximum number of sensor fields', 'Failed', {timeOut: 3000});  
-    }
-  }
-
-  function removeForm(id){
-    var fieldUsed = $("input[name='field_"+id+"']");
-    var patternUsed = $("input[name='pattern_"+id+"']");    
-    $("#"+id).remove();    
-    fieldForm();
-  }
-
-  function fieldForm(){
-    usedFieldDevice = [];
-    var method = $("#inputMethod").val();    
-    $("input[name='object_pattern[]']").each(function() {
-        id =  $(this).val();
-        var value = $("select[name='field_"+id+"']").val();
-        usedFieldDevice.push(value);
-    }); 
-    $("input[name='object_pattern[]']").each(function() {
-        var optionDevice = '<option value="">--- Select Field---</option>';
-        id =  $(this).val();
-        var value = $("select[name='field_"+id+"']").val();
-        for(var i in fieldDevice){
-          if(!usedFieldDevice.includes(fieldDevice[i])){
-            optionDevice +='<option value="'+fieldDevice[i]+'">'+fieldDevice[i]+'</option>';
-          }else if(fieldDevice[i] == value){
-            optionDevice +='<option value="'+fieldDevice[i]+'" selected>'+fieldDevice[i]+'</option>';
-          }          
-        }
-        $("select[name='field_"+id+"']").html(optionDevice);
-    }); 
-  }
-
-  function patternForm(){
-    $("input[name='object_pattern[]']").each(function() {
-        // console.log($(this).val()); 
-    });   
-  }
-
-  // function methodForm(){
-  //   var method = $("#inputMethod").val(); 
-  //   $("#params").html(""); 
-  //   if(method != ""){
-  //     var params = method_list[method]["params"];    
-  //     for (var i = 0; i < params.length; i++) {
-  //       var obj = params[i];
-  //       if(obj["type"] == "float"){
-  //         var item_form = '<div class="form-group form-material ">'+
-  //               '<label class="form-control-label" for="input'+obj['name']+'">'+obj['label']+'</label>'+
-  //               '<input type="number" class="form-control inputparams" id="input'+obj['name']+'" name="params['+obj['name']+']" value="" step="any" autocomplete="off">'+
-  //             '</div>';
-  //       }
-  //       $("#params").append(item_form);
-  //     }
-  //     $("#frmprocess").css("display","block");
-  //     $("#frmsearch").css("display","none");
-  //   } else {
-  //     $("#frmprocess").css("display","none");
-  //     $("#frmsearch").css("display","block");
-  //   }
-  // }
-  
-  function patternFormStart(){
-    var method = $("#inputMethod").val();
-    var optionPattern = '<option value="">--- Select Data Pattern---</option>';    
-    $("input[name='object_pattern[]']").each(function() {
-        var optionDevice = '<option value="">--- Select Field---</option>';
-        id =  $(this).val();
-        var value = $("select[name='pattern_"+id+"']").val();
-        if(method == "array_list"){
-          for(var i in objectPattern){
-            if(!usedObjectPattern.includes(i)){
-              optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
-            }else if(objectPattern[i] == value){
-              optionPattern +='<option value="'+i+'" selected>item['+i+'] ('+objectPattern[i]+') </option>';
-            }
-          }
-        } else if(method == "json_object"){
-          for(var i in objectPattern){
-            if(!usedObjectPattern.includes(i)){
-              optionPattern +='<option value="'+i+'">'+i+' ('+objectPattern[i]+') </option>';
-            }else if(objectPattern[i] == value){
-              optionPattern +='<option value="'+i+'" selected>'+i+' ('+objectPattern[i]+') </option>';
-            }
-          }
-        }
-        $("select[name='pattern_"+id+"']").html(optionPattern);
-    }); 
-
-  }
-
-  $( document ).ready(function() {
-    // Override global options
-    $("#form_delimeter1").hide();
-    $("#form_delimeter2").hide();
-    $("#form_process").hide();
-    $("#btnsave").hide();
-    toastr.options = {
-      positionClass: 'toast-top-center'
-    };
-    <?php if($success){ ?>
-      toastr.success('<?= $success; ?>', 'Success', {timeOut: 3000})
-    <?php }  
-    if($error){ ?>
-        toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
-    <?php } ?>
-
-    function sleep(milliseconds) {
-      var start = new Date().getTime();
-      for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){
-          break;
-        }
-      }
-    }
-
-    $("#inputMethod").change(function() {
-      val = $("#inputMethod").val();
-      $("#form_delimeter1").hide();
-      $("#form_delimeter2").hide();
-      if(val == "json_object"){
-        $("#form_delimeter1").show(); 
-        $("#form_delimeter2").show(); 
-        $("#form_process").show();
-      }else if(val == "array_list"){
-        $("#form_delimeter1").show();
-        $("#form_process").show();
-      } else {
-        $("#form_process").hide();
-      }
+          });
     });
-
-  });
-
-  
-  // $('#select_id option[value="'+value+'"]').attr("disabled", true);
 </script>
-

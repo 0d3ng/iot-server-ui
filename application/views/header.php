@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/waves/waves.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/dropdowns.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/icheck/icheck.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/jquery-wizard/jquery-wizard.css">
 
         <!-- Select -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/select2/select2.css">
@@ -65,11 +66,12 @@
         <!-- File Upload -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/blueimp-file-upload/jquery.fileupload.css">
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/dropify/dropify.css">
-    
+
     <!-- Fonts -->
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/web-icons/web-icons.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/material-design/material-design.min.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/brand-icons/brand-icons.min.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/font-awesome/font-awesome.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
     
     <!--[if lt IE 9]>
