@@ -48,7 +48,7 @@ class device_m extends My_Model{
 	}
 
 	function datasensor($device,$data){
-		$url = $this->config->item('url_node')."device/data/".$device."/";				
+		$url = $this->config->item('url_node')."device/data/".$device."/";			
 		$result =  json_decode($this->sendPost($url,$data));
 		if(!$result->status)
 			$result->data = array();
