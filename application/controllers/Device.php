@@ -817,9 +817,14 @@ class Device extends CI_Controller {
             }                       
         }
         $data["id"] = $id;
-        $data["interface"] = array("USB Serial");
+        $data["resource"] = array("USB Mono Stick","USB Serial","Data Logger [GL240]");
         $data['field'] = $this->extract($data['data']->field);
-        $this->load->view('device_edge_add_v', $data);
+        $cek = $this->input->get("test");
+        if($cek){
+            $this->load->view('device_edge_add_v_old', $data);
+        } else {
+            $this->load->view('device_edge_add_v', $data);
+        }
     }
     
     function edge_edit($data,$id){       
@@ -865,6 +870,56 @@ class Device extends CI_Controller {
         // echo "</pre>";
         // exit();           
         $this->load->view('device_edge_edit_v', $data);
+    }
+
+    function resource($id=""){
+        $data = array();
+        $resource =  $this->input->post("resource");
+
+        ##Interface List
+        $usb_serial = array("type"=>"usb_serial","label"=>"USB Serial");
+        $wlan = array("type"=>"wlan","label"=>"Wireless Network");
+        ##END-----------
+
+
+        if($resource == "USB Mono Stick"){
+            $data["data"]= (object) array(
+                "type"=>"usb_serial",
+                "method"=>"json_object",
+                "config"=>(object) array(
+                    "port"=>"/dev/ttyUSB0",
+                    "baudrate"=>115200,
+                    "timeout" => 1
+                ),
+                "string_sample"=> "rc=80000000:lq=51:ct=0001:ed=810DCBDD:id=10:ba=2810:a1=0935:a2=0535:x=0000:y=0000:z=0000",
+			    "delimeter"=> [":", "="],
+                "string_pattern"=> "rc=[rc-value]:lq=[lq-value]:ct=[ct-value]:ed=[ed-value]:id=[id-value]:ba=[ba-value]:a1=[a1-value]:a2=[a2-value]:x=[x-value]:y=[y-value]:z=[z-value]"
+            );    
+        }   
+        
+        if($resource == "USB Mono Stick" or $resource == "USB Serial"){
+            ##Method
+            $method_array = array("type"=>"array_list", "label"=>"Covert to Array List");
+            $method_json = array("type"=>"json_object", "label"=>"Covert to JSON Object");
+            ##----------------
+            if(empty($data["data"])){
+                $data["data"]= (object) array(
+                    "type"=>"",
+                    "method"=>"",
+                    "config"=>(object) array(
+                        "baudrate"=>0
+                    ),
+                    "delimeter"=> [],
+                    "string_pattern"=> ""
+                );      
+            }
+            $data["forms"] = (object) array(
+                "interface"=>[$usb_serial],
+                "method"=>[$method_array,$method_json],
+                "baudrate" => [110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 115200, 128000,256000]
+            );
+            $this->load->view("edge_interface/usb_serial",$data);
+        }
     }
     
     function edge_delete($id,$code){       

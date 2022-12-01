@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/waves/waves.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/examples/css/uikit/dropdowns.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/icheck/icheck.css">
-    <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/jquery-wizard/jquery-wizard.css">
+    <!-- <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/jquery-wizard/jquery-wizard.css"> -->
 
         <!-- Select -->
         <link rel="stylesheet" href="<?= base_url()?>assets/global/vendor/select2/select2.css">
