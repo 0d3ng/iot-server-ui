@@ -752,10 +752,12 @@ class Device extends CI_Controller {
             $edge = $this->edge_m->get_detail($code);
             if($edge->status){
                 $data["edge"] = $edge->data;
-                $this->edge_download($data,$id);
+                $this->edge_download($data,$id,$code);
             }else{
                 $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
             }                            
+        } else if($method=="deploy"){
+            $this->edge_deploy_device($id,$code);
         } else {
             $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));
         }
@@ -763,8 +765,12 @@ class Device extends CI_Controller {
 
     function edge_list($id,$data){
         $data['title']= 'Edge Computing Configuration List';
+        $data['success_deploy'] = "";
+        $data['error_deploy'] = "";
         if($this->input->get('alert')=='success') $data['success']='Delete edge configuration successfully';	
         if($this->input->get('alert')=='failed') $data['error']="Failed to delete edge configuration";
+        if($this->input->get('alert')=='success_deploy') $data['success_deploy']='Update edge configuration remotely successfully';	
+        if($this->input->get('alert')=='failed_deploy') $data['error_deploy']="Failed to update edge configuration remotely";
         $src = array(
             "device_code"=>$id
         );
@@ -784,30 +790,61 @@ class Device extends CI_Controller {
     function edge_add($data,$id){       
         $data['title']= 'Edge Computing Configuration Add';		
         $data['user_now'] = $this->session->userdata('dasboard_iot');	
-        if($this->input->post('save')){             
+        if($this->input->post('save')){   
+            // print("<pre>");                
+            ##Extract Interface
+            $type = $this->input->post('interface'); 
+            $item_interface = array();
+            if($type == "usb_serial"){
+                $item_interface = array(
+                    "type" => $type,
+                    "config"=>array(
+                        "port"=>$this->input->post('config_port'),
+                        "baudrate"=>(int)$this->input->post('config_baudrate'),
+                        "timeout"=>(int)$this->input->post('config_timeout')
+                    ),
+                    "method" => $this->input->post('method'),
+                    "string_sample" => $this->input->post('string_sample'),
+                    "string_pattern" => $this->input->post('string_pattern'), 
+                );
+                if($this->input->post('method') == "array_list"){
+                    $item_interface["delimeter"] = [$this->input->post('delimeter')[0]];    
+                } else if($this->input->post('method') == "json_object"){
+                    $item_interface["delimeter"] = $this->input->post('delimeter');
+                }
+            }
+            ##Extract Data Resource
             $object_used =  array();                    
-            $method =  $this->input->post('method');                    
             $object_pattern = $this->input->post('object_pattern'); 
             foreach($object_pattern as $i => $item){                
                 $field = $this->input->post('field_'.$item);
                 $pattern = $this->input->post('pattern_'.$item);
                 $object_used[$field] = $pattern;
-            }            
+            } 
+            $item_interface["object_used"] = $object_used;
+            
+            $interface = [$item_interface];
+
+            ##Extract Data Transmitted
+            $data_transmitted = array();
+            $item_transmitted= $this->input->post('data_transmitted'); 
+            foreach($item_transmitted as $i => $field){   
+                $value = $this->input->post('field_'.$field);
+                $data_transmitted[$field] = $value;
+            } 
             $input = array(
                 "device_code" => $id,
-                "method" => $this->input->post('method'),
-                "interface" => $this->input->post('interface'),
-                "string_sample" => $this->input->post('string_sample'),
-                "object_used" => $object_used,
-                "string_pattern" => $this->input->post('string_pattern'),
+                "resource" => $this->input->post('resource'),
+                "interface" => $interface,
+                "data_transmitted" => $data_transmitted,
+                "time_interval" => (int)$this->input->post('time_interval'),
+                "comm_service" =>  $this->input->post('comeservice'),
                 "add_by" => $data['user_now']->id,
-                "active" => $this->input->post('active')
+                "active" => true,
             );
-            if($method == "array_list"){
-                $input["delimeter"] = [$this->input->post('delimeter')[0]];    
-            } else if($method == "json_object"){
-                $input["delimeter"] = $this->input->post('delimeter');
-            }
+            // print_r($input);
+            // print("</pre>");                      
+            // exit();
             
             $respo = $this->edge_m->add($input);
             if($respo->status){             
@@ -819,6 +856,21 @@ class Device extends CI_Controller {
         $data["id"] = $id;
         $data["resource"] = array("USB Mono Stick","USB Serial","Data Logger [GL240]");
         $data['field'] = $this->extract($data['data']->field);
+
+        $data["commservice"] = array();
+        $data["commservice"]["list"] = array();
+        if($data['data']->communication->{'http-post'}){
+            $data["commservice"]["list"][] = (object) array("type"=>"http_post","label"=>"HTTP-POST Service"); 
+            $data["commservice"]["http_url"] = $this->config->item('url_node')."comdata/sensor/".$data['data']->key_access;
+        }
+        if($data['data']->communication->{'mqtt'}){
+            $data["commservice"]["list"][] = (object) array("type"=>"mqtt","label"=>"MQTT Service");
+            $data["commservice"]["mqtt"] = (object) array(
+                "server" => str_replace($data['data']->communication->{'server'},"localhost",$this->config->item('host_mqtt')),
+                "port" => $data['data']->communication->{'port'},
+                "topic" => $data['data']->communication->{'topic'} 
+            );
+        }
         $cek = $this->input->get("test");
         if($cek){
             $this->load->view('device_edge_add_v_old', $data);
@@ -830,30 +882,64 @@ class Device extends CI_Controller {
     function edge_edit($data,$id){       
         $data['title']= 'Edge Computing Configuration Edit';		
         $data['user_now'] = $this->session->userdata('dasboard_iot');	
+        
         if($this->input->post('save')){ 
+            // print("<pre>");                
+            ##Extract Interface
+            $type = $this->input->post('interface'); 
+            $item_interface = array();
+            if($type == "usb_serial"){
+                $item_interface = array(
+                    "type" => $type,
+                    "config"=>array(
+                        "port"=>$this->input->post('config_port'),
+                        "baudrate"=>(int)$this->input->post('config_baudrate'),
+                        "timeout"=>(int)$this->input->post('config_timeout')
+                    ),
+                    "method" => $this->input->post('method'),
+                    "string_sample" => $this->input->post('string_sample'),
+                    "string_pattern" => $this->input->post('string_pattern'), 
+                );
+                if($this->input->post('method') == "array_list"){
+                    $item_interface["delimeter"] = [$this->input->post('delimeter')[0]];    
+                } else if($this->input->post('method') == "json_object"){
+                    $item_interface["delimeter"] = $this->input->post('delimeter');
+                }
+            }
+            ##Extract Data Resource
             $object_used =  array();                    
-            $method =  $this->input->post('method');                    
             $object_pattern = $this->input->post('object_pattern'); 
             foreach($object_pattern as $i => $item){                
                 $field = $this->input->post('field_'.$item);
                 $pattern = $this->input->post('pattern_'.$item);
                 $object_used[$field] = $pattern;
-            }            
+            } 
+            $item_interface["object_used"] = $object_used;
+            
+            $interface = [$item_interface];
+
+            ##Extract Data Transmitted
+            $data_transmitted = array();
+            $item_transmitted= $this->input->post('data_transmitted'); 
+            foreach($item_transmitted as $i => $field){   
+                $value = $this->input->post('field_'.$field);
+                $data_transmitted[$field] = $value;
+            } 
             $input = array(
                 "device_code" => $id,
-                "method" => $this->input->post('method'),
-                "interface" => $this->input->post('interface'),
-                "string_sample" => $this->input->post('string_sample'),
-                "object_used" => $object_used,
-                "string_pattern" => $this->input->post('string_pattern'),
-                "updated_by" => $data['user_now']->id,
-                "active" => $this->input->post('active')
+                "resource" => $this->input->post('resource'),
+                "interface" => $interface,
+                "data_transmitted" => $data_transmitted,
+                "time_interval" => (int)$this->input->post('time_interval'),
+                "comm_service" =>  $this->input->post('comeservice'),
+                "add_by" => $data['user_now']->id,
+                "active" => true,
             );
-            if($method == "array_list"){
-                $input["delimeter"] = [$this->input->post('delimeter')[0]];    
-            } else if($method == "json_object"){
-                $input["delimeter"] = $this->input->post('delimeter');
-            }            
+            // print_r($input);
+            // print("</pre>");                      
+            // exit(); 
+            
+            
             $respo = $this->edge_m->edit($data["edge"]->id, $input);
             if($respo->status){             
                 $data['success']=$respo->message;   
@@ -862,25 +948,48 @@ class Device extends CI_Controller {
                 $data['error']=$respo->message;
             }                       
         }
+        
         $data["id"] = $id;
-        $data["interface"] = array("USB Serial");
-        $data["field"] =  $this->extract($data['data']->field);    
+                   
+        $data["resource"] = array("USB Mono Stick","USB Serial","Data Logger [GL240]");
+        $data['field'] = $this->extract($data['data']->field);
+
+        $data["commservice"] = array();
+        $data["commservice"]["list"] = array();
+        if($data['data']->communication->{'http-post'}){
+            $data["commservice"]["list"][] = (object) array("type"=>"http_post","label"=>"HTTP-POST Service"); 
+            $data["commservice"]["http_url"] = $this->config->item('url_node')."comdata/sensor/".$data['data']->key_access;
+        }
+        if($data['data']->communication->{'mqtt'}){
+            $data["commservice"]["list"][] = (object) array("type"=>"mqtt","label"=>"MQTT Service");
+            $data["commservice"]["mqtt"] = (object) array(
+                "server" => str_replace($data['data']->communication->{'server'},"localhost",$this->config->item('host_mqtt')),
+                "port" => $data['data']->communication->{'port'},
+                "topic" => $data['data']->communication->{'topic'} 
+            );
+        }
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
-        // exit();           
-        $this->load->view('device_edge_edit_v', $data);
+        // exit();
+        $cek = $this->input->get("test");
+        if($cek){
+            $this->load->view('device_edge_edit_v_old', $data);
+        } else {        
+            $this->load->view('device_edge_edit_v', $data);
+        }
     }
 
     function resource($id=""){
         $data = array();
-        $resource =  $this->input->post("resource");
+        $resource =  $this->input->post("resource");        
 
         ##Interface List
         $usb_serial = array("type"=>"usb_serial","label"=>"USB Serial");
         $wlan = array("type"=>"wlan","label"=>"Wireless Network");
         ##END-----------
 
+        
 
         if($resource == "USB Mono Stick"){
             $data["data"]= (object) array(
@@ -897,6 +1006,14 @@ class Device extends CI_Controller {
             );    
         }   
         
+        if($id){
+            $edge = $this->edge_m->get_detail($id)->data;
+            $interface = $edge->interface[0];
+            if($resource == "USB Mono Stick"){
+                $data["data"] =  $interface;        
+            }        
+        }
+
         if($resource == "USB Mono Stick" or $resource == "USB Serial"){
             ##Method
             $method_array = array("type"=>"array_list", "label"=>"Covert to Array List");
@@ -920,6 +1037,7 @@ class Device extends CI_Controller {
             );
             $this->load->view("edge_interface/usb_serial",$data);
         }
+
     }
     
     function edge_delete($id,$code){       
@@ -940,6 +1058,27 @@ class Device extends CI_Controller {
                                   
         }        
         redirect(base_url().'device/edge/'.$id.'/?alert=failed') ;		
+    }
+
+    function edge_deploy_device($id,$code){       
+        if($id){
+            $data= $this->edge_m->get_detail($code);
+            if($data->status){
+                $edge_id = $data->data->id;
+                $params = array(
+                    "edgeconfig_code"=>$code
+                );               
+                $respo = $this->edge_m->device_remote_update($params);
+                if($respo->status){             
+                    redirect(base_url().'device/edge/'.$id.'/?alert=success_deploy') ; 			
+                } else {                
+                    redirect(base_url().'device/edge/'.$id.'/?alert=failed_deploy') ; 			
+                } 
+            }else{
+                redirect(base_url().'device/edge/'.$id.'/?alert=failed_deploy') ; 			
+            }
+        }        
+        redirect(base_url().'device/edge/'.$id.'/?alert=failed_udeploy') ;		
     }
 
     function edge_process($id,$field){
@@ -987,54 +1126,72 @@ class Device extends CI_Controller {
         return $filename;
     }
 
-    function edge_download($data,$id){  
+    function edge_download($data,$id,$code){  
         $name =  $data['data']->name;        
         $filename = 'configuration_'.$data["edge"]->edgeconfig_code.'_device_'.$name.'['.$id.']';
         $filename = $this->beautify_filename($filename);
-        
-        $comm = array();        
-        if($data['data']->communication->{"http-post"}){
-            if($data['data']->group_code_name == "other"){
-                $http_qerry = array(
-                    "device_code" => $data['data']->device_code,
-                    "channel_type" => "http-post"
-                );
-                $comm2 = $this->device_m->get_com_chanel($http_qerry);
-                if($comm2->status)
-                    $comm["http_post"] =   $this->config->item('url_node').'comdata/sensor/'.$comm2->data->token_access;            
-            }
-        }
-        if($data['data']->communication->mqtt){
-            $server = $data['data']->communication->server;
-            if($server == 'localhost'){
-                $server = $this->config->item('host_mqtt');
-            }
-            $comm["mqtt"] = array(
-                "server" => $server,
-                "port" => $data['data']->communication->port,
-                "topic" => $data['data']->communication->topic
-            );
-        }
-        $response = array(
-            "device_code" =>$id,
-            "interface" => array(),
-            "device_info" => array(
-                "name" => $data["data"]->name,
-                "field" => $data["data"]->field,                              
-            ),
-            "communication_protocol" => $comm,  
-        );
+        $params = array(
+            "edgeconfig_code"=>$code
+        );               
+        $respo = $this->edge_m->device_config_download($params);
+        if($respo->status){      
+            $response = $respo->data;      
+            header("Content-type: application/vnd.ms-excel");
+            header("Content-Type: application/force-download");
+            header("Content-Type: application/download");
+            header("Content-disposition: " . $filename . ".json");
+            header("Content-disposition: filename=" . $filename . ".json");
 
-        if($data["edge"]->interface == "USB Serial"){
-            $interface = array(        
-                "method" => $data["edge"]->method,
-                "string_sample" => $data["edge"]->string_sample,
-                "delimeter" => $data["edge"]->delimeter,
-                "string_pattern" => $data["edge"]->string_pattern,
-                "object_used" =>$data["edge"]->object_used,                
-            );
-            $response["interface"]["usb_serial"] = $interface;
-        }
+            $response = stripslashes(json_encode($response));
+            echo $response;
+            exit;
+        } else {                
+            $this->load->view('errors/html/error_404.php',array("heading"=>"Page Not Found","message"=>"The page you were looking for doesn't exists"));			
+        } 
+
+        // $comm = array();        
+        // if($data['data']->communication->{"http-post"}){
+        //     if($data['data']->group_code_name == "other"){
+        //         $http_qerry = array(
+        //             "device_code" => $data['data']->device_code,
+        //             "channel_type" => "http-post"
+        //         );
+        //         $comm2 = $this->device_m->get_com_chanel($http_qerry);
+        //         if($comm2->status)
+        //             $comm["http_post"] =   $this->config->item('url_node').'comdata/sensor/'.$comm2->data->token_access;            
+        //     }
+        // }
+        // if($data['data']->communication->mqtt){
+        //     $server = $data['data']->communication->server;
+        //     if($server == 'localhost'){
+        //         $server = $this->config->item('host_mqtt');
+        //     }
+        //     $comm["mqtt"] = array(
+        //         "server" => $server,
+        //         "port" => $data['data']->communication->port,
+        //         "topic" => $data['data']->communication->topic
+        //     );
+        // }
+        // $response = array(
+        //     "device_code" =>$id,
+        //     "interface" => array(),
+        //     "device_info" => array(
+        //         "name" => $data["data"]->name,
+        //         "field" => $data["data"]->field,                              
+        //     ),
+        //     "communication_protocol" => $comm,  
+        // );
+
+        // if($data["edge"]->interface == "USB Serial"){
+        //     $interface = array(        
+        //         "method" => $data["edge"]->method,
+        //         "string_sample" => $data["edge"]->string_sample,
+        //         "delimeter" => $data["edge"]->delimeter,
+        //         "string_pattern" => $data["edge"]->string_pattern,
+        //         "object_used" =>$data["edge"]->object_used,                
+        //     );
+        //     $response["interface"]["usb_serial"] = $interface;
+        // }
 
 
         // echo "<pre>";
@@ -1042,16 +1199,7 @@ class Device extends CI_Controller {
         // echo "</pre>";
         // exit();
         // Force download .json file with JSON in it
-        header("Content-type: application/vnd.ms-excel");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/download");
-        header("Content-disposition: " . $filename . ".json");
-        header("Content-disposition: filename=" . $filename . ".json");
-
-
-        $response = stripslashes(json_encode($response));
-        echo $response;
-        exit;
+        
     }
 
     

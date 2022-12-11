@@ -72,7 +72,7 @@
                 <td class="actions">
                   <a target="_blank" href="<?= base_url()?>device/edge/<?= $id; ?>/download/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Download Configuration"><i class="icon md-download" aria-hidden="true"></i></a>
-                  <a target="_blank" href="<?= base_url()?>device/edge/<?= $id; ?>/deploy/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
+                  <a href="<?= base_url()?>device/edge/<?= $id; ?>/deploy/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Deploy Configuration to Device"><i class="icon fa-microchip" aria-hidden="true"></i></a>
                   <a href="<?= base_url()?>device/edge/<?= $id; ?>/edit/<?= $d->edgeconfig_code; ?>" class="btn btn-sm btn-icon btn-pure btn-default on-default edit-row"
                     data-toggle="tooltip" data-original-title="Edit"><i class="icon md-edit" aria-hidden="true"></i></a>
@@ -100,7 +100,14 @@
     <?php }  
     if($error){ ?>
         toastr.error('<?= $error; ?>', 'Failed', {timeOut: 3000});
+    <?php }  
+    if($success_deploy){ ?>
+        toastr.success('<?= $success_deploy; ?>', 'Success', {timeOut: 3000});
+    <?php }  
+    if($error_deploy){ ?>
+        toastr.error('<?= $error_deploy; ?>', 'Failed', {timeOut: 3000});
     <?php } ?>
+    
       
     $(".btn-leave").click(function(e){
       e.preventDefault();

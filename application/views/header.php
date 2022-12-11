@@ -74,6 +74,10 @@
     <link rel="stylesheet" href="<?= base_url()?>assets/global/fonts/font-awesome/font-awesome.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
     
+
+    
+    <link rel="stylesheet" href="<?= base_url();?>assets/leaflet/dist/leaflet.css" />
+    
     <!--[if lt IE 9]>
     <script src="<?= base_url()?>assets/global/vendor/html5shiv/html5shiv.min.js"></script>
     <![endif]-->

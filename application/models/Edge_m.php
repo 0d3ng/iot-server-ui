@@ -51,6 +51,16 @@ class edge_m extends My_Model{
 		$url = $this->config->item('url_node')."device/edge/config/process/";				
 		return json_decode($this->sendPost($url,$data));
 	}
+
+	function device_remote_update($data){
+		$url = $this->config->item('url_node')."device/edge/device/update/";				
+		return json_decode($this->sendPost($url,$data));
+	}
+
+	function device_config_download($data){
+		$url = $this->config->item('url_node')."device/edge/device/config/";				
+		return json_decode($this->sendPost($url,$data));
+	}
 }
 
 /* End of file admin_model.php */
