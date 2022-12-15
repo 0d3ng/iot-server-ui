@@ -46,7 +46,7 @@
                                 <span class="pearl-title">Confirmation</span>
                             </li>
                         </ul>
-                        <form method="post" autocomplete="off">
+                        <form method="post" autocomplete="off" novalidate>
                         <div class="tab-content pt-20">
                             <div class="tab-pane active" id="deviceConfiguration" role="tabpanel">
                                 <div class="row">
