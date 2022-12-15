@@ -3,7 +3,7 @@
                     <h3 class="example-title" style="color:#0D47A1;">Interface Configuration</h3>
                     <div class="form-group form-material ">
                         <label class="form-control-label" for="inputInterface">Network Interface</label>
-                        <select class="form-control " id="inputInterface" name="interface" required>
+                        <select class="form-control " id="inputInterface" name="interface" >
                           <?php foreach ($forms->interface as $d) { ?>
                           <option value="<?= $d["type"] ?>" <?= ($d["type"] == $data->type)?'selected':'' ?> ><?= $d["label"]?></option>
                           <?php } ?>
@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group form-material ">
                         <label class="form-control-label" for="inputBaudrate">Baudrate</label>
-                        <select class="form-control " id="inputConfigBaudrate" name="config_baudrate" required>
+                        <select class="form-control " id="inputConfigBaudrate" name="config_baudrate" >
                           <?php foreach ($forms->baudrate as $d) { ?>
                           <option value="<?= $d; ?>" <?= ($d == $data->config->baudrate)?'selected':'' ?> ><?= $d; ?></option>
                           <?php } ?>
@@ -34,7 +34,7 @@
                     <h3 class="example-title" style="color:#0D47A1;">Data Converter Method</h3>
                     <div class="form-group form-material ">
                         <label class="form-control-label" for="inputMethod">Method</label>
-                        <select class="form-control " id="inputMethod" name="method" required>
+                        <select class="form-control " id="inputMethod" name="method" >
                           <option value="">Select Method</option>
                           <?php foreach ($forms->method as $d) { ?>
                           <option value="<?= $d["type"] ?>" <?= ($d["type"] == $data->method)?'selected':'' ?> ><?= $d["label"] ?></option>

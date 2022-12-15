@@ -96,7 +96,7 @@
                                     <div class="col-md-4">   
                                         <h3 class="example-title" style="color:#0D47A1;">Resource</h3>
                                         <div class="form-group form-material ">
-                                            <select class="form-control " id="inputResouce" name="resource" required>
+                                            <select class="form-control " id="inputResouce" name="resource" >
                                                 <option value="" >Select Resource</option>
                                                 <?php foreach ($resource as $d) { ?>
                                                 <option value="<?= $d?>" ><?= $d?></option>
@@ -139,7 +139,7 @@
                                     <div class="col-md-6">   
                                         <h3 class="example-title" style="color:#0D47A1;">Communication Protocol</h3>
                                         <div class="form-group form-material ">
-                                            <select class="form-control " id="inputComService" name="comeservice" required>
+                                            <select class="form-control " id="inputComService" name="comeservice" >
                                                 <option value="" >Select Communication Services</option>
                                                 <?php foreach ($commservice["list"] as $d) { ?>
                                                     <option value="<?= $d->type?>" ><?= $d->label?></option>
@@ -409,12 +409,12 @@
             var forms = '<div class="form-material col-md-12" id="form_src_'+id+'">'+
                 '<div class="form-material row">'+   
                 '<div class="col-md-5 col-8">'+
-                    '<select class="form-control" onchange="patternForm(\''+id+'\')" name="pattern_'+id+'" required>'+
+                    '<select class="form-control" onchange="patternForm(\''+id+'\')" name="pattern_'+id+'" >'+
                     optionPattern + 
                     '</select>'+
                 '</div>'+         
                 '<div class="col-md-5 col-8">'+
-                    '<input class="form-control" type="text" name="field_'+id+'" onchange="fieldForm()" required>'+                    
+                    '<input class="form-control" type="text" name="field_'+id+'" onchange="fieldForm()" >'+                    
                 '</div>'+
                 '<div class="col-md-2 col-4">'+
                     '<a onclick="removeForm(this.name)" name="form_src_'+id+'" class="btn btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove" >'+
@@ -654,11 +654,11 @@
 
         $(".selectable-item").change(function() {
             field = $(this).val();
-            if(this.checked) {
-                $("#field_"+field).attr("required","required");
-            }else{
-                $("#field_"+field).removeAttr("required");
-            }
+            // if(this.checked) {
+            //     $("#field_"+field).attr("required","required");
+            // }else{
+            //     $("#field_"+field).removeAttr("required");
+            // }
             validation3();
         });
 

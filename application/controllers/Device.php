@@ -1004,7 +1004,23 @@ class Device extends CI_Controller {
 			    "delimeter"=> [":", "="],
                 "string_pattern"=> "rc=[rc-value]:lq=[lq-value]:ct=[ct-value]:ed=[ed-value]:id=[id-value]:ba=[ba-value]:a1=[a1-value]:a2=[a2-value]:x=[x-value]:y=[y-value]:z=[z-value]"
             );    
-        }   
+        } 
+        
+        if($resource == "Data Logger [GL240]"){
+            $data["data"]= (object) array(
+                "type"=>"web_scrapping",
+                "method"=>"json_object",
+                "config"=>(object) array(
+                    "port"=>"/dev/ttyUSB0",
+                    "baudrate"=>115200,
+                    "timeout" => 1
+                ),
+                "string_sample"=> "rc=80000000:lq=51:ct=0001:ed=810DCBDD:id=10:ba=2810:a1=0935:a2=0535:x=0000:y=0000:z=0000",
+			    "delimeter"=> [":", "="],
+                "string_pattern"=> "rc=[rc-value]:lq=[lq-value]:ct=[ct-value]:ed=[ed-value]:id=[id-value]:ba=[ba-value]:a1=[a1-value]:a2=[a2-value]:x=[x-value]:y=[y-value]:z=[z-value]"
+            );    
+        }
+        
         
         if($id){
             $edge = $this->edge_m->get_detail($id)->data;
