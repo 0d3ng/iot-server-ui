@@ -128,30 +128,33 @@
                                                     </div>                                                      
                                                 </div>
                                             </div>
+
+                                            <?php foreach ($edge->interface[0]->object_used as $key => $val) {  
+                                                $code = substr(md5(mt_rand()), 0, 5);
+                                            ?>
+                                            <div class="form-material col-md-12" id="form_src_<?= $code ?>">
+                                                <div class="form-material row">
+                                                    <div class="col-md-5 col-8">
+                                                        <select class="form-control" onchange="patternForm('<?= $code ?>')" name="pattern_<?= $code ?>" required="" >                                                        
+                                                            <option value="<?= $val?>"><?= $val?></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-5 col-8">
+                                                        <input class="form-control" type="text" name="field_<?= $code ?>" onchange="fieldForm()" required="" value="<?= $key?>">
+                                                    </div>
+                                                    <div class="col-md-2 col-4">
+                                                        <a onclick="removeForm(this.name)" name="form_src_<?= $code ?>" class="btn btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove">
+                                                            <i class="icon md-delete" aria-hidden="true"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="object_pattern[]" value="<?= $code ?>">
+                                            </div>
+                                            <?php } ?>
+
                                         </div>
                                         
-                                        <?php foreach ($edge->interface[0]->object_used as $key => $val) {  
-                                            $code = substr(md5(mt_rand()), 0, 5);
-                                        ?>
-                                        <div class="form-material col-md-12" id="form_src_<?= $code ?>t">
-                                            <div class="form-material row">
-                                                <div class="col-md-5 col-8">
-                                                    <select class="form-control" onchange="patternForm('<?= $code ?>')" name="pattern_<?= $code ?>" required="" >                                                        
-                                                        <option value="<?= $val?>"><?= $val?></option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-5 col-8">
-                                                    <input class="form-control" type="text" name="field_<?= $code ?>" onchange="fieldForm()" required="" value="<?= $key?>">
-                                                </div>
-                                                <div class="col-md-2 col-4">
-                                                    <a onclick="removeForm(this.name)" name="form_src_<?= $code ?>" class="btn btn-icon btn-pure btn-default btn-leave on-default remove-row" data-toggle="tooltip" data-original-title="Remove">
-                                                        <i class="icon md-delete" aria-hidden="true"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="object_pattern[]" value="<?= $code ?>">
-                                        </div>
-                                        <?php } ?>
+                                        
                                         <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                                                      
                                     </div>
                                 </div>
