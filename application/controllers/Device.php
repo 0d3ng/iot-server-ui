@@ -1145,7 +1145,7 @@ class Device extends CI_Controller {
     function edge_download($data,$id,$code){  
         $name =  $data['data']->name;        
         $filename = 'configuration_'.$data["edge"]->edgeconfig_code.'_device_'.$name.'['.$id.']';
-        $filename = $this->beautify_filename($filename);
+        // $filename = $this->beautify_filename($filename);
         $params = array(
             "edgeconfig_code"=>$code
         );               
