@@ -1136,7 +1136,7 @@ class Device extends CI_Controller {
             '/\.{2,}/'
         ), '.', $filename);
         // lowercase for windows/unix interoperability http://support.microsoft.com/kb/100625
-        $filename = mb_strtolower($filename, mb_detect_encoding($filename));
+        $filename = strtolower($filename, mb_detect_encoding($filename));
         // ".file-name.-" becomes "file-name"
         $filename = trim($filename, '.-');
         return $filename;
