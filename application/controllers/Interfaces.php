@@ -174,8 +174,8 @@ class Interfaces extends CI_Controller {
             );
     
             if($data["with_time"]){
-                $query["time_end"] = $data["time_str"].":00";
-                $query["time_start"] = $data["time_end"].":00";
+                $query["time_end"] = $data["time_end"].":00";
+                $query["time_start"] = $data["time_str"].":00";
             }
             $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
             if(!empty($data['sensor'])) 
