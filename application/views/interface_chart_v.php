@@ -128,6 +128,8 @@
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
 <script src="<?= base_url()?>assets/global/vendor/icheck/icheck.min.js"></script>
 <script src="<?= base_url()?>assets/global/js/Plugin/icheck.js"></script>
+<script src="<?= base_url()?>assets/global/vendor/clockpicker/bootstrap-clockpicker.js"></script>
+<script src="<?= base_url()?>assets/global/js/Plugin/clockpicker.js"></script>
 
 <?php 
 
@@ -173,6 +175,14 @@
         } 
     ?>
     $( document ).ready(function() {
+
+        $('input').on('ifChecked', function(event){
+            $(".search-time").removeAttr('disabled');
+        });
+        $('input').on('ifUnchecked', function(event){
+            $(".search-time").attr('disabled','disabled');
+        });
+
         Highcharts.stockChart('chart', {
             chart: {
                 events: {
