@@ -137,6 +137,60 @@ class Interfaces extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function chart($id=""){        
+		$data=array();
+		$data['success']='';
+		$data['error']='';
+		if($this->input->get('alert')=='success') $data['success']='Delete data interface successfully';	
+		if($this->input->get('alert')=='failed') $data['error']="Failed to delete data interface";	
+		$data['title']='Data Interface List';
+		$data['user_now'] = $this->session->userdata('dasboard_iot');
+
+        $data["interfaces"] = $this->interface_m->get_detail($id);
+        $data["date_str"] = date("Y-m-d");
+        $data["date_end"] = date("Y-m-d");
+        $data["time_str"] = date("H:i");
+        $data["time_end"] = date("H:i");
+        $data["with_time"] = FALSE;
+        if($this->input->get('start'))
+            $data["date_str"] = $this->input->get('start');
+        if($this->input->get('end'))
+            $data["date_end"] = $this->input->get('end');
+        if($this->input->get('tstart'))
+            $data["time_str"] = $this->input->get('tstart');
+        if($this->input->get('tend'))
+            $data["time_end"] = $this->input->get('tend');
+        if($this->input->get('with_time'))
+            $data["with_time"] = TRUE;
+        
+        if($data["interfaces"]->status){
+            $data["interfaces"] = $data["interfaces"]->data;
+            $sensor_code = $data["interfaces"]->resource_code;
+            $data['data'] = $this->device_m->get_detail($sensor_code)->data; 
+            $data['extract'] = $this->extract($data['data']->field);
+            $query = array(
+                "date_start" => $data["date_str"],
+                "date_end" => $data["date_end"]
+            );
+    
+            if($data["with_time"]){
+                $query["time_end"] = $data["time_str"].":00";
+                $query["time_start"] = $data["time_end"].":00";
+            }
+            $data['sensor'] = $this->device_m->datasensor($data['data']->device_code,$query)->data;
+            if(!empty($data['sensor'])) 
+                $data['sensor'] = array_reverse((array)$data['sensor']);
+        } else {
+            $data["interfaces"] = array();
+        }
+        // echo"<pre>";
+        // print_r($data);
+        // echo"</pre>";
+        // exit();
+        $this->load->view('interface_chart_v', $data);
+	}
+    
+
     function dataget_nested($key,$value,$export){
         foreach($key as $d){
             if(!isset($value->{$d})){
@@ -150,6 +204,7 @@ class Interfaces extends CI_Controller {
         }
         return $value;
     }
+
 
 
 
