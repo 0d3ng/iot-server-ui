@@ -195,19 +195,20 @@
             legend: {
                 enabled: true,         
                 floating: true,
-                title: {
-                    text: 'Sensor Data',
-                    style: {
-                        fontStyle: 'italic'
-                    }
-                },
+                // title: {
+                //     text: 'Sensor Data',
+                //     style: {
+                //         fontStyle: 'italic',
+                //         fontSize: '15px'
+                //     }
+                // },
                 layout: 'horizontal',
                 align: 'right',
                 verticalAlign: 'top',
                 x: -20,
                 y: -10,
-                style: {
-                    fontSize:'16px'
+                itemStyle: {
+                    fontSize: '16px'
                 }
             },
             plotOptions: {
@@ -270,7 +271,7 @@
                     text: '<?=  $x_axis->title?>',
                     style: {
                         fontWeight: 'bold',
-                        fontSize:'15px'
+                        fontSize:'16px'
                     }
                 }
             },
