@@ -117,12 +117,10 @@
 </div>
 
 <?php include("footer.php") ?>
-<!-- <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script> -->
 <script type="text/javascript" src="<?= base_url();?>assets/leaflet/dist/leaflet-src.js"></script>
 <script src='<?= base_url();?>assets/leaflet/Leaflet.GoogleMutant.js'></script>
-<!-- <script src='<?= base_url();?>assets/leaflet/sampang-maps.js'></script> -->
 
+<script type="text/javascript" src="<?= base_url();?>assets/leaflet/turf.min.js"></script>
 
 
 <script src="<?= base_url()?>assets/global/vendor/bootstrap-table/tableExport.min.js"></script>
@@ -138,67 +136,104 @@
 <script src="<?= base_url()?>assets/global/js/Plugin/clockpicker.js"></script>
 <!-- <script src="<?= base_url()?>assets/examples/js/tables/bootstrap.js"></script> -->
 <script>
-  $( document ).ready(function() {
-    // Maps 
-    icon = {
-      "1":'bg-red',
-      "2":'bg-blue',
-      "3":'bg-yellow',
-      "4":'bg-green'
-    }
-    var maps = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { 
-      // var maps = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-            attribution: '-',
-            maxZoom: 18,
-            minZoom: 10,
-            id: 'mapbox.streets',
-            accessToken: 'pk.eyJ1IjoiYWRlc3VsYWltYW4iLCJhIjoiY2prcWFqcW85MW00YzNsbW54ZThscmpvdSJ9.ai7YM6Pj5ayquazYjHnOCA'
-          });
+    $( document ).ready(function() {
+        
+        
 
-      var bounds_group = new L.featureGroup([]);
-      var map = L.map('map',  {
-        editable: true,
-        center: [<?= $interfaces->configuration->center->latitude ?>, <?= $interfaces->configuration->center->longitude ?>],
-        zoom: <?= $interfaces->configuration->center->zoom ?>,
-        scrollWheelZoom: false,
-        zoomControl: true,
-        layers: [maps, bounds_group]
-      });  
-      var totalhal = 0;
-      function update_maps(hal){
-        url_jsaon = "<?= base_url();?>interfaces/resource/<?= $data->device_code?>";
-        var hasilpasien=$.getJSON(url_jsaon, function (data) {
-          for (var i = 0; i < data.length; i++) {
-              console.log(data[i]);
-              var lat =data[i].<?= $interfaces->configuration->marker->latitude ?>;
-              var lng =data[i].<?= $interfaces->configuration->marker->longitude ?>;
-              var category = data[i].<?= $interfaces->configuration->marker->category ?>;
-              <?php foreach($interfaces->configuration->popup as $value){ ?>
-              var <?= $value ?>= data[i].<?= $value?>;
-              <?php } ?>                    
-              // var greenIcon = L.divIcon({ className: 'circle bg-yellow shadow', iconSize: [12, 12]});
-              var greenIcon = L.divIcon({ className: 'circle '+icon[category]+' shadow', iconSize: [12, 12]})
-              var stat = "Information Detail";
-
-              var customPopup =
-                    "<h4>"+stat+"</h4>"
-                    <?php foreach($interfaces->configuration->popup as $value){ ?>
-                    +"<span> <?= str_replace("_"," ",strtoupper($value)) ?> : <b>"+<?= $value?>+"</b></span><br>"
-                    <?php } ?>                    
-                ;
-                console.log([lat, lng]);
-                // console.log("--------------");
-                L.marker([lat, lng],{icon:greenIcon}).addTo(map).bindPopup(customPopup);
-                // L.marker([lat, lng]).addTo(map);
-          }
-        });
-
-        if(totalhal>hal){
-            setTimeout(function(){
-                update_maps(hal+1);
-            }, 1000);
+        function category_color(cat) {
+            if(cat == "1") return "red";
+            if(cat == "2") return "blue";
+            if(cat == "3") return "yellow"; 
+            if(cat == "4") return "green"; 
         }
-      }
-      update_maps(1);
-  });
+
+        function category_style(feature) {
+            return {
+                fillColor: category_color(feature.properties.<?= $interfaces->configuration->marker->category ?>),
+                weight: 1,
+                opacity: 1,
+                color: "white",
+                fillOpacity: 0.5
+            };
+        }
+
+        function update_maps(year, month){
+            $.ajax({
+                type: 'get',
+                url: '<?= base_url();?>interfaces/resource/<?= $data->device_code?>',
+                data: {'year':year,"month":month},
+                success: function (result){
+                    data = {
+                        "type": "FeatureCollection",
+                        "features":[]
+                    };
+
+                    for (var i = 0; i < result.length; i++) {
+                        feature = {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [result[i].<?= $interfaces->configuration->marker->longitude ?>,result[i].<?= $interfaces->configuration->marker->latitude ?>]
+                            },
+                            "properties": result[i]
+                        };  
+                        data.features.push(feature);   
+                    }    
+                    
+                    turf.clusterEach(data, "<?= $interfaces->configuration->marker->category ?>", function(cluster, clusterValue, currentIndex) {
+                        clustered = turf.clustersDbscan(cluster, 1);
+                        console.log(clusterValue);
+                        console.log(currentIndex);
+                        console.log(clustered);
+                        
+                        turf.clusterEach(clustered, "cluster", function(cluster2, clusterValue2, currentIndex2) {
+                            // console.log(cluster2);
+                            let ch = turf.convex(cluster2);
+                            ch.properties.<?= $interfaces->configuration->marker->category ?> = clusterValue;
+                            L.geoJSON(ch, {style: category_style}).addTo(map);
+                        });
+                        L.geoJSON(cluster, {
+                            onEachFeature: function(feature, layer) {
+                                var popups = "<h4>Information Detail</h4>"
+                                    <?php foreach($interfaces->configuration->popup as $value){ ?>
+                                    +"<span> <?= str_replace("_"," ",strtoupper($value)) ?> : <b>"+feature.properties.<?= $value?>+"</b></span><br>"
+                                    <?php } ?>                    
+                
+                                layer.bindPopup(popups);
+                            },
+                            pointToLayer: function(geoJsonPoint, latlng) {
+                                return L.circleMarker(latlng);
+                            },
+                            style: category_style
+                        }).addTo(map);
+                    });
+
+                }
+            });
+        }
+        let map = L.map("map").setView([<?= $interfaces->configuration->center->latitude ?>, <?= $interfaces->configuration->center->longitude ?>], <?= $interfaces->configuration->center->zoom ?>);
+        // var maps = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { 
+        //     attribution: '-',
+        //     maxZoom: 18,
+        //     minZoom: 10,
+        //     id: 'mapbox.streets',
+        //     accessToken: 'pk.eyJ1IjoiYWRlc3VsYWltYW4iLCJhIjoiY2prcWFqcW85MW00YzNsbW54ZThscmpvdSJ9.ai7YM6Pj5ayquazYjHnOCA'
+        // }).addTo(map);
+
+        // var map = L.map('map',  {
+        //     editable: true,
+        //     center: [<?= $interfaces->configuration->center->latitude ?>, <?= $interfaces->configuration->center->longitude ?>],
+        //     zoom: <?= $interfaces->configuration->center->zoom ?>,
+        //     scrollWheelZoom: false,
+        //     zoomControl: true,
+        //     layers: [maps] //, heatmapLayer
+        // });  
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", 
+            {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
+        ).addTo(map);
+
+        var totalhal = 0;
+        update_maps(<?= date("Y,m")?>);
+    });
 </script>

@@ -1008,16 +1008,16 @@ class Device extends CI_Controller {
         
         if($resource == "Data Logger [GL240]"){
             $data["data"]= (object) array(
-                "type"=>"web_scrapping",
-                "method"=>"json_object",
+                "type"=>"wlan",
+                "method"=>"web_scrapping",
                 "config"=>(object) array(
-                    "port"=>"/dev/ttyUSB0",
-                    "baudrate"=>115200,
-                    "timeout" => 1
+                    "url"=>"http://192.168.230.1/digital.cgi?chgrp=0",
+                    "timeout" => 8
                 ),
-                "string_sample"=> "rc=80000000:lq=51:ct=0001:ed=810DCBDD:id=10:ba=2810:a1=0935:a2=0535:x=0000:y=0000:z=0000",
-			    "delimeter"=> [":", "="],
-                "string_pattern"=> "rc=[rc-value]:lq=[lq-value]:ct=[ct-value]:ed=[ed-value]:id=[id-value]:ba=[ba-value]:a1=[a1-value]:a2=[a2-value]:x=[x-value]:y=[y-value]:z=[z-value]"
+                "web_scrapping_result"=> "['CH 1', '-  34.9', 'degC', 'CH 2', 'Off', '-', 'CH 3', 'Off', '-', 'CH 4', 'Off', '-', 'CH 5', 'Off', '-', 'CH 6', 'Off', '-', 'CH 7', 'BURNOUT', '-', 'CH 8', 'Off', '-', 'CH 9', 'Off', '-', 'CH 10', 'Off', '-']",
+                "index_name"=>0,
+                "index_value"=>1,
+                "max_sequence"=>3
             );    
         }
         
@@ -1025,9 +1025,9 @@ class Device extends CI_Controller {
         if($id){
             $edge = $this->edge_m->get_detail($id)->data;
             $interface = $edge->interface[0];
-            if($resource == "USB Mono Stick"){
-                $data["data"] =  $interface;        
-            }        
+            if($edge->resource == $resource){
+                $data["data"] =  $interface;
+            }
         }
 
         if($resource == "USB Mono Stick" or $resource == "USB Serial"){
@@ -1054,6 +1054,27 @@ class Device extends CI_Controller {
             $this->load->view("edge_interface/usb_serial",$data);
         }
 
+        if($resource == "Data Logger [GL240]"){
+            ##Method
+            $method_webscrap = array("type"=>"web_scrapping", "label"=>"Web Scrapping");
+            ##----------------
+            if(empty($data["data"])){
+                $data["data"]= (object) array(
+                    "type"=>"",
+                    "method"=>"",
+                    "config"=>(object) array(),
+                    "web_scrapping_result"=> "",
+                    "index_name"=>"",
+                    "index_value"=>"",
+                    "max_sequence"=>""
+                );      
+            }
+            $data["forms"] = (object) array(
+                "interface"=>[$wlan],
+                "method"=>[$method_webscrap]
+            );
+            $this->load->view("edge_interface/datalog",$data);    
+        }
     }
     
     function edge_delete($id,$code){       
@@ -1098,18 +1119,48 @@ class Device extends CI_Controller {
     }
 
     function edge_process($id,$field){
-        if($this->input->post('method') and $this->input->post('sample')){
+        if($this->input->post('method')){
             $method = $this->input->post('method');
-            $input = array(
-                "method" => $this->input->post('method'),
-                "string_sample" => $this->input->post('sample')                
-            );
-            if($method == "array_list"){
-                $input["delimeter"] = [$this->input->post('delimeter1')];    
-            } else if($method == "json_object"){
-                $input["delimeter"] = [$this->input->post('delimeter1'),$this->input->post('delimeter2')];
-            }   
-            $response = $this->edge_m->process($input);
+            
+            if($method == "web_scrapping"){
+                $list = $this->input->post('webresult');
+                $list = str_replace("['","",$list);
+                $list = str_replace("']","",$list);
+                $list = explode("', '",$list);
+                $result = array();
+                $i = 0;
+                $index_name = $this->input->post('indexname');
+                $index_value = $this->input->post('indexvalue');
+                $max_sequence = $this->input->post('maxsequence');
+                foreach($list as $l){
+                    if($i == $index_name){
+                        $item_name = $l;
+                    }
+                    if($i == $index_value){
+                        $item_val = $l;
+                    }    
+                    $i++;
+                    if($i == $max_sequence){
+                        $result[$item_name] = $item_val;
+                        $i=0;     
+                    }
+                }
+                $response = array(
+                    "status" => true,
+                    "data" => $result
+                );
+            }else{
+                $input = array(
+                    "method" => $this->input->post('method'),
+                    "string_sample" => $this->input->post('sample')                
+                );
+                if($method == "array_list"){
+                    $input["delimeter"] = [$this->input->post('delimeter1')];    
+                } else if($method == "json_object"){
+                    $input["delimeter"] = [$this->input->post('delimeter1'),$this->input->post('delimeter2')];
+                }   
+                $response = $this->edge_m->process($input);
+            }
         } else {
             $response = array(
                 "status" => false

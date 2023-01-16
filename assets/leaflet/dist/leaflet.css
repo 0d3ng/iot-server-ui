@@ -653,3 +653,38 @@ div.circle {
 		-moz-box-shadow: 0 0 10px #fdd835 !important; 
 		box-shadow:0 0 10px #fdd835 !important;
 	}
+
+.bg-green{
+		background-color: #4caf50 !important;
+		-webkit-box-shadow:0 0 10px #4caf50 !important; 
+		-moz-box-shadow: 0 0 10px #4caf50 !important; 
+		box-shadow:0 0 10px #4caf50 !important;
+	}
+
+.bg-blue{
+		background-color: #2962FF !important;
+		-webkit-box-shadow:0 0 10px #2962FF !important; 
+		-moz-box-shadow: 0 0 10px #2962FF !important; 
+		box-shadow:0 0 10px #2962FF !important;
+	}
+
+.bg-orange{
+		background-color: #ff9800 !important;
+		-webkit-box-shadow:0 0 10px #ff9800 !important; 
+		-moz-box-shadow: 0 0 10px #ff9800 !important; 
+		box-shadow:0 0 10px #ff9800 !important;
+	}
+
+.bg-deep-orange{
+		background-color: #FF3D00 !important;
+		-webkit-box-shadow:0 0 10px #FF3D00 !important; 
+		-moz-box-shadow: 0 0 10px #FF3D00 !important; 
+		box-shadow:0 0 10px #FF3D00 !important;
+	}
+
+.bg-red{
+		background-color: #f44336 !important;
+		-webkit-box-shadow:0 0 10px #f44336 !important; 
+		-moz-box-shadow: 0 0 10px #f44336 !important; 
+		box-shadow:0 0 10px #f44336 !important;
+	}

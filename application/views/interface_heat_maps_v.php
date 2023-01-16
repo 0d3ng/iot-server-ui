@@ -115,13 +115,17 @@
     </div>
   </div>
 </div>
+<div class="circle bg-yellow shadow ">AAAAAAAAAAAA</div>
 
 <?php include("footer.php") ?>
 <!-- <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script> -->
 <script type="text/javascript" src="<?= base_url();?>assets/leaflet/dist/leaflet-src.js"></script>
 <script src='<?= base_url();?>assets/leaflet/Leaflet.GoogleMutant.js'></script>
-<!-- <script src='<?= base_url();?>assets/leaflet/sampang-maps.js'></script> -->
+<!-- <script src='<?= base_url();?>assets/leaflet/heatmap.min.js'></script> -->
+<!-- <script src='<?= base_url();?>assets/leaflet/leaflet-heatmap.js'></script> -->
+<script src='<?= base_url();?>assets/leaflet/leaflet-heatmap-2014.js'></script>
+
 
 
 
@@ -140,12 +144,6 @@
 <script>
   $( document ).ready(function() {
     // Maps 
-    icon = {
-      "1":'bg-red',
-      "2":'bg-blue',
-      "3":'bg-yellow',
-      "4":'bg-green'
-    }
     var maps = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { 
       // var maps = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
             attribution: '-',
@@ -155,49 +153,54 @@
             accessToken: 'pk.eyJ1IjoiYWRlc3VsYWltYW4iLCJhIjoiY2prcWFqcW85MW00YzNsbW54ZThscmpvdSJ9.ai7YM6Pj5ayquazYjHnOCA'
           });
 
-      var bounds_group = new L.featureGroup([]);
-      var map = L.map('map',  {
+    // let cfg = {
+    //   "radius": 20,
+    //   "blur": 15,
+    //   "useLocalExtrema": true,
+    //   "valueField": 'category'
+    // }
+
+    // let heatmapLayer = new HeatmapOverlay(cfg)
+    var map = L.map('map',  {
         editable: true,
         center: [<?= $interfaces->configuration->center->latitude ?>, <?= $interfaces->configuration->center->longitude ?>],
         zoom: <?= $interfaces->configuration->center->zoom ?>,
         scrollWheelZoom: false,
         zoomControl: true,
-        layers: [maps, bounds_group]
-      });  
-      var totalhal = 0;
-      function update_maps(hal){
+        layers: [maps] //, heatmapLayer
+    });  
+    var totalhal = 0;
+      
+    function update_maps(hal){
         url_jsaon = "<?= base_url();?>interfaces/resource/<?= $data->device_code?>";
         var hasilpasien=$.getJSON(url_jsaon, function (data) {
-          for (var i = 0; i < data.length; i++) {
-              console.log(data[i]);
-              var lat =data[i].<?= $interfaces->configuration->marker->latitude ?>;
-              var lng =data[i].<?= $interfaces->configuration->marker->longitude ?>;
-              var category = data[i].<?= $interfaces->configuration->marker->category ?>;
-              <?php foreach($interfaces->configuration->popup as $value){ ?>
-              var <?= $value ?>= data[i].<?= $value?>;
-              <?php } ?>                    
-              // var greenIcon = L.divIcon({ className: 'circle bg-yellow shadow', iconSize: [12, 12]});
-              var greenIcon = L.divIcon({ className: 'circle '+icon[category]+' shadow', iconSize: [12, 12]})
-              var stat = "Information Detail";
-
-              var customPopup =
-                    "<h4>"+stat+"</h4>"
-                    <?php foreach($interfaces->configuration->popup as $value){ ?>
-                    +"<span> <?= str_replace("_"," ",strtoupper($value)) ?> : <b>"+<?= $value?>+"</b></span><br>"
-                    <?php } ?>                    
-                ;
-                console.log([lat, lng]);
-                // console.log("--------------");
-                L.marker([lat, lng],{icon:greenIcon}).addTo(map).bindPopup(customPopup);
-                // L.marker([lat, lng]).addTo(map);
-          }
-        });
-
-        if(totalhal>hal){
-            setTimeout(function(){
-                update_maps(hal+1);
-            }, 1000);
+        var location = [];
+        for (var i = 0; i < data.length; i++) {
+            var lat = data[i].<?= $interfaces->configuration->marker->latitude ?>;
+            var lng = data[i].<?= $interfaces->configuration->marker->longitude ?>;
+            var category = data[i].<?= $interfaces->configuration->marker->category ?>;
+            // location.push({lat:lat,lng:lng,category:category});
+            location.push([lat,lng,category]);
         }
+        // console.log(location);
+        // heatmapLayer.setData({
+        //     min: 1,
+        //     max: 6, 
+        //     data: location
+        // });
+        var heat = L.heatLayer(location,{
+            radius: 20,
+            blur: 15, 
+            maxZoom: 17,
+        }).addTo(map);
+    });
+
+        // if(totalhal>hal){
+        //     setTimeout(function(){
+        //         update_maps(hal+1);
+        //     }, 1000);
+        // }
+
       }
       update_maps(1);
   });
