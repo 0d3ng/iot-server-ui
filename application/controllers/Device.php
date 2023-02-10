@@ -791,7 +791,6 @@ class Device extends CI_Controller {
         $data['title']= 'Edge Computing Configuration Add';		
         $data['user_now'] = $this->session->userdata('dasboard_iot');	
         if($this->input->post('save')){   
-            // print("<pre>");                
             ##Extract Interface
             $type = $this->input->post('interface'); 
             $item_interface = array();
@@ -812,6 +811,19 @@ class Device extends CI_Controller {
                 } else if($this->input->post('method') == "json_object"){
                     $item_interface["delimeter"] = $this->input->post('delimeter');
                 }
+            }else if($type=="wlan"){
+                $item_interface = array(
+                    "type"=>$type,
+                    "config"=>array(
+                        "url"=>$this->input->post('config_url'),
+                        "timeout"=>(int)$this->input->post('config_timeout')
+                    ),
+                    "method"=>$this->input->post('method'),
+                    "web_scrapping_result"=>$this->input->post('web_scrapping_result'),
+                    "index_name"=>(int)$this->input->post('index_name'),
+                    "index_value"=>(int)$this->input->post('index_value'),
+                    "max_sequence"=>(int)$this->input->post('max_sequence'),
+                );
             }
             ##Extract Data Resource
             $object_used =  array();                    
@@ -832,6 +844,49 @@ class Device extends CI_Controller {
                 $value = $this->input->post('field_'.$field);
                 $data_transmitted[$field] = $value;
             } 
+
+            ##Extract Local Data 
+            $data_local = array();
+            $item_local= $this->input->post('local_data'); 
+            foreach($item_transmitted as $i => $item){   
+                $field = $this->input->post('ld_field_'.$item);
+                $value = $this->input->post('ld_value_'.$item);
+                $type = $this->input->post('ld_type_'.$item);
+                $data_local[$field] = [$value,$type];
+            } 
+
+            ##Extract Visualization
+            
+            
+            $table = array();
+            $item_table = $this->input->post('table_data'); 
+            foreach($item_table as $i => $item){   
+                $value = $this->input->post('table_value_'.$item);
+                $table[] = $value;
+            } 
+
+            $graph = array();
+            $list_graph = $this->input->post('graph_list'); 
+            foreach($list_graph as $i => $listID){  
+                $list_graph_object = array("value"=>array()); 
+                $item_graph = $this->input->post('graph_item_'.$listID); 
+                foreach($item_transmitted as $i => $listID){
+                    $label = $this->input->post('graph_label_'.$item);
+                    $value = $this->input->post('graph_value_'.$item);
+                    $list_graph_object["value"][] = array(
+                        "title" =>$label,
+                        "value" =>$value
+
+                    );
+                }
+                $graph[] = $list_graph_object;
+            } 
+
+            $visualization = array(
+                "table" => $table,
+                "grapgh" => $graph
+            );
+
             $input = array(
                 "device_code" => $id,
                 "resource" => $this->input->post('resource'),
@@ -839,9 +894,12 @@ class Device extends CI_Controller {
                 "data_transmitted" => $data_transmitted,
                 "time_interval" => floatval($this->input->post('time_interval')),
                 "comm_service" =>  $this->input->post('comeservice'),
+                "local_data" => $data_local,
+                "visualization" => $visualization,
                 "add_by" => $data['user_now']->id,
                 "active" => true,
             );
+            // print("<pre>");                
             // print_r($input);
             // print("</pre>");                      
             // exit();
@@ -905,6 +963,19 @@ class Device extends CI_Controller {
                 } else if($this->input->post('method') == "json_object"){
                     $item_interface["delimeter"] = $this->input->post('delimeter');
                 }
+            }else if($type=="wlan"){
+                $item_interface = array(
+                    "type"=>$type,
+                    "config"=>array(
+                        "url"=>$this->input->post('config_url'),
+                        "timeout"=>(int)$this->input->post('config_timeout')
+                    ),
+                    "method"=>$this->input->post('method'),
+                    "web_scrapping_result"=>$this->input->post('web_scrapping_result'),
+                    "index_name"=>(int)$this->input->post('index_name'),
+                    "index_value"=>(int)$this->input->post('index_value'),
+                    "max_sequence"=>(int)$this->input->post('max_sequence'),
+                );
             }
             ##Extract Data Resource
             $object_used =  array();                    
