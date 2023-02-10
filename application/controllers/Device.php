@@ -847,40 +847,40 @@ class Device extends CI_Controller {
 
             ##Extract Local Data 
             $data_local = array();
-            $item_local= $this->input->post('local_data'); 
-            foreach($item_transmitted as $i => $item){   
-                $field = $this->input->post('ld_field_'.$item);
-                $value = $this->input->post('ld_value_'.$item);
-                $type = $this->input->post('ld_type_'.$item);
-                $data_local[$field] = [$value,$type];
-            } 
+            // $item_local= $this->input->post('local_data'); 
+            // foreach($item_transmitted as $i => $item){   
+            //     $field = $this->input->post('ld_field_'.$item);
+            //     $value = $this->input->post('ld_value_'.$item);
+            //     $type = $this->input->post('ld_type_'.$item);
+            //     $data_local[$field] = [$value,$type];
+            // } 
 
             ##Extract Visualization
             
             
             $table = array();
-            $item_table = $this->input->post('table_data'); 
-            foreach($item_table as $i => $item){   
-                $value = $this->input->post('table_value_'.$item);
-                $table[] = $value;
-            } 
+            // $item_table = $this->input->post('table_data'); 
+            // foreach($item_table as $i => $item){   
+            //     $value = $this->input->post('table_value_'.$item);
+            //     $table[] = $value;
+            // } 
 
             $graph = array();
-            $list_graph = $this->input->post('graph_list'); 
-            foreach($list_graph as $i => $listID){  
-                $list_graph_object = array("value"=>array()); 
-                $item_graph = $this->input->post('graph_item_'.$listID); 
-                foreach($item_transmitted as $i => $listID){
-                    $label = $this->input->post('graph_label_'.$item);
-                    $value = $this->input->post('graph_value_'.$item);
-                    $list_graph_object["value"][] = array(
-                        "title" =>$label,
-                        "value" =>$value
+            // $list_graph = $this->input->post('graph_list'); 
+            // foreach($list_graph as $i => $listID){  
+            //     $list_graph_object = array("value"=>array()); 
+            //     $item_graph = $this->input->post('graph_item_'.$listID); 
+            //     foreach($item_transmitted as $i => $listID){
+            //         $label = $this->input->post('graph_label_'.$item);
+            //         $value = $this->input->post('graph_value_'.$item);
+            //         $list_graph_object["value"][] = array(
+            //             "title" =>$label,
+            //             "value" =>$value
 
-                    );
-                }
-                $graph[] = $list_graph_object;
-            } 
+            //         );
+            //     }
+            //     $graph[] = $list_graph_object;
+            // } 
 
             $visualization = array(
                 "table" => $table,
