@@ -375,6 +375,8 @@
                         console.log(result);
                         if(status){            
                             objectPattern = result["data"];
+                            fieldForm();
+                            patternFormStart();
                             $("#btnsave").show();
                         }else{
                             toastr.error('Process Failed', 'Failed', {timeOut: 3000});

@@ -349,46 +349,83 @@
     var usedObjectPattern = [];
     var resourceOutput = {};
     
-    function patternProcess(){
-        var method = $("#inputMethod").val();
-        var sample = $("#inputStringSample").val();
-        var del1 = $("#inputDelimeter1").val();
-        var del2 = $("#inputDelimeter2").val();
-        
-        if(method!="" && sample!=""){
-        data = {
-            "method":method,
-            "sample":sample
-        };
-        if(del1!=""){ data["delimeter1"] = del1; }
-        if(del2!=""){ data["delimeter2"] = del2; }
-        $.ajax({
-            type: 'post',
-            url: '<?= base_url()?>device/edge/<?= $id ?>/process',
-            data: data,
-            success: function (result){
-            status = result["status"];
-            console.log(result);
-            if(status){            
-                if(method == "array_list"){
-                    $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
-                    objectPattern = result["data"]["list"]; 
-                } else if(method == "json_object"){              
-                    $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
-                    $("#inputDelimeter2").val(result["data"]["delimeter"][1]);
-                    objectPattern = result["data"]["object"]; 
-                }
-                $("#inputPattern").val(result["data"]["string_pattern"]);
-                fieldForm();
-                patternFormStart();
-                $("#btnsave").show();
-            }else{
-                toastr.error('Process Failed', 'Failed', {timeOut: 3000});
-            }
-            }
-        });
-        }else{      
-            toastr.error('Please choose method and fill example of message input', 'Failed', {timeOut: 3000});
+    function patternProcess(resource = "USB Mono Stick"){
+        if( resource == "USB Mono Stick"){
+            var method = $("#inputMethod").val();
+            var sample = $("#inputStringSample").val();
+            var del1 = $("#inputDelimeter1").val();
+            var del2 = $("#inputDelimeter2").val();
+            if(method!="" && sample!=""){
+                data = {
+                    "method":method,
+                    "sample":sample
+                };
+                if(del1!=""){ data["delimeter1"] = del1; }
+                if(del2!=""){ data["delimeter2"] = del2; }
+                $.ajax({
+                    type: 'post',
+                    url: '<?= base_url()?>device/edge/<?= $id ?>/process',
+                    data: data,
+                    success: function (result){
+                        status = result["status"];
+                        console.log(result);
+                        if(status){            
+                            if(method == "array_list"){
+                                $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
+                                objectPattern = result["data"]["list"]; 
+                            } else if(method == "json_object"){              
+                                $("#inputDelimeter1").val(result["data"]["delimeter"][0]);
+                                $("#inputDelimeter2").val(result["data"]["delimeter"][1]);
+                                objectPattern = result["data"]["object"]; 
+                            }
+                            $("#inputPattern").val(result["data"]["string_pattern"]);
+                            fieldForm();
+                            patternFormStart();
+                            $("#btnsave").show();
+                        }else{
+                            toastr.error('Process Failed', 'Failed', {timeOut: 3000});
+                        }
+                    }
+                });
+            }else{      
+                toastr.error('Please choose method and fill example of message input', 'Failed', {timeOut: 3000});
+            }                         
+        }
+        if(resource == "Data Logger [GL240]"){
+            var method = $("#inputMethod").val();
+            var webresult = $("#inputWebScrapResults").val();  
+            var indexName = $("#inputIndexName").val();
+            var indexValue = $("#inputIndexValue").val();
+            var maxSequence = $("#inputMaxSequence").val();
+            if(method!="" && webresult!="" && indexName!="" && maxSequence!=""){
+                data = {
+                    "method":method,
+                    "webresult":webresult,
+                    "indexname":indexName,
+                    "indexvalue":indexValue,
+                    "maxsequence":maxSequence
+                };
+                console.log(data)
+                $.ajax({
+                    type: 'post',
+                    url: '<?= base_url()?>device/edge/<?= $id ?>/process',
+                    data: data,
+                    success: function (result){
+                        status = result["status"];
+                        console.log(result);
+                        if(status){            
+                            objectPattern = result["data"];
+                            fieldForm();
+                            patternFormStart();
+                            $("#btnsave").show();
+                        }else{
+                            toastr.error('Process Failed', 'Failed', {timeOut: 3000});
+                        }
+                    }
+                });
+            }else{      
+                toastr.error('Please choose method and fill all form data', 'Failed', {timeOut: 3000});
+            } 
         }
     }
 
@@ -406,7 +443,7 @@
                         optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
                     }
                 }
-            } else if(method == "json_object"){
+            } else if(method == "json_object" || method == "web_scrapping"){
                 for(var i in objectPattern){
                     if(i == value){ 
                         optionPattern +='<option value="'+i+'" selected>'+i+' ('+objectPattern[i]+') </option>';
@@ -420,6 +457,35 @@
 
     }
 
+    // function patternFormStart(){
+    //     var method = $("#inputMethod").val();
+    //     var optionPattern = '<option value="">--- Select Data Pattern---</option>';    
+    //     $("input[name='object_pattern[]']").each(function() {
+    //         var optionDevice = '<option value="">--- Select Field---</option>';
+    //         id =  $(this).val();
+    //         var value = $("select[name='pattern_"+id+"']").val();
+    //         if(method == "array_list"){
+    //             for(var i in objectPattern){
+    //                 if(!usedObjectPattern.includes(i)){
+    //                     optionPattern +='<option value="'+i+'">item['+i+'] ('+objectPattern[i]+') </option>';
+    //                 }else if(objectPattern[i] == value){
+    //                     optionPattern +='<option value="'+i+'" selected>item['+i+'] ('+objectPattern[i]+') </option>';
+    //                 }
+    //             }
+    //         } else if(method == "json_object" || method == "web_scrapping"){
+    //             for(var i in objectPattern){
+    //                 if(!usedObjectPattern.includes(i)){
+    //                     optionPattern +='<option value="'+i+'">'+i+' ('+objectPattern[i]+') </option>';
+    //                 }else if(objectPattern[i] == value){
+    //                     optionPattern +='<option value="'+i+'" selected>'+i+' ('+objectPattern[i]+') </option>';
+    //                 }
+    //             }
+    //         }
+    //         $("select[name='pattern_"+id+"']").html(optionPattern);
+    //     }); 
+
+    // }
+    
     function addForm(){
         var method = $("#inputMethod").val();
         var pattern = $("#inputPattern").val();
@@ -595,11 +661,10 @@
                         } else {
                             $("#form_process").hide();
                         }
-                        patternProcess();
+                        patternProcess(resource);
                     });                            
-                }
-                if(resource == "USB Mono Stick"){
-                    patternProcess();     
+                }else{
+                    patternProcess(resource);     
                 }
             }
         });
@@ -717,8 +782,7 @@
                                     $("#form_process").hide();
                                 }
                             });                            
-                        }
-                        if(resource == "USB Mono Stick"){
+                        }else{
                             patternProcess();     
                         }
                     }
