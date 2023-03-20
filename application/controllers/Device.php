@@ -383,7 +383,7 @@ class Device extends CI_Controller {
                     $return = array_merge($return,$listitem); 
                 }
             } else {
-               $return[] = (!empty($prefix))?implode($prefix,"-")."-".$item:$item;
+               $return[] = (!empty($prefix))?implode("-",$prefix)."-".$item:$item;
             }
         }
         return $return;
