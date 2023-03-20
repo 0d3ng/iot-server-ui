@@ -371,17 +371,19 @@ class Device extends CI_Controller {
         $this->load->view('device_data_v', $data);
     }   
 
-    function extract($list,$prefix=''){
+    function extract($list,$prefix=array()){
         $return = array();
         for ($i = 0; $i < count($list); $i++) {
             $item = $list[$i];
             if(is_object($item)){
                 foreach($item as $key=>$value) {
-                    $listitem = $this->extract($value,$key);
+                    $prefix_key = $prefix;
+                    $prefix_key[] = $key;
+                    $listitem = $this->extract($value,$prefix_key);
                     $return = array_merge($return,$listitem); 
                 }
             } else {
-               $return[] = (!empty($prefix))?$prefix."-".$item:$item;
+               $return[] = (!empty($prefix))?implode($prefix,"-")."-".$item:$item;
             }
         }
         return $return;
