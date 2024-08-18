@@ -23,57 +23,79 @@
                         <ul class="nav nav-tabs pearls row" role="tablist" style="border-bottom:none;">
                             <li class="nav-item pearl current col-3" role="presentation" id="navDeviceConfiguration">
                                 <a class="pearl-icon active" data-toggle="tab" href="#deviceConfiguration" aria-controls="deviceConfiguration" role="tab">
-                                    <i class="icon md-sign-in" aria-hidden="true"></i>
-                                </a>
-                                <span class="pearl-title">Input</span>
-                            </li>
-                            <li class="nav-item pearl  col-3" role="presentation" id="navDataResource">
-                                <a class="nav-links pearl-icon " data-toggle="tab" href="#dataResource" aria-controls="dataResource" role="tab"  id="navDataResource_link">
                                     <i class="icon md-settings" aria-hidden="true"></i>
                                 </a>
-                                <span class="pearl-title">Processing</span>
+                                <span class="pearl-title">Device Configuration</span>
+                            </li>
+                            <li class="nav-item pearl  col-3" role="presentation" id="navDataResource">
+                                <a class="nav-links pearl-icon disabled" data-toggle="tab" href="#dataResource" aria-controls="dataResource" role="tab"  id="navDataResource_link">
+                                    <i class="icon md-sign-in" aria-hidden="true"></i>
+                                </a>
+                                <span class="pearl-title">Data Resource & Converter</span>
                             </li>
                             <li class="nav-item pearl col-3" role="presentation" id="navDataTransmitted">
-                                <a class="nav-links pearl-icon " data-toggle="tab" href="#dataTransmitted" aria-controls="dataTransmitted" role="tab" id="navDataTransmitted_link">
+                                <a class="nav-links pearl-icon disabled" data-toggle="tab" href="#dataTransmitted" aria-controls="dataTransmitted" role="tab" id="navDataTransmitted_link">
                                     <i class="icon md-cloud-upload" aria-hidden="true" ></i>
                                 </a>
-                                <span class="pearl-title">Output</span>
+                                <span class="pearl-title">Data Transmission</span>
                             </li>
                             <li class="nav-item pearl col-3" role="presentation" id="navFinalData">
-                                <a class="nav-links pearl-icon " data-toggle="tab" href="#finalData" aria-controls="finalData" role="tab" id="navFinalData_link">
+                                <a class="nav-links pearl-icon disabled" data-toggle="tab" href="#finalData" aria-controls="finalData" role="tab" id="navFinalData_link">
                                     <i class="icon md-check" aria-hidden="true" ></i> 
-                                    <!-- disabled -->
                                 </a>
                                 <span class="pearl-title">Confirmation</span>
                             </li>
                         </ul>
                         <form method="post" autocomplete="off" novalidate>
-                        <div class="tab-content pt-20" style="overflow-x:hidden; overflow-y:auto; max-height:550px;">
+                        <div class="tab-content pt-20">
                             <div class="tab-pane active" id="deviceConfiguration" role="tabpanel">
                                 <div class="row">
-                                    <!-- Time Interval -->
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="panel-heading">
-                                            <div class="panel-actions" style="right: 5px;">
-                                                <a class="btn btn-default btn-outline pull-right" data-toggle="collapse" href="#timeInterval" aria-expanded="false" role="button"><i class="icon wb-chevron-down" aria-hidden="true"></i></a>
+                                    <div class="col-sm-12 col-md-6">
+                                        <h3 class="example-title" style="color:#0D47A1;">Device Information</h3>
+                                        <div class="pricing-list text-left">
+                                            <div class="pricing-header bg-green-600">                                                
+                                                <div class="pricing-price" style="padding-bottom: 0px;font-size: 2rem;">
+                                                    <span class="pricing-currency"><i class="icon wb-memory" aria-hidden="true"></i></span>
+                                                    <span class="pricing-amount">Code: <?= $data->device_code; ?></span>            
+                                                </div>
+                                                <p class="px-30 font-size-16" ><strong>Device Name</strong>: <i><?= $data->name; ?> </i></p>
                                             </div>
-                                            <h3 class="example-title" style="color:#0D47A1;">Time Interval Configuration</h3>
+                                            <ul class="pricing-features font-size-16" style="background-color: #fff;" >
+                                                <li>
+                                                    <strong>Location :</strong> <?= $data->information->location; ?></li>
+                                                <li>
+                                                    <strong>Purpose :</strong> <?= $data->information->purpose; ?>
+                                                </li>
+                                                <?php if(!empty($group)){ ?>
+                                                <li>
+                                                    <strong>Devices Group :</strong> <?= $group->name; ?></li>
+                                                <?php } ?>
+                                                <li>
+                                                    <strong>Detail Infomation :</strong> <?= $data->information->detail; ?>
+                                                </li>
+                                                <li>
+                                                    <strong>Sensor :</strong> <?= implode(", ",$field); ?>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div class="form-group form-material collapse show" id="timeInterval">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h3 class="example-title" style="color:#0D47A1;">Device Configuration</h3>
+                                        <div class="form-group form-material ">
                                             <label class="form-control-label" for="inputTimeInterval">Time Interval (seconds)</label>
                                             <input type="number" class="form-control" id="inputTimeInterval" name="time_interval" onchange="validation1()"/>
-                                        </div>                                        
-                                    </div>    
-                                    
-                                    <div class="col-md-6 col-lg-4">   
-                                        <div class="panel-heading">
-                                                <div class="panel-actions" style="right: 5px;">
-                                                    <a class="btn btn-default btn-outline pull-right" data-toggle="collapse" href="#dataResource" aria-expanded="false" role="button"><i class="icon wb-chevron-down" aria-hidden="true"></i></a>
-                                                </div>
-                                                <h3 class="example-title" style="color:#0D47A1;">Resource</h3>
                                         </div>
-                                        <div class="form-group form-material collapse show" id="dataResource">
-                                            <label class="form-control-label" for="inputTimeInterval">Select Device/Sensor as Resource</label>
+                                    </div>                                    
+                                </div>
+                                <div class="wizard-buttons mt-10">
+                                    <a class="btn btn-primary btn-outline float-right waves-effect waves-classic next-step" href="#" role="button">Next</a>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="dataResource" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-4">   
+                                        <h3 class="example-title" style="color:#0D47A1;">Resource</h3>
+                                        <div class="form-group form-material ">
                                             <select class="form-control " id="inputResouce" name="resource" >
                                                 <option value="" >Select Resource</option>
                                                 <?php foreach ($resource as $d) { ?>
@@ -82,18 +104,12 @@
                                             </select>
                                         </div>
                                     </div>
-                                    
                                     <div class="col-md-12 row" id="form_resource">   
                                     
                                     </div>
                                     <div class="col-md-12 col-xl-8" id="form_output" style="display: none;">   
-                                        <div class="panel-heading">
-                                            <div class="panel-actions" style="right: 5px;">
-                                                <a class="btn btn-default btn-outline pull-right" data-toggle="collapse" href="#specFrm" aria-expanded="false" role="button"><i class="icon wb-chevron-down" aria-hidden="true"></i></a>
-                                            </div>
-                                            <h3 class="example-title" style="color:#0D47A1;">Data Resource Output</h3>
-                                        </div>
-                                        <div class="row collapse show" id="specFrm" style="margin-top:5px:">
+                                        <h3 class="example-title" style="color:#0D47A1;">Data Resource Output</h3>
+                                        <div class="row" id="specFrm">
                                             <div class="form-material col-md-12">
                                                 <div class="form-material row">
                                                     <div class="col-md-5 col-sm-5 col-8">
@@ -110,17 +126,6 @@
                                         </div>
                                         <button type="button" id="btnAddChildField" onclick="addForm()" class="btn btn-sm btn-info waves-effect waves-classic mt-15 mb-5 waves-effect waves-classic"><i class="md-plus"></i> Add New</button>                                                      
                                     </div>
-                                    
-                                </div>
-                                <div class="wizard-buttons mt-10">
-                                    <a class="btn btn-primary btn-outline float-right waves-effect waves-classic next-step" href="#" role="button">Next</a>
-                                </div>
-                            </div>
-                            <!-- Processing -->
-                            <div class="tab-pane" id="dataResource" role="tabpanel">
-                                <div class="row">
-                                    
-                                    
                                 </div>
 
 
@@ -142,7 +147,7 @@
                                             </select>
                                         </div>
                                         <?php if( !empty($commservice["http_url"]) ){ ?>
-                                        <div class="" id="http-config" style="display:none">
+                                        <div class="example-wrap" id="http-config" style="display:none">
                                             <h3 class="example-title" style="color:#0D47A1;">Configuration for HTTP Communication </h3>
                                             <div class="form-group form-material ">
                                                 <label class="form-control-label" for="inputHTTPPost">REST-API URL</label>
@@ -152,28 +157,28 @@
                                         </div>
                                         <?php } ?>
                                         <?php if( !empty($commservice["mqtt"]) ) { ?>
-                                        <div class="" id="mqtt-config" style="display:none">
+                                        <div class="example-wrap" id="mqtt-config" style="display:none">
                                             <h3 class="example-title" style="color:#0D47A1;">Configuration for MQTT Communication </h3>
                                             <div class="form-group form-material ">
                                                 <label class="form-control-label" for="inputMQTTServer">Server</label>
                                                 <input type="text" class="form-control" id="inputMQTTServer" name="mqtt_server" value="<?= (empty($commservice["mqtt"]->{"server"}))?'':$commservice["mqtt"]->{"server"};  ?>" 
-                                                    />
+                                                    readonly="true"/>
                                             </div>
                                             <div class="form-group form-material ">
                                                 <label class="form-control-label" for="inputMQTTPort">Port</label>
                                                 <input type="text" class="form-control" id="inputMQTTPort" name="mqtt_port" value="<?= (empty($commservice["mqtt"]->{"port"}))?'':$commservice["mqtt"]->{"port"};  ?>" 
-                                                    />
+                                                    readonly="true"/>
                                             </div>
                                             <div class="form-group form-material ">
                                                 <label class="form-control-label" for="inputMQTTTopic">Topic</label>
                                                 <input type="text" class="form-control" id="inputMQTTTopic" name="mqtt_topic" value="<?= (empty($commservice["mqtt"]->{"topic"}))?'':$commservice["mqtt"]->{"topic"};  ?>" 
-                                                    />
+                                                    readonly="true"/>
                                             </div>
                                         </div>
                                         <?php } ?>                                        
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="">
+                                        <div class="example-wrap">
                                             <h3 class="example-title">Sensor Data Transmit to The Server</h3>
                                             <div class="example">
                                                 <table class="table table-hover" data-plugin="selectable" data-row-selectable="true">
@@ -218,36 +223,6 @@
                             <div class="tab-pane" id="finalData" role="tabpanel">
                                 
                                 <div class="row">
-                                    <!-- Device Information -->                                    
-                                    <div class="col-sm-12 col-md-6">
-                                        <h3 class="example-title" style="color:#0D47A1;">Device Information</h3>
-                                        <div class="pricing-list text-left">
-                                            <div class="pricing-header bg-green-600">                                                
-                                                <div class="pricing-price" style="padding-bottom: 0px;font-size: 2rem;">
-                                                    <span class="pricing-currency"><i class="icon wb-memory" aria-hidden="true"></i></span>
-                                                    <span class="pricing-amount">Code: <?= $data->device_code; ?></span>            
-                                                </div>
-                                                <p class="px-30 font-size-16" ><strong>Device Name</strong>: <i><?= $data->name; ?> </i></p>
-                                            </div>
-                                            <ul class="pricing-features font-size-16" style="background-color: #fff;" >
-                                                <li>
-                                                    <strong>Location :</strong> <?= $data->information->location; ?></li>
-                                                <li>
-                                                    <strong>Purpose :</strong> <?= $data->information->purpose; ?>
-                                                </li>
-                                                <?php if(!empty($group)){ ?>
-                                                <li>
-                                                    <strong>Devices Group :</strong> <?= $group->name; ?></li>
-                                                <?php } ?>
-                                                <li>
-                                                    <strong>Detail Infomation :</strong> <?= $data->information->detail; ?>
-                                                </li>
-                                                <li>
-                                                    <strong>Sensor :</strong> <?= implode(", ",$field); ?>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
                                     <div class="col-md-6">
                                         <div class="mb-20" id="mqtt-config">
                                             <h4 class="example-title" style="color:#0D47A1;">Device Configuration</h4>
@@ -272,6 +247,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-6">
                                         <div class="mb-20" id="mqtt-config">
                                             <h4 class="example-title" style="color:#0D47A1;">Data Transmitted</h4>
