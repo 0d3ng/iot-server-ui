@@ -9,10 +9,10 @@
 
         <IfModule mod_php5.c>
                 RewriteRule ^(.*)$ index.php/$1 [L]
-        </IfModule>                                     
+        </IfModule>
 
         <IfModule !mod_php5.c>
                 RewriteRule ^(.*)$ index.php?/$1 [L]
         </IfModule>
 
-</IfModule> 
+</IfModule>
