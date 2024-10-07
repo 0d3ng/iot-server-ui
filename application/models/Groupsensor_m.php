@@ -11,8 +11,10 @@ class groupsensor_m extends My_Model{
 		$data = array(
 			"code_name" => $id
 		);
-		$url = $this->config->item('url_node')."groupsensor/detail/";				
-		return json_decode($this->sendPost($url,$data));
+		$url = $this->config->item('url_node')."groupsensor/detail/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+        return json_decode($result);
 	}
 
 	function add($data){

@@ -11,8 +11,10 @@ class device_m extends My_Model{
 		$data = array(
 			"device_code" => $id
 		);
-		$url = $this->config->item('url_node')."device/detail/";				
-		return json_decode($this->sendPost($url,$data));
+		$url = $this->config->item('url_node')."device/detail/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+		return json_decode($result);
 	}
 
 	function add($data){
@@ -48,11 +50,13 @@ class device_m extends My_Model{
 	}
 
 	function datasensor($device,$data){
-		$url = $this->config->item('url_node')."device/data/".$device."/";			
-		$result =  json_decode($this->sendPost($url,$data));
-		if(!$result->status)
-			$result->data = array();
-		return $result;
+		$url = $this->config->item('url_node')."device/data/".$device."/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+        $decode_json = json_decode($result);
+        if(!$decode_json->status)
+            $decode_json->data = array();
+		return $decode_json;
 	}
 
 	function count_datasensor($device,$data){

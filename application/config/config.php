@@ -45,8 +45,10 @@ $config['index_page'] = '';
 
 $config['url_node'] = 'http://localhost:3001/';//"http://103.106.72.181:3001/";//
 $config['url_elastic'] = 'http://localhost:9200/';//'http://localhost:9200';
-$config['host_mqtt'] = 'localhost';
-$config['port_mqtt'] = 1883;
+$config['host_mqtt'] = '127.0.0.1';
+$config['port_mqtt'] = 9001;
+$config['username_mqtt'] = 'okadai';
+$config['password_mqtt'] = '123456';
 //$config['url_node'] = 'http://202.182.58.11:3001/';
 /*
 |--------------------------------------------------------------------------
@@ -201,7 +203,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 2;
 
 /*
 |--------------------------------------------------------------------------

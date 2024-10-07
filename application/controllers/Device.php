@@ -305,7 +305,8 @@ class Device extends CI_Controller {
 		redirect(base_url().'device/?alert=failed') ; 			
 	}	
 
-    public function data($id){       
+    public function data($id){
+        log_message('debug',"id= $id");
         $data=array();
         $data['success']='';
         $data['error']='';
