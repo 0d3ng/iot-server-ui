@@ -13,7 +13,10 @@ RUN apk update && apk add --no-cache \
     freetype-dev \
     icu-dev \
     libzip-dev \
-    oniguruma-dev
+    oniguruma-dev \
+    net-tools \
+    busybox-extras \
+    nano
 
 # Install PHP extensions yang dibutuhkan CodeIgniter
 RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl \
