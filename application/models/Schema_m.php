@@ -11,8 +11,10 @@ class schema_m extends My_Model{
 		$data = array(
 			"schema_code" => $id
 		);
-		$url = $this->config->item('url_node')."schema/detail/";				
-		return json_decode($this->sendPost($url,$data));
+		$url = $this->config->item('url_node')."schema/detail/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+        return json_decode($result);
 	}
 
 	function add($data){
@@ -35,16 +37,17 @@ class schema_m extends My_Model{
 	}	
 
 	function search($data){
-		$url = $this->config->item('url_node')."schema/";				
-		$result =  json_decode($this->sendPost($url,$data));
-		if(!$result->status)
-			$result->data = array();
-		return $result;
+		$url = $this->config->item('url_node')."schema/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+        return json_decode($result);
 	}
 
 	function search_count($data){
-		$url = $this->config->item('url_node')."schema/count/";				
-		return json_decode($this->sendPost($url,$data));
+		$url = $this->config->item('url_node')."schema/count/";
+        $result =  $this->sendPost($url,$data);
+        log_message('debug',"result ". static::class."= $result");
+        return json_decode($result);
 	}
 
 	function datasensor($schema,$data){
